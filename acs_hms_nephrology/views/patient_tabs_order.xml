@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Réorganisation de l'ordre des onglets dans la vue patient -->
+    <record id="view_patient_tabs_order" model="ir.ui.view">
+        <field name="name">hms.patient.tabs.order</field>
+        <field name="model">hms.patient</field>
+        <field name="inherit_id" ref="acs_hms_nephrology.view_patient_form"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+
+            <!-- L'ordre voulu :
+                 1. General Information (info) - déjà en premier
+                 2. Antécédants (hospital_info) - déjà en deuxième
+                 3. Famille (emergency_contacts_family) - déjà en troisième
+                 4. Examens Physiques (clinical_ass) - déjà en quatrième
+                 5. Biologie (biologie) - déjà en cinquième
+                 6. Imagerie (nephrology_imaging) - doit être déplacé ICI
+                 7. Diagnostic (diseases) - doit être après Imagerie
+                 8. Néphropathie Initiale (nephrology_history) - doit être à la fin
+            -->
+
+            <!-- Déplacer l'onglet Imagerie juste après Biologie -->
+            <xpath expr="//page[@name='nephrology_imaging']" position="replace"/>
+            <xpath expr="//page[@name='biologie']" position="after">
+                <page name='nephrology_imaging' string="Imagerie">
+                    <notebook>
+                        <page string="Échographies" name="echography">
+                            <field name="echography_ids" nolabel="1" context="{'default_patient_id': id}">
+                                <list string="Échographies">
+                                    <field name="name"/>
+                                    <field name="exam_date"/>
+                                    <field name="organ"/>
+                                    <field name="echo_type"/>
+                                    <field name="has_anomalies" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Radiographies" name="radio">
+                            <field name="radio_ids" nolabel="1" context="{'default_patient_id': id}">
+                                <list string="Radiographies">
+                                    <field name="name"/>
+                                    <field name="exam_date"/>
+                                    <field name="anatomic_region"/>
+                                    <field name="incidence"/>
+                                    <field name="image_quality"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="TDM" name="tdm">
+                            <field name="tdm_ids" nolabel="1" context="{'default_patient_id': id}">
+                                <list string="TDM">
+                                    <field name="name"/>
+                                    <field name="exam_date"/>
+                                    <field name="explored_zone"/>
+                                    <field name="contrast_used" widget="boolean_toggle"/>
+                                    <field name="ctdi"/>
+                                    <field name="dlp"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="IRM" name="irm">
+                            <field name="irm_ids" nolabel="1" context="{'default_patient_id': id}">
+                                <list string="IRM">
+                                    <field name="name"/>
+                                    <field name="exam_date"/>
+                                    <field name="explored_zone"/>
+                                    <field name="contrast_used" widget="boolean_toggle"/>
+                                    <field name="exam_duration"/>
+                                    <field name="patient_tolerance"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </page>
+            </xpath>
+
+            <!-- Déplacer l'onglet Néphropathie Initiale à la fin (après Diagnostic) -->
+            <xpath expr="//page[@name='nephrology_history']" position="replace"/>
+            <xpath expr="//page[@name='diseases']" position="after">
+                <page name='nephrology_history' string="Néphropathie Initiale" invisible="not nephrology_care">
+                    <group>
+                        <group>
+                            <field name="nephro_main_complaint" placeholder="Plainte Principale"/>
+                        </group>
+                    </group>
+
+                    <separator string="Histoire de la maladie" colspan="4"/>
+                    <group>
+                        <field name="nephro_disease_history" nolabel="1" placeholder="Histoire de la maladie"/>
+                    </group>
+
+                    <separator string="Antecedants personnels" colspan="4"/>
+                    <group>
+                        <group>
+                            <label for="nephro_medical_antecedent" string="Médicaux"/>
+                            <field name="nephro_medical_antecedent" nolabel="1" placeholder="Maladie"/>
+                            <field name="nephro_surgical_antecedent_ids" widget="many2many_tags" options="{'no_open': True, 'no_create_edit': False}"/>
+                        </group>
+                        <group string="GO (Gynéco-Obstétrique)">
+                            <field name="nephro_menarche_date"/>
+                            <field name="nephro_ddr_date"/>
+                            <field name="nephro_grossesse"/>
+                            <field name="nephro_parite"/>
+                            <field name="nephro_avortement"/>
+                            <field name="nephro_deces"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="nephro_lifestyle_ids" widget="many2many_tags"/>
+                    </group>
+
+                    <separator string="Antecedants Familiaux (Ascendants, Descendants, Collatéraux)" colspan="4"/>
+                    <group string="Ascendants" >
+                        <field name="nephro_family_ascendant_ids" nolabel="1" colspan="4">
+                            <list editable="bottom">
+                                <field name="relation_type_id" options="{'no_open': True, 'no_create_edit': False}"/>
+                                <field name="disease_id"/>
+                                <field name="notes"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group string="Collatéraux">
+                        <field name="nephro_family_collateral_ids" nolabel="1" colspan="4">
+                            <list editable="bottom">
+                                <field name="relation_type_id" options="{'no_open': True, 'no_create_edit': False}"/>
+                                <field name="disease_id"/>
+                                <field name="notes"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group string="Descendants">
+                        <field name="nephro_family_descendant_ids" nolabel="1" colspan="4">
+                            <list editable="bottom">
+                                <field name="relation_type_id" options="{'no_open': True, 'no_create_edit': False}"/>
+                                <field name="disease_id"/>
+                                <field name="notes"/>
+                            </list>
+                        </field>
+                    </group>
+
+                    <separator string="Néphropathie initiale" colspan="4"/>
+                    <group>
+                        <group>
+                            <field name="nephro_dialysis_start_date"/>
+                            <field name="nephro_dialysis_start_center"/>
+                            <field name="nephro_tunneled_catheter_date"/>
+                        </group>
+                        <group>
+                            <field name="nephro_catheter_count_simple"/>
+                            <field name="nephro_catheter_count_tunneled"/>
+                            <field name="nephro_fav_creation_date"/>
+                            <field name="nephro_fav_location_id" options="{'no_open': True, 'no_create_edit': False}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

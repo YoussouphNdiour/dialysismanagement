@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Lifestyle Data -->
+        <record id="lifestyle_monogame" model="acs.lifestyle">
+            <field name="name">Monogame</field>
+        </record>
+
+        <record id="lifestyle_polygame" model="acs.lifestyle">
+            <field name="name">Polygame</field>
+        </record>
+
+        <record id="lifestyle_the" model="acs.lifestyle">
+            <field name="name">Thé</field>
+        </record>
+
+        <record id="lifestyle_tabac" model="acs.lifestyle">
+            <field name="name">Tabac</field>
+        </record>
+
+        <record id="lifestyle_alcool" model="acs.lifestyle">
+            <field name="name">Alcool</field>
+        </record>
+
+        <record id="lifestyle_cafe" model="acs.lifestyle">
+            <field name="name">Café</field>
+        </record>
+
+        <!-- Surgical History Data -->
+        <record id="surgical_fracture" model="acs.surgical.history">
+            <field name="name">Fracture</field>
+        </record>
+
+        <record id="surgical_app" model="acs.surgical.history">
+            <field name="name">APP</field>
+        </record>
+
+        <record id="surgical_hernie" model="acs.surgical.history">
+            <field name="name">Hernie</field>
+        </record>
+
+        <record id="surgical_cesarienne" model="acs.surgical.history">
+            <field name="name">Césarienne</field>
+        </record>
+
+        <record id="surgical_appendicectomie" model="acs.surgical.history">
+            <field name="name">Appendicectomie</field>
+        </record>
+
+        <record id="surgical_cholecystectomie" model="acs.surgical.history">
+            <field name="name">Cholécystectomie</field>
+        </record>
+
+        <!-- FAV Location Data -->
+        <record id="fav_humero_cephalique" model="acs.fav.location">
+            <field name="name">Huméro-céphalique</field>
+        </record>
+
+        <record id="fav_humero_basilique" model="acs.fav.location">
+            <field name="name">Huméro-basilique</field>
+        </record>
+
+        <record id="fav_radio_cephalique" model="acs.fav.location">
+            <field name="name">Radio-céphalique</field>
+        </record>
+
+    </data>
+</odoo>

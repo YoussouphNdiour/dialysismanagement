@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================
+         MENU PRINCIPAL : NÉPHROLOGIE
+         Séquence 20 → apparaît après Discussion (5) et Calendrier (10)
+    ============================================================ -->
+    <menuitem id="menu_acs_main_nephrology"
+        name="Néphrologie"
+        sequence="20"
+        web_icon="acs_hms_nephrology,static/description/icon.png"
+        groups="acs_hms_nephrology.group_hms_nephrology_user"/>
+
+    <!-- 1. Patients -->
+    <menuitem id="menu_acs_patient"
+        name="Patients"
+        parent="menu_acs_main_nephrology"
+        action="action_acs_hms_patient"
+        sequence="10"/>
+
+    <!-- 2. Hémodialyses (liste complète) -->
+    <menuitem id="menu_acs_nephrology_procedures"
+        name="Hémodialyses"
+        parent="menu_acs_main_nephrology"
+        action="action_nephrology_procedure"
+        sequence="20"/>
+
+    <!-- 3. Séances de Dialyse (traitements) -->
+    <menuitem id="menu_acs_treatment"
+        name="Séances de Dialyse"
+        parent="menu_acs_main_nephrology"
+        action="action_acs_treatment"
+        sequence="30"/>
+
+    <!-- 4. Rendez-vous -->
+    <menuitem id="menu_acs_appointment"
+        name="Rendez-vous"
+        parent="menu_acs_main_nephrology"
+        action="action_appointment"
+        sequence="40"/>
+
+    <!-- 5. Biologie (analyses de laboratoire) -->
+    <menuitem id="menu_acs_biologie"
+        name="Biologie"
+        parent="menu_acs_main_nephrology"
+        action="acs_hms.action_acs_patient_biologie"
+        sequence="50"/>
+
+    <!-- 6. Ordonnances -->
+    <menuitem id="menu_acs_ordonnances"
+        name="Ordonnances"
+        parent="menu_acs_main_nephrology"
+        action="acs_hms.act_open_hms_prescription_order_view"
+        groups="acs_hms.group_hms_jr_doctor"
+        sequence="60"/>
+
+    <!-- ============================================================
+         CONFIGURATION (admins uniquement)
+    ============================================================ -->
+    <menuitem id="menu_nephrology_config"
+        name="Configuration"
+        parent="menu_acs_main_nephrology"
+        groups="acs_hms_base.group_hms_manager"
+        sequence="100"/>
+
+    <menuitem id="menu_vascular_types"
+        name="Types d'accès vasculaire"
+        parent="menu_nephrology_config"
+        action="action_acs_vscular_types"
+        sequence="10"/>
+
+    <menuitem id="menu_acs_dialyer"
+        name="Rein (dialyseurs)"
+        parent="menu_nephrology_config"
+        action="action_acs_dialyer"
+        sequence="20"/>
+
+    <menuitem id="menu_acs_dialysate"
+        name="Types de dialysat"
+        parent="menu_nephrology_config"
+        action="action_acs_dialysate"
+        sequence="30"/>
+
+    <menuitem id="menu_acs_race"
+        name="Race"
+        parent="menu_nephrology_config"
+        action="action_acs_race"
+        sequence="40"/>
+
+    <menuitem id="menu_acs_schedule"
+        name="Horaire de dialyse"
+        parent="menu_nephrology_config"
+        action="action_acs_nephrology_schedule"
+        sequence="50"/>
+
+    <menuitem id="menu_nephrology_config_settings"
+        name="Paramètres généraux"
+        parent="menu_nephrology_config"
+        action="acs_hms_base.action_hms_config_settings"
+        groups="base.group_system"
+        sequence="90"/>
+
+</odoo>

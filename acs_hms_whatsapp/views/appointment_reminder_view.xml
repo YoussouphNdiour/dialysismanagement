@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Add WhatsApp Reminder button to Appointment Form -->
+    <record id="view_appointment_form_whatsapp_reminder" model="ir.ui.view">
+        <field name="name">hms.appointment.form.whatsapp.reminder</field>
+        <field name="model">hms.appointment</field>
+        <field name="inherit_id" ref="acs_hms.view_hms_appointment_form"/>
+        <field name="arch" type="xml">
+            <!-- Add WhatsApp button in header before state field -->
+            <xpath expr="//header/field[@name='state']" position="before">
+                <button name="action_send_whatsapp_reminder"
+                        string="Send WhatsApp Reminder"
+                        type="object"
+                        invisible="state in ('cancel', 'done')"/>
+            </xpath>
+            <!-- Add tracking fields for WhatsApp reminders -->
+            <xpath expr="//field[@name='acs_reminder_sent']" position="after">
+                <field name="whatsapp_reminder_24h_sent"/>
+                <field name="whatsapp_reminder_12h_sent"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

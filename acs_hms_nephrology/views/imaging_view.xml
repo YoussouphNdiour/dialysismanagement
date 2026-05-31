@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- ==================== ÉCHOGRAPHIE ==================== -->
+
+    <!-- Liste Échographie -->
+    <record id="view_nephro_echography_list" model="ir.ui.view">
+        <field name="name">acs.nephro.echography.list</field>
+        <field name="model">acs.nephro.echography</field>
+        <field name="arch" type="xml">
+            <list string="Échographies">
+                <field name="name"/>
+                <field name="exam_date"/>
+                <field name="patient_id"/>
+                <field name="organ"/>
+                <field name="echo_type"/>
+                <field name="has_anomalies" widget="boolean_toggle"/>
+                <field name="physician_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Formulaire Échographie -->
+    <record id="view_nephro_echography_form" model="ir.ui.view">
+        <field name="name">acs.nephro.echography.form</field>
+        <field name="model">acs.nephro.echography</field>
+        <field name="arch" type="xml">
+            <form string="Échographie">
+                <header></header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Référence" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Informations Générales">
+                            <field name="patient_id"/>
+                            <field name="exam_date"/>
+                            <field name="physician_id"/>
+                            <field name="radiologist_id"/>
+                        </group>
+                        <group string="Liens">
+                            <field name="appointment_id"/>
+                            <field name="invoice_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Examen" name="exam">
+                            <group>
+                                <group string="Type d'examen">
+                                    <field name="organ"/>
+                                    <field name="organ_other" invisible="organ != 'autre'"/>
+                                    <field name="laterality"/>
+                                    <field name="echo_type"/>
+                                </group>
+                                <group string="Mesures">
+                                    <field name="measurement_size"/>
+                                    <field name="measurement_volume"/>
+                                    <field name="doppler_flow"/>
+                                </group>
+                            </group>
+
+                            <group string="Anomalies">
+                                <field name="has_anomalies"/>
+                                <field name="anomalies_description" invisible="not has_anomalies" placeholder="Description des anomalies..."/>
+                            </group>
+
+                            <separator string="Observation"/>
+                            <field name="observation" placeholder="Observation..."/>
+
+                            <separator string="Conclusion"/>
+                            <field name="conclusion" placeholder="Conclusion..."/>
+                        </page>
+
+                        <page string="Pièces jointes" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Échographie -->
+    <record id="action_nephro_echography" model="ir.actions.act_window">
+        <field name="name">Échographies</field>
+        <field name="res_model">acs.nephro.echography</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- ==================== RADIOGRAPHIE ==================== -->
+
+    <!-- Liste Radiographie -->
+    <record id="view_nephro_radio_list" model="ir.ui.view">
+        <field name="name">acs.nephro.radio.list</field>
+        <field name="model">acs.nephro.radio</field>
+        <field name="arch" type="xml">
+            <list string="Radiographies">
+                <field name="name"/>
+                <field name="exam_date"/>
+                <field name="patient_id"/>
+                <field name="anatomic_region"/>
+                <field name="incidence"/>
+                <field name="image_quality" decoration-success="image_quality == 'bonne'" decoration-warning="image_quality == 'moyenne'" decoration-danger="image_quality == 'mauvaise'"/>
+                <field name="physician_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Formulaire Radiographie -->
+    <record id="view_nephro_radio_form" model="ir.ui.view">
+        <field name="name">acs.nephro.radio.form</field>
+        <field name="model">acs.nephro.radio</field>
+        <field name="arch" type="xml">
+            <form string="Radiographie">
+                <header></header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Référence" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Informations Générales">
+                            <field name="patient_id"/>
+                            <field name="exam_date"/>
+                            <field name="physician_id"/>
+                            <field name="radiologist_id"/>
+                        </group>
+                        <group string="Liens">
+                            <field name="appointment_id"/>
+                            <field name="invoice_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Examen" name="exam">
+                            <group>
+                                <group string="Paramètres d'examen">
+                                    <field name="anatomic_region"/>
+                                    <field name="anatomic_region_other" invisible="anatomic_region != 'autre'"/>
+                                    <field name="incidence"/>
+                                    <field name="patient_position"/>
+                                </group>
+                                <group string="Qualité et Dosage">
+                                    <field name="image_quality" widget="badge" decoration-success="image_quality == 'bonne'" decoration-warning="image_quality == 'moyenne'" decoration-danger="image_quality == 'mauvaise'"/>
+                                    <field name="approximate_dose"/>
+                                </group>
+                            </group>
+
+                            <group string="Produit de contraste">
+                                <field name="contrast_used"/>
+                                <field name="contrast_type" invisible="not contrast_used"/>
+                            </group>
+
+                            <separator string="Observations"/>
+                            <field name="findings" placeholder="Observations..."/>
+
+                            <separator string="Conclusion"/>
+                            <field name="conclusion" placeholder="Conclusion..."/>
+                        </page>
+
+                        <page string="Pièces jointes" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Radiographie -->
+    <record id="action_nephro_radio" model="ir.actions.act_window">
+        <field name="name">Radiographies</field>
+        <field name="res_model">acs.nephro.radio</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- ==================== TDM ==================== -->
+
+    <!-- Liste TDM -->
+    <record id="view_nephro_tdm_list" model="ir.ui.view">
+        <field name="name">acs.nephro.tdm.list</field>
+        <field name="model">acs.nephro.tdm</field>
+        <field name="arch" type="xml">
+            <list string="TDM">
+                <field name="name"/>
+                <field name="exam_date"/>
+                <field name="patient_id"/>
+                <field name="explored_zone"/>
+                <field name="contrast_used" widget="boolean_toggle"/>
+                <field name="ctdi"/>
+                <field name="dlp"/>
+                <field name="has_incidents" widget="boolean_toggle"/>
+                <field name="physician_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Formulaire TDM -->
+    <record id="view_nephro_tdm_form" model="ir.ui.view">
+        <field name="name">acs.nephro.tdm.form</field>
+        <field name="model">acs.nephro.tdm</field>
+        <field name="arch" type="xml">
+            <form string="TDM (Tomodensitométrie)">
+                <header></header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Référence" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Informations Générales">
+                            <field name="patient_id"/>
+                            <field name="exam_date"/>
+                            <field name="physician_id"/>
+                            <field name="radiologist_id"/>
+                        </group>
+                        <group string="Liens">
+                            <field name="appointment_id"/>
+                            <field name="invoice_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Examen" name="exam">
+                            <group>
+                                <group string="Zone explorée">
+                                    <field name="explored_zone"/>
+                                    <field name="explored_zone_other" invisible="explored_zone != 'autre'"/>
+                                </group>
+                                <group string="Dosimétrie ⚠️">
+                                    <field name="ctdi"/>
+                                    <field name="dlp"/>
+                                </group>
+                            </group>
+
+                            <group>
+                                <group string="Produit de contraste">
+                                    <field name="contrast_used"/>
+                                    <field name="contrast_type" invisible="not contrast_used"/>
+                                    <field name="contrast_type_other" invisible="contrast_type != 'autre' or not contrast_used"/>
+                                </group>
+                                <group string="Paramètres techniques">
+                                    <field name="slice_count"/>
+                                    <field name="slice_thickness"/>
+                                </group>
+                            </group>
+
+                            <group string="Reconstructions">
+                                <field name="reconstruction_axial"/>
+                                <field name="reconstruction_coronal"/>
+                                <field name="reconstruction_sagittal"/>
+                                <field name="reconstruction_3d"/>
+                            </group>
+
+                            <group string="Incidents">
+                                <field name="has_incidents"/>
+                                <field name="incidents_description" invisible="not has_incidents" placeholder="Description des incidents..."/>
+                            </group>
+
+                            <separator string="Résultats"/>
+                            <field name="findings" placeholder="Résultats..."/>
+
+                            <separator string="Conclusion"/>
+                            <field name="conclusion" placeholder="Conclusion..."/>
+                        </page>
+
+                        <page string="Pièces jointes" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action TDM -->
+    <record id="action_nephro_tdm" model="ir.actions.act_window">
+        <field name="name">TDM</field>
+        <field name="res_model">acs.nephro.tdm</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- ==================== IRM ==================== -->
+
+    <!-- Liste IRM -->
+    <record id="view_nephro_irm_list" model="ir.ui.view">
+        <field name="name">acs.nephro.irm.list</field>
+        <field name="model">acs.nephro.irm</field>
+        <field name="arch" type="xml">
+            <list string="IRM">
+                <field name="name"/>
+                <field name="exam_date"/>
+                <field name="patient_id"/>
+                <field name="explored_zone"/>
+                <field name="contrast_used" widget="boolean_toggle"/>
+                <field name="exam_duration"/>
+                <field name="patient_tolerance" decoration-success="patient_tolerance == 'bonne'" decoration-warning="patient_tolerance == 'moyenne'" decoration-danger="patient_tolerance == 'mauvaise'"/>
+                <field name="physician_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Formulaire IRM -->
+    <record id="view_nephro_irm_form" model="ir.ui.view">
+        <field name="name">acs.nephro.irm.form</field>
+        <field name="model">acs.nephro.irm</field>
+        <field name="arch" type="xml">
+            <form string="IRM">
+                <header></header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Référence" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Informations Générales">
+                            <field name="patient_id"/>
+                            <field name="exam_date"/>
+                            <field name="physician_id"/>
+                            <field name="radiologist_id"/>
+                        </group>
+                        <group string="Liens">
+                            <field name="appointment_id"/>
+                            <field name="invoice_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Examen" name="exam">
+                            <group>
+                                <group string="Zone explorée">
+                                    <field name="explored_zone"/>
+                                    <field name="explored_zone_other" invisible="explored_zone != 'autre'"/>
+                                </group>
+                                <group string="Durée et Tolérance">
+                                    <field name="exam_duration" widget="float_time"/>
+                                    <field name="patient_tolerance" widget="badge" decoration-success="patient_tolerance == 'bonne'" decoration-warning="patient_tolerance == 'moyenne'" decoration-danger="patient_tolerance == 'mauvaise'"/>
+                                    <field name="tolerance_notes" invisible="patient_tolerance != 'mauvaise'" placeholder="Notes sur la tolérance..."/>
+                                </group>
+                            </group>
+
+                            <group string="Séquences IRM">
+                                <group>
+                                    <field name="sequence_t1"/>
+                                    <field name="sequence_t2"/>
+                                    <field name="sequence_flair"/>
+                                    <field name="sequence_diffusion"/>
+                                </group>
+                                <group>
+                                    <field name="sequence_stir"/>
+                                    <field name="sequence_t1_gado"/>
+                                    <field name="sequence_angio"/>
+                                    <field name="sequence_other" placeholder="Autres séquences..."/>
+                                </group>
+                            </group>
+
+                            <group string="Produit de contraste (Gadolinium)">
+                                <field name="contrast_used"/>
+                                <field name="contrast_dose" invisible="not contrast_used"/>
+                            </group>
+
+                            <group string="Contre-indications">
+                                <field name="contraindication_checked"/>
+                                <field name="has_pacemaker"/>
+                                <field name="has_metal_implant"/>
+                                <field name="has_claustrophobia"/>
+                                <field name="other_contraindications" placeholder="Autres contre-indications..."/>
+                            </group>
+
+                            <separator string="Résultats"/>
+                            <field name="findings" placeholder="Résultats..."/>
+
+                            <separator string="Conclusion"/>
+                            <field name="conclusion" placeholder="Conclusion..."/>
+                        </page>
+
+                        <page string="Pièces jointes" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action IRM -->
+    <record id="action_nephro_irm" model="ir.actions.act_window">
+        <field name="name">IRM</field>
+        <field name="res_model">acs.nephro.irm</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

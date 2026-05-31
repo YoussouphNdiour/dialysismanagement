@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_acs_family_member_form" model="ir.ui.view">
+        <field name="name">acs.family.member.form</field>
+        <field name="model">acs.family.member</field>
+        <field name="arch" type="xml">
+            <form string="Family Member">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="related_patient_id"/>
+                            <field name="relation_id"/>
+                        </group>
+                        <group>
+                            <field name="patient_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Patient View -->
+    <record id="patient_kanban_view" model="ir.ui.view">
+        <field name="name">patient.kanban</field>
+        <field name="model">hms.patient</field>
+        <field name="inherit_id" ref="acs_hms_base.patient_kanban_view"/>
+        <field name="arch" type="xml">
+            <field name="acs_tag_ids" position="after">
+                <div t-if="record.show_cancellation_warning_flag.raw_value" class="badge rounded-pill text-bg-danger">
+                    <span class="fa fa-exclamation-triangle" title="Cancellation"/>
+                    <field name="acs_cancelled_appointments" nolabel="1"/> Appointment Cancellation in last <field name="acs_flag_days" nolabel="1"/> days
+                    <field name="show_cancellation_warning_flag" invisible="1"/>
+                </div>
+            </field>
+            <div name="name" position="replace">
+                <div>
+                    <div class="mb-1" name="name" style="width: 70%;">
+                        <field name="display_name" class="mb-0 fw-bold fs-5"/>
+                    </div>
+                    <div class="position-absolute top-0 end-0 text-center" style="width: 75px; height: 40px;">
+                        <field name="acs_patient_progress" widget="percentpie" invisible="not show_patient_progress" class="w-100 h-100"/>
+                    </div>
+                </div>
+            </div>
+            <xpath expr="//footer/div" position="inside">
+                <a t-if="record.appointment_count.raw_value" class="btn btn-sm btn-link smaller" groups="acs_hms.group_hms_receptionist" name="action_appointment" role="button" type="object">
+                    <i class="fa fa-user-md me-1" aria-label="Appointments" role="img" title="Appointments"/>
+                    <field name="appointment_count"/>
+                </a>
+                <a t-if="record.prescription_count.raw_value" class="btn btn-sm btn-link smaller" groups="acs_hms.group_hms_receptionist" name="action_prescription" role="button" type="object">
+                    <i class="fa fa-wpforms me-1" aria-label="Prescriptions" role="img" title="Prescriptions"/>
+                    <field name="prescription_count"/>
+                </a>
+                <a t-if="record.patient_procedure_count.raw_value" class="btn btn-sm btn-link smaller" groups="acs_hms.group_hms_receptionist" name="action_view_patient_procedures" role="button" type="object">
+                    <i class="fa fa-list-alt  me-1" aria-label="Procedures" role="img" title="Procedures"/>
+                    <field name="patient_procedure_count"/>
+                </a>
+                <a t-if="record.evaluation_count.raw_value" class="btn btn-sm btn-link smaller" groups="acs_hms.group_hms_receptionist" name="action_evaluation" role="button" type="object">
+                    <i class="fa fa-stethoscope me-1" aria-label="Evaluations" role="img" title="Evaluations"/>
+                    <field name="evaluation_count"/>
+                </a>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_patient_form" model="ir.ui.view">
+        <field name="name">patient.form</field>
+        <field name="model">hms.patient</field>
+        <field name="inherit_id" ref="acs_hms_base.view_patient_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="required">1</attribute>
+            </field>
+
+            <header position="inside">
+                <button name="create_invoice" string="Create Invoice" type="object" class="oe_highlight" invisible="invoice_id" groups="acs_hms.group_patient_registration_invoicing"/>
+                <field name="invoice_id" invisible="1"/>
+            </header>
+
+            <widget name="web_ribbon" position="after">
+                <field name="show_cancellation_warning_flag" invisible="1"/>
+                <div invisible="not show_cancellation_warning_flag" class="badge rounded-pill text-bg-danger">
+                    <span class="fa fa-exclamation-triangle" title="Cancellation"/>
+                    <field name="acs_cancelled_appointments" nolabel="1"/> Appointment Cancellation in last <field name="acs_flag_days" nolabel="1"/> days
+                </div>
+            </widget>
+
+            <button name="action_view_attachments" position="attributes">
+                <attribute name="groups">acs_hms.group_hms_receptionist</attribute>
+            </button>
+
+            <button name='view_invoices' position="after">
+                <button name="action_appointment" type="object" class="oe_stat_button" groups="acs_hms.group_hms_receptionist" icon="fa-stethoscope">
+                    <field string="Appointments" name="appointment_count" widget="statinfo"/>
+                </button>
+                <button name="action_prescription" groups="acs_hms.group_hms_jr_doctor" type="object" class="oe_stat_button" icon="fa-wpforms">
+                    <field string="Prescriptions" name="prescription_count" widget="statinfo"/>
+                </button>
+                <button name="action_evaluation" type="object" class="oe_stat_button" groups="acs_hms.group_hms_receptionist" icon="fa-stethoscope">
+                    <field string="Evaluations" name="evaluation_count" widget="statinfo"/>
+                </button>
+                <button name="action_biologie" type="object" class="oe_stat_button" groups="acs_hms.group_hms_jr_doctor" icon="fa-flask">
+                    <field string="Biologie" name="biologie_count" widget="statinfo"/>
+                </button>
+                <button name="action_view_patient_procedures" groups="acs_hms.group_hms_receptionist" class="oe_stat_button" icon="fa-medkit" type="object">
+                    <field string="Patient Procedures" name="patient_procedure_count" widget="statinfo"/>
+                </button>
+                <button name="action_treatment" type="object" class="oe_stat_button" groups="acs_hms.group_hms_receptionist" icon="fa-user-md">
+                    <field string="Treatments" name="treatment_count" widget="statinfo"/>
+                </button>
+            </button>
+            
+            <xpath expr="//div[@name='img_div']/div" position="inside">
+                <field name="acs_patient_progress" widget="percentpie" invisible="not show_patient_progress"/>
+            </xpath>
+
+            <field name="property_account_position_id" position="after">
+                <field name="registration_product_id" groups="acs_hms.group_patient_registration_invoicing"/>
+            </field>
+
+            <field name="caste" position="after">
+                <field name="ethnic_group_id" groups="acs_hms_base.group_manage_ethnic_religion_tribe"/>
+            </field>
+            <field name="company_id" position="attributes">
+                <attribute name="string">Hospital</attribute>
+            </field>
+            <group name="ref_doc_details" position="inside">
+                <field name="ref_doctor_ids" widget="many2many_tags"/>
+                <field name="department_ids" widget="many2many_tags" groups="acs_hms.group_allow_multi_department" options="{'no_open': True, 'no_create': True}" context="{'list_view_ref': 'acs_hms.view_hr_department_list'}" domain="[('patient_department','=',True)]"/>
+                <field name="assignee_ids" widget="many2many_tags"/>
+            </group>
+
+            <page name="hospital_info" position="after">
+                <page name="clinical_ass" string="Examens Physiques" groups="acs_hms.group_hms_nurse">
+                    <div>NOTE: Details are shown based on last Completed Patient Evaluation. <t invisible="not last_evaluation_id">Last Evaluation: <field name="last_evaluation_id" nolabel="1" class="oe_link"/></t> <button class="oe_inline oe_stat_button btn-link" type="object" name="acs_show_evaluation_chart" title="Show Evaluation Charts" icon="fa-area-chart"  string="Show Evaluation Charts" widget="statinfo"/></div>
+                    <group>
+                        <group>
+                            <label for="weight"/>
+                            <div class="o_row">
+                                <field name="weight"/>
+                                <field name="acs_weight_name"/>
+                            </div>
+                            <label for="height"/>
+                            <div class="o_row">
+                                <field name="height"/>
+                                <field name="acs_height_name"/>
+                            </div>
+                            <label for="temp"/>
+                            <div class="o_row">
+                                <field name="temp"/>
+                                <field name="acs_temp_name"/>
+                            </div>
+                            <label for="rbs"/>
+                            <div class="o_row">
+                                <field name="rbs"/>
+                                <field name="acs_rbs_name"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="rr"/>
+                            <label string="Systolic/Diastolic BP" for="systolic_bp"/>
+                            <div name="systolic_bp">
+                                <div class="oe_inline" style="display: inline;" >
+                                    <field name="systolic_bp" class="oe_inline"/>/<field name="diastolic_bp" class="oe_inline"/>
+                                </div>
+                            </div>
+                            <label for="spo2"/>
+                            <div class="o_row">
+                                <field name="spo2"/>
+                                <field name="acs_spo2_name"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="bmi"/>
+                        </group>
+                        <group>
+                            <field name="bmi_state"/>
+                        </group>
+                    </group>
+                    <separator string="Pain Level"/>
+                    <group>
+                        <group>
+                            <label for="pain_level"/>
+                            <div class="o_row">
+                                <field name="pain_level"/>
+                                <span><button name="%(action_acs_pain_level)d" type="action" icon="fa-question-circle" title="Pain Level"/></span>
+                            </div>
+                            <field name="pain" colspan="2" nolabel="1"/>
+                        </group>
+                    </group>
+                   
+                    <separator string="Examens Physiques Détaillés"/>
+                    <group>
+                        <group>
+                            <field name="last_evaluation_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Examen Physique">
+                            <field name="tete" placeholder="Tête..."/>
+                            <field name="cou" placeholder="Cou..."/>
+                            <field name="thorax" placeholder="Thorax..."/>
+                        </group>
+                        <group>
+                            <field name="abdomen" placeholder="Abdomen..."/>
+                            <field name="msmi" placeholder="MSMI (Membres Supérieurs et Inférieurs)..."/>
+                            <field name="oge" placeholder="OGE (Organes Génitaux Externes)..."/>
+                            <field name="traitement" placeholder="Traitement..."/>
+                        </group>
+                    </group>
+                    <separator string="Medical Alert"/>
+                    <field name="medical_alert_ids" widget="many2many_tags"/>
+                    <separator string="Allergies"/>
+                    <field name="allergy_ids" widget="many2many_tags"/>
+                     <separator string="Résumé Néphrologies"/>
+                    <field name="medical_history" placeholder="Résumé Néphrologies..."/>
+                </page>
+
+                <page name="biologie" string="Biologie" groups="acs_hms.group_hms_jr_doctor">
+                    <div>NOTE: Details are shown based on last Completed Biologie Test. <t invisible="not last_biologie_id">Last Biologie: <field name="last_biologie_id" nolabel="1" class="oe_link"/></t> <button class="oe_inline oe_stat_button btn-link" type="object" name="acs_show_biologie_chart" title="Show Biologie Charts" icon="fa-area-chart"  string="Show Biologie Charts" widget="statinfo"/></div>
+                    <notebook>
+                        <page name="biologie_history" string="Historique des Tests">
+                            <field name="biologie_ids" nolabel="1"
+                                   context="{'default_patient_id': id, 'default_physician_id': primary_physician_id}"/>
+                        </page>
+                        <page name="lab_hematology" string="Hématologie">
+                            <group>
+                                <group>
+                                    <field name="gb" readonly="1"/>
+                                    <field name="hb" readonly="1"/>
+                                    <field name="vgm" readonly="1"/>
+                                    <field name="ccmh" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="plt" readonly="1"/>
+                                    <field name="leu" readonly="1"/>
+                                    <field name="crp" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="lab_kidney" string="Fonction Rénale">
+                            <group>
+                                <group>
+                                    <field name="uree" readonly="1"/>
+                                    <field name="creat" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="dfg_mdrd" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="lab_electrolytes" string="Électrolytes">
+                            <group>
+                                <group>
+                                    <field name="sodium" readonly="1"/>
+                                    <field name="potassium" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="chlore" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="lab_lipids" string="Bilan Lipidique">
+                            <group>
+                                <group>
+                                    <field name="hdl" readonly="1"/>
+                                    <field name="ldl" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="ct" readonly="1"/>
+                                    <field name="tg" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="lab_liver" string="Bilan Hépatique">
+                            <group string="Transaminases">
+                                <group>
+                                    <field name="alat" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="asat" readonly="1"/>
+                                </group>
+                            </group>
+                            <separator string="Sérologie Hépatite B"/>
+                            <group>
+                                <group>
+                                    <field name="serologie_aghbs" readonly="1"/>
+                                    <field name="serologie_ac_anti_hbs" readonly="1"/>
+                                    <field name="serologie_ac_anti_hbc" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="serologie_interpretation" readonly="1"
+                                           class="alert alert-info"
+                                           role="status"
+                                           invisible="not serologie_interpretation"
+                                           widget="text"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="lab_minerals" string="Minéraux et Vitamines">
+                            <group>
+                                <group>
+                                    <field name="calcium" readonly="1"/>
+                                    <field name="phosphore" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="pthi" readonly="1"/>
+                                    <field name="vitamine_d" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="lab_bilan_martial" string="Bilan Martial">
+                            <group>
+                                <group>
+                                    <field name="ferritinemia" readonly="1"/>
+                                    <field name="cst" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="serum_iron" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </page>
+
+                <page name='diseases' string="Diagnostic" groups="acs_hms.group_hms_jr_doctor">
+                    <notebook>
+                        <page name="diagnostic_history" string="Historique des Diagnostics">
+                            <field name="patient_diseases_ids" nolabel="1"
+                                   context="{'default_patient_id': id, 'default_physician_id': primary_physician_id}">
+                                <list string="Historique des Diagnostics">
+                                    <field name="diagnosed_date"/>
+                                    <field name="disease_ids" widget="many2many_tags"/>
+                                    <field name="physician_id"/>
+                                    <field name="status"/>
+                                    <field name="disease_severity"/>
+                                    <field name="acs_procedures"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page name="diagnostic_info" string="Informations ">
+                            <group>
+                                <group>
+                                    <field name="main_complaint" placeholder="Plainte Principale"/>
+                                </group>
+                            </group>
+
+                            <!-- <separator string="Histoire de la maladie" colspan="4"/>
+                            <group>
+                                <field name="disease_history" nolabel="1" placeholder="Histoire de la maladie"/>
+                            </group> -->
+
+                            <separator string="Antecedants personnels" colspan="4"/>
+                    <group>
+                        <group>
+                            <label for="medical_antecedent" string="Médicaux"/>
+                            <field name="medical_antecedent" nolabel="1" placeholder="Maladie"/>
+                            <field name="surgical_antecedent_ids" widget="many2many_tags" options="{'no_open': True, 'no_create_edit': False}"/>
+                        </group>
+                        <group string="GO (Gynéco-Obstétrique)">
+                            <field name="menarche_date"/>
+                            <field name="ddr_date"/>
+                            <field name="grossesse"/>
+                            <field name="parite"/>
+                            <field name="avortement"/>
+                            <field name="deces"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="lifestyle_ids" widget="many2many_tags"/>
+                    </group>
+                    <separator string="Allergies" colspan="4"/>
+                    <group>
+                        <field name="allergy_ids" widget="many2many_tags"/>
+                    </group>
+
+                    <separator string="Antecedants Familiaux (Ascendants, Descendants, Collatéraux)" colspan="4"/>
+                    <group string="Ascendants" colspan="4">
+                        <field name="family_ascendant_ids" nolabel="1">
+                            <list editable="bottom">
+                                <field name="relation_type_id" options="{'no_open': True, 'no_create_edit': False}"/>
+                                <field name="disease_id"/>
+                                <field name="notes"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group string="Collatéraux"  colspan="4">
+                        <field name="family_collateral_ids" nolabel="1">
+                            <list editable="bottom">
+                                <field name="relation_type_id" options="{'no_open': True, 'no_create_edit': False}"/>
+                                <field name="disease_id"/>
+                                <field name="notes"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group string="Descendants"  colspan="4">
+                        <field name="family_descendant_ids" nolabel="1">
+                            <list editable="bottom">
+                                <field name="relation_type_id" options="{'no_open': True, 'no_create_edit': False}"/>
+                                <field name="disease_id"/>
+                                <field name="notes"/>
+                            </list>
+                        </field>
+                    </group>
+
+                    <!-- <separator string="Néphropathie initiale" colspan="4"/>
+                    <group>
+                        <group>
+                            <field name="dialysis_start_date"/>
+                            <field name="dialysis_start_center"/>
+                            <field name="tunneled_catheter_date"/>
+                        </group>
+                        <group>
+                            <field name="catheter_count_simple"/>
+                            <field name="catheter_count_tunneled"/>
+                            <field name="fav_creation_date"/>
+                            <field name="fav_location_id" options="{'no_open': True, 'no_create_edit': False}"/>
+                        </group>
+                    </group> -->
+
+                    <!-- <separator string="Medical Alert" colspan="4"/>
+                    <group>
+                        <field name="medical_alert_ids" widget="many2many_tags"/>
+                    </group> -->
+                            <separator string="Nephrology Summary" colspan="4"/>
+                            <field name="medical_history"/>
+                            <!-- <separator string="Diseases History" colspan="4"/>
+                            <field name="patient_diseases_ids"  nolabel="1" colspan="4"/>
+                            <separator string="Family Disease History"/>
+                            <field name="family_history_ids" /> -->
+                            <separator string="Genetic Risk" />
+                            <field name="genetic_risks_ids"/>
+                        </page>
+                    </notebook>
+                </page>
+                
+            </page>
+            <page name="emergency_contacts_family" position="inside">
+                <separator string="famille"/>
+                <field name="family_member_ids">
+                    <list editable="bottom">
+                        <field name="related_patient_id"/>
+                        <field name="relation_id" required="1"/>
+                    </list>
+                </field>
+            </page>
+            <xpath expr="//field[@name='emergency_contact_ids']//field[@name='relationship']" position="replace">
+                <field name="relation_id" required="1"/>
+            </xpath>
+         </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Surgical History Views -->
+    <record id="view_acs_surgical_history_list" model="ir.ui.view">
+        <field name="name">acs.surgical.history.list</field>
+        <field name="model">acs.surgical.history</field>
+        <field name="arch" type="xml">
+            <list string="Surgical History">
+                <field name="name"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_acs_surgical_history_form" model="ir.ui.view">
+        <field name="name">acs.surgical.history.form</field>
+        <field name="model">acs.surgical.history</field>
+        <field name="arch" type="xml">
+            <form string="Surgical History">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_acs_surgical_history" model="ir.actions.act_window">
+        <field name="name">Surgical History</field>
+        <field name="res_model">acs.surgical.history</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Surgical History found. Let's create one!
+            </p>
+            <p>
+                Define surgical procedures (e.g., Fracture, APP, Hernie, Césarienne).
+            </p>
+        </field>
+    </record>
+
+    <!-- FAV Location Views -->
+    <record id="view_acs_fav_location_list" model="ir.ui.view">
+        <field name="name">acs.fav.location.list</field>
+        <field name="model">acs.fav.location</field>
+        <field name="arch" type="xml">
+            <list string="FAV Location">
+                <field name="name"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_acs_fav_location_form" model="ir.ui.view">
+        <field name="name">acs.fav.location.form</field>
+        <field name="model">acs.fav.location</field>
+        <field name="arch" type="xml">
+            <form string="FAV Location">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_acs_fav_location" model="ir.actions.act_window">
+        <field name="name">FAV Location</field>
+        <field name="res_model">acs.fav.location</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No FAV Location found. Let's create one!
+            </p>
+            <p>
+                Define FAV locations (e.g., Huméro-céphalique, Huméro-basilique, Radio-céphalique).
+            </p>
+        </field>
+    </record>
+
+    <!-- Lifestyle Views -->
+    <record id="view_acs_lifestyle_list" model="ir.ui.view">
+        <field name="name">acs.lifestyle.list</field>
+        <field name="model">acs.lifestyle</field>
+        <field name="arch" type="xml">
+            <list string="Lifestyle">
+                <field name="name"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_acs_lifestyle_form" model="ir.ui.view">
+        <field name="name">acs.lifestyle.form</field>
+        <field name="model">acs.lifestyle</field>
+        <field name="arch" type="xml">
+            <form string="Lifestyle">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_acs_lifestyle" model="ir.actions.act_window">
+        <field name="name">Lifestyle</field>
+        <field name="res_model">acs.lifestyle</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Lifestyle found. Let's create one!
+            </p>
+            <p>
+                Define lifestyle options for patients (e.g., Monogame, Polygame, Thé, Tabac, Alcool, Café).
+            </p>
+        </field>
+    </record>
+
+    <!-- Family Relation Type Views -->
+    <record id="view_acs_family_relation_type_list" model="ir.ui.view">
+        <field name="name">acs.family.relation.type.list</field>
+        <field name="model">acs.family.relation.type</field>
+        <field name="arch" type="xml">
+            <list string="Family Relation Types">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_acs_family_relation_type_form" model="ir.ui.view">
+        <field name="name">acs.family.relation.type.form</field>
+        <field name="model">acs.family.relation.type</field>
+        <field name="arch" type="xml">
+            <form string="Family Relation Type">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_acs_family_relation_type" model="ir.actions.act_window">
+        <field name="name">Family Relation Types</field>
+        <field name="res_model">acs.family.relation.type</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Record Found
+            </p>
+            <p>
+                Click to add a Family Relation Type.
+            </p>
+        </field>
+    </record>
+
+    <!-- Family Ascendant Views -->
+    <record id="view_hms_family_ascendant_list" model="ir.ui.view">
+        <field name="name">hms.family.ascendant.list</field>
+        <field name="model">hms.family.ascendant</field>
+        <field name="arch" type="xml">
+            <list string="Family Ascendant">
+                <field name="patient_id"/>
+                <field name="relation_type_id"/>
+                <field name="disease_id"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hms_family_ascendant_form" model="ir.ui.view">
+        <field name="name">hms.family.ascendant.form</field>
+        <field name="model">hms.family.ascendant</field>
+        <field name="arch" type="xml">
+            <form string="Family Ascendant">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="relation_type_id"/>
+                        </group>
+                        <group>
+                            <field name="disease_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Additional notes..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Family Collateral Views -->
+    <record id="view_hms_family_collateral_list" model="ir.ui.view">
+        <field name="name">hms.family.collateral.list</field>
+        <field name="model">hms.family.collateral</field>
+        <field name="arch" type="xml">
+            <list string="Family Collateral">
+                <field name="patient_id"/>
+                <field name="relation_type_id"/>
+                <field name="disease_id"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hms_family_collateral_form" model="ir.ui.view">
+        <field name="name">hms.family.collateral.form</field>
+        <field name="model">hms.family.collateral</field>
+        <field name="arch" type="xml">
+            <form string="Family Collateral">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="relation_type_id"/>
+                        </group>
+                        <group>
+                            <field name="disease_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Additional notes..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Family Descendant Views -->
+    <record id="view_hms_family_descendant_list" model="ir.ui.view">
+        <field name="name">hms.family.descendant.list</field>
+        <field name="model">hms.family.descendant</field>
+        <field name="arch" type="xml">
+            <list string="Family Descendant">
+                <field name="patient_id"/>
+                <field name="relation_type_id"/>
+                <field name="disease_id"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hms_family_descendant_form" model="ir.ui.view">
+        <field name="name">hms.family.descendant.form</field>
+        <field name="model">hms.family.descendant</field>
+        <field name="arch" type="xml">
+            <form string="Family Descendant">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="relation_type_id"/>
+                        </group>
+                        <group>
+                            <field name="disease_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Additional notes..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

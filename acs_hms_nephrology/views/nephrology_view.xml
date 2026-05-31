@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_hms_appointment_form" model="ir.ui.view">
+        <field name="name">hms.appointment.form</field>
+        <field name="model">hms.appointment</field>
+        <field name="inherit_id" ref="acs_hms.view_hms_appointment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='planned_duration']" position="after">
+                <field name="blood_group" invisible="department_type!='nephrology'"/>
+            </xpath>
+
+            <!-- Commented out: These fields no longer exist in the parent view -->
+            <!-- <xpath expr="//field[@name='past_history']" position="attributes">
+                <attribute name="invisible">department_type=='nephrology'</attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='info']/separator[@name='past_history']" position="attributes">
+                <attribute name="invisible">department_type=='nephrology'</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='differential_diagnosis']" position="attributes">
+                <attribute name="invisible">department_type=='nephrology'</attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='advice']/separator[@name='differential_diagnosis']" position="attributes">
+                <attribute name="invisible">department_type=='nephrology'</attribute>
+            </xpath> -->
+
+            <xpath expr="//field[@name='diseases_ids']" position="before">
+                <field name="debugging_treatment" invisible="department_type!='nephrology'"/>
+            </xpath>
+
+            <xpath expr="//div[@name='div_hr']" position="after">
+                <label for="blood_flow"/>
+                <div class="o_row">
+                    <field name="blood_flow" readonly="state in ['cancel','done']"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='div_rbs']" position="after">
+                <label for="venous_pressure"/>
+                <div class="o_row">
+                    <field name="venous_pressure" readonly="state in ['cancel','done']"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='bmi']" position="after">
+                <field name="observation"/>
+            </xpath>
+
+            <xpath expr="//page[@name='info']" position="after">
+                <page name="nephrology" string="Néphrologie" invisible="department_type!='nephrology'" groups="acs_hms_nephrology.group_hms_nephrology_user">
+                    <div class="o_row">
+                        <field name="show_etiology" nolabel="1" class="oe_inline"/>
+                        <label for="show_etiology" string="Étiologie de l'insuffisance rénale chronique"/>
+                    </div>
+                    <field name="etiology_of_chronic_renal_failure" nolabel="1" invisible="not show_etiology" placeholder="Étiologie de l'insuffisance rénale chronique..."/>
+
+                    <div class="o_row">
+                        <field name="show_way_of_arrival" nolabel="1" class="oe_inline"/>
+                        <label for="show_way_of_arrival" string="Voie d'arrivée"/>
+                    </div>
+                    <field name="way_of_arrival" nolabel="1" invisible="not show_way_of_arrival" placeholder="Voie d'arrivée..."/>
+
+                    <div class="o_row">
+                        <field name="show_adverse_reactions" nolabel="1" class="oe_inline"/>
+                        <label for="show_adverse_reactions" string="Réactions indésirables"/>
+                    </div>
+                    <field name="adverse_reactions" nolabel="1" invisible="not show_adverse_reactions" placeholder="Réactions indésirables..."/>
+
+                    <div class="o_row">
+                        <field name="show_transplant_waiting_list" nolabel="1" class="oe_inline"/>
+                        <label for="show_transplant_waiting_list" string="Liste d'attente de transplantation"/>
+                    </div>
+                    <field name="transplant_waiting_list" nolabel="1" invisible="not show_transplant_waiting_list" placeholder="Liste d'attente de transplantation..."/>
+
+                    <div class="o_row">
+                        <field name="show_toxic_habits" nolabel="1" class="oe_inline"/>
+                        <label for="show_toxic_habits" string="Habitudes toxiques"/>
+                    </div>
+                    <field name="toxic_habits" nolabel="1" invisible="not show_toxic_habits" placeholder="Habitudes toxiques..."/>
+
+                    <div class="o_row">
+                        <field name="show_trauma" nolabel="1" class="oe_inline"/>
+                        <label for="show_trauma" string="Traumatisme"/>
+                    </div>
+                    <field name="trauma" nolabel="1" invisible="not show_trauma" placeholder="Traumatisme..."/>
+
+                    <div class="o_row">
+                        <field name="show_transfusions" nolabel="1" class="oe_inline"/>
+                        <label for="show_transfusions" string="Transfusions"/>
+                    </div>
+                    <field name="transfusions" nolabel="1" invisible="not show_transfusions" placeholder="Transfusions..."/>
+
+                    <div class="o_row">
+                        <field name="show_cesarean_operations" nolabel="1" class="oe_inline"/>
+                        <label for="show_cesarean_operations" string="Opérations césariennes"/>
+                    </div>
+                    <field name="cesarean_operations" nolabel="1" invisible="not show_cesarean_operations" placeholder="Opérations césariennes..."/>
+
+                    <div class="o_row">
+                        <field name="show_vaccinations" nolabel="1" class="oe_inline"/>
+                        <label for="show_vaccinations" string="Vaccinations"/>
+                    </div>
+                    <field name="vaccinations" nolabel="1" invisible="not show_vaccinations" placeholder="Vaccinations..."/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_acs_patient_evaluation_form" model="ir.ui.view">
+        <field name="name">acs.patient.evaluation.form</field>
+        <field name="model">acs.patient.evaluation</field>
+        <field name="inherit_id" ref="acs_hms.view_acs_patient_evaluation_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='div_rr']" position="after">
+                <label for="blood_flow"/>
+                <div class="o_row">
+                    <field name="blood_flow" readonly="state in ['cancel','done']"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='div_rbs']" position="after">
+                <label for="venous_pressure"/>
+                <div class="o_row">
+                    <field name="venous_pressure" readonly="state in ['cancel','done']"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_acs_patient_procedure_form" model="ir.ui.view">
+        <field name="name">acs.patient.procedure.form</field>
+        <field name="model">acs.patient.procedure</field>
+        <field name="inherit_id" ref="acs_hms.view_acs_patient_procedure_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='patient_id']" position="after">
+                <field name="blood_group" invisible="department_type!='nephrology'"/>
+            </xpath>
+
+            <xpath expr="//field[@name='notes']" position="after">
+                <field name="allergy_ids" widget="many2many_tags" readonly="1" invisible="department_type!='nephrology'" string="Allergies"/>
+            </xpath>
+
+            <xpath expr="//notebook/page[@name='consumed_products']" position="before">
+                <page name="nephrology" string="Néphrologie" invisible="department_type!='nephrology'" groups="acs_hms_nephrology.group_hms_nephrology_user">
+                    <group string="Régime d'Hémodialyse" invisible="department_type!='nephrology'">
+                        <group>
+                            <field name="type_of_vascular_access"/>
+                            <field name="dialyzer_type"/>
+                            <field name="dialysis_number"/>
+                            <field name="aiguille_arterielle"/>
+                            <field name="aiguille_veineuse"/>
+                            <field name="ponction"/>
+                        </group>
+
+                        <group>
+                            <field name="nephrology_schedule_ids" widget="many2many_tags"/>
+                            <field name="last_ktv"/>
+                            <field name="last_ktv_sp"/>
+                            <field name="last_ktv_dp"/>
+                            <field name="last_pru_percent"/>
+                            <field name="type_of_dialysate"/>
+                        </group>
+                    </group>
+
+                    <!-- Section Poids - Ordre demandé -->
+                    <group string="Poids" invisible="department_type!='nephrology'">
+                        <group>
+                            <field name="dry_weight"/>
+                            <field name="arrival_weight"/>
+                        </group>
+                        <group>
+                            <field name="interdialysis_increase"/>
+                            <field name="uf_habituelle"/>
+                            <field name="uf_max"/>
+                        </group>
+                    </group>
+
+                    <!-- Débits -->
+                    <group string="Débits" invisible="department_type!='nephrology'">
+                        <group>
+                            <field name="blood_flow"/>
+                            <field name="anticoagulation"/>
+                            <field name="glc"/>
+                        </group>
+                        <group>
+                            <field name="dialysis_fluid_flow"/>
+                            <field name="restitution"/>
+                            <field name="bicarbonate"/>
+                        </group>
+                    </group>
+
+                    <!-- Autres paramètres -->
+                    <group invisible="department_type!='nephrology'">
+                        <group>
+                            <field name="erythropoietin_units"/>
+                            <field name="potassium"/>
+                        </group>
+
+                        <group>
+                            <field name="sodium"/>
+                            <field name="calcium"/>
+                        </group>
+                    </group>
+
+                    <separator string="Hémoculture" invisible="department_type!='nephrology'"/>
+                    <field name="blood_culture" placeholder="Hémoculture..." invisible="department_type!='nephrology'"/>
+
+                    <separator string="Vaccination" invisible="department_type!='nephrology'"/>
+                    <field name="vaccination" placeholder="Vaccination..." invisible="department_type!='nephrology'"/>
+
+                    <separator string="Traitement En Cours" invisible="department_type!='nephrology'"/>
+                    <field name="interdialysis_medication" placeholder="Traitement en cours..." invisible="department_type!='nephrology'"/>
+
+                    <separator string="Transfusion" invisible="department_type!='nephrology'"/>
+                    <field name="transfusion" placeholder="Transfusion..." invisible="department_type!='nephrology'"/>
+
+                    <!-- Signes Vitaux - 6 mesures pendant l'hémodialyse -->
+                    <separator string="Signes Vitaux (pendant l'hémodialyse)" invisible="department_type!='nephrology'"/>
+                    <field name="vital_sign_ids" invisible="department_type!='nephrology'" nolabel="1">
+                        <list string="Signes Vitaux" editable="bottom">
+                            <field name="measurement_time"/>
+                            <field name="blood_pressure"/>
+                            <field name="heart_rate"/>
+                            <field name="respiratory_rate"/>
+                            <field name="spo2" optional="show"/>
+                            <field name="temperature" optional="show"/>
+                            <field name="glycemia" optional="show"/>
+                            <field name="is_hypotension" readonly="1"
+                                   decoration-danger="is_hypotension"/>
+                            <field name="notes"/>
+                        </list>
+                        <form string="Signe Vital">
+                            <group>
+                                <group>
+                                    <field name="measurement_time"/>
+                                    <field name="blood_pressure"/>
+                                    <field name="spo2"/>
+                                    <field name="temperature"/>
+                                </group>
+                                <group>
+                                    <field name="heart_rate"/>
+                                    <field name="respiratory_rate"/>
+                                    <field name="glycemia"/>
+                                    <field name="is_hypotension" readonly="1"/>
+                                </group>
+                            </group>
+                            <separator string="Notes"/>
+                            <field name="notes" placeholder="Notes..."/>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Procedure Group Line Form View -->
+    <record id="view_procedure_group_line_form_nephrology" model="ir.ui.view">
+        <field name="name">procedure.group.line.form.nephrology</field>
+        <field name="model">procedure.group.line</field>
+        <field name="inherit_id" ref="acs_hms.view_procedure_group_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='procedure_time']" position="after">
+                <field name="nephrology_schedule_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Procedure Group Form View - List -->
+    <record id="view_procedure_group_form_nephrology" model="ir.ui.view">
+        <field name="name">procedure.group.form.nephrology</field>
+        <field name="model">procedure.group</field>
+        <field name="inherit_id" ref="acs_hms.view_procedure_group_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']/list/field[@name='product_id']" position="after">
+                <field name="nephrology_schedule_id"/>
+            </xpath>
+        </field>
+    </record>
+    <!-- Champs pré/post séance + KT/V -->
+    <record id="view_acs_patient_procedure_ktv_inherit" model="ir.ui.view">
+        <field name="name">acs.patient.procedure.ktv.form.inherit</field>
+        <field name="model">acs.patient.procedure</field>
+        <field name="inherit_id" ref="acs_hms_nephrology.view_acs_patient_procedure_form"/>
+        <field name="arch" type="xml">
+            <!-- Statut arrivée — avant le bloc poids -->
+            <field name="arrival_weight" position="before">
+                <group string="Statut à l'arrivée">
+                    <field name="arrival_status"/>
+                    <field name="pre_dialysis_bp"/>
+                    <field name="pre_dialysis_temp"/>
+                    <field name="parameter_change_reason"/>
+                </group>
+            </field>
+            <!-- Poids sortie et UF réelle — après le bloc UF -->
+            <field name="uf_max" position="after">
+                <separator string="Fin de séance"/>
+                <group>
+                    <group>
+                        <field name="departure_weight"/>
+                        <field name="actual_uf"/>
+                        <field name="actual_duration"/>
+                        <field name="global_tolerance"/>
+                    </group>
+                    <group>
+                        <field name="urea_pre"/>
+                        <field name="urea_post"/>
+                        <field name="urr_calculated"/>
+                        <field name="ktv_calculated"
+                               decoration-success="ktv_status == 'adequate'"
+                               decoration-danger="ktv_status == 'insufficient'"/>
+                        <field name="ktv_status" widget="badge"
+                               decoration-success="ktv_status == 'adequate'"
+                               decoration-danger="ktv_status == 'insufficient'"/>
+                    </group>
+                </group>
+                <field name="end_notes" placeholder="Notes de fin de séance..."/>
+            </field>
+        </field>
+    </record>
+</odoo>

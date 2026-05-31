@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Settings View -->
+    <record id="res_config_settings_view_form_inherit_whatsapp" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.whatsapp</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="acs_hms_base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='other_configurations_setting_container']" position="after">
+                <block title="WhatsApp Integration" name="whatsapp_integration_setting_container">
+                    <setting string="WhatsApp Integration" help="Enable WhatsApp integration to send prescriptions and documents via WhatsApp">
+                        <field name="whatsapp_enabled"/>
+                    </setting>
+
+                    <setting string="API URL" invisible="not whatsapp_enabled">
+                        <field name="whatsapp_api_url" placeholder="https://www.wasenderapi.com/api/send-message" class="o_light_label"/>
+                    </setting>
+
+                    <setting string="API Key" help="Your WasenderApi Bearer token" invisible="not whatsapp_enabled">
+                        <field name="whatsapp_api_key" password="True" placeholder="Enter your WasenderApi Bearer Token" class="o_light_label"/>
+                        <div class="text-muted mt8">
+                            Get your API key from <a href="https://www.wasenderapi.com" target="_blank">WasenderApi Dashboard</a>
+                        </div>
+                    </setting>
+
+                    <setting string="Default Prescription Message" help="Default message to send with prescriptions" invisible="not whatsapp_enabled">
+                        <field name="whatsapp_default_message" placeholder="Bonjour, veuillez trouver ci-joint votre ordonnance." class="o_light_label"/>
+                    </setting>
+
+                    <setting string="Default Invoice Message" help="Default message to send with invoices" invisible="not whatsapp_enabled">
+                        <field name="whatsapp_default_invoice_message" placeholder="Bonjour, veuillez trouver ci-joint votre facture." class="o_light_label"/>
+                    </setting>
+
+                    <setting string="Default Appointment Reminder Message" help="Default message for appointment reminders" invisible="not whatsapp_enabled">
+                        <field name="whatsapp_default_appointment_reminder_message" placeholder="Bonjour, ceci est un rappel pour votre rendez-vous." class="o_light_label"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

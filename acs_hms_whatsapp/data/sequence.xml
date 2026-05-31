@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Sequence for WhatsApp Messages -->
+    <record id="seq_whatsapp_message" model="ir.sequence">
+        <field name="name">WhatsApp Message</field>
+        <field name="code">whatsapp.message</field>
+        <field name="prefix">WA</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+        <field name="number_increment">1</field>
+    </record>
+</odoo>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- WhatsApp Compose Message Form View -->
+    <record id="whatsapp_compose_message_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.compose.message.view.form</field>
+        <field name="model">whatsapp.compose.message</field>
+        <field name="arch" type="xml">
+            <form string="Send via WhatsApp">
+                <sheet>
+                    <div class="alert alert-info text-center" role="alert">
+                        <i class="fa fa-whatsapp fa-3x mb-2"/>
+                        <h4>Send Prescription via WhatsApp</h4>
+                    </div>
+                    <group>
+                        <group string="Prescription Details">
+                            <field name="prescription_id" readonly="1"/>
+                            <field name="patient_id" readonly="1"/>
+                        </group>
+                        <group string="Recipient">
+                            <field name="phone" placeholder="+221771234567" required="1"/>
+                            <div class="text-muted">
+                                Enter phone number in international format (e.g., +221771234567)
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Message Settings">
+                            <field name="send_as" widget="radio"/>
+                        </group>
+                    </group>
+                    <group string="Message">
+                        <field name="message_text" widget="text" placeholder="Enter your message here..."/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_send_and_close" string="Send" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- WhatsApp Compose Message Action -->
+    <record id="whatsapp_compose_message_action" model="ir.actions.act_window">
+        <field name="name">Send via WhatsApp</field>
+        <field name="res_model">whatsapp.compose.message</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

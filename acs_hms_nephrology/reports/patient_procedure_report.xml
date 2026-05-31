@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_acs_procedures_document_inherit" inherit_id="acs_hms.report_acs_procedures_document">
+        <xpath expr="//table" position="replace">
+            <table class="table table-sm o_main_table mt16">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Lot/Serial Number</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="category_line_data" t-value="doc.acs_consumable_line_data()"/>
+                    <t t-foreach="category_line_data.items()" t-as="category_data">
+                        <tr>
+                            <td colspan="6">
+                                <strong><span t-esc="category_data[0].name"/></strong>
+                            </td>
+                        </tr>
+                        <t t-foreach="category_data[1]" t-as="line" t-index="line_index">
+                            <tr>
+                                <td>
+                                    <span t-esc="line_index + 1"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.product_id.name"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.qty"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.lot_id.name"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.note"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+
+</odoo>

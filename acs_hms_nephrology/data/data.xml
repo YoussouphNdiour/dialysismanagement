@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="acs_nephrology_department" model="hr.department">
+            <field name="name">Nephrology</field>
+            <field name="patient_department">True</field>
+            <field name="department_type">nephrology</field>
+            <field name="image" type="base64" file="acs_hms_nephrology/static/description/icon.png"/>
+        </record>
+
+        <record id="base.user_root" model="res.users">
+            <field name="department_ids" eval="[Command.link(ref('acs_hms_nephrology.acs_nephrology_department'))]"/>
+        </record>
+
+        <record id="base.user_admin" model="res.users">
+            <field name="department_ids" eval="[Command.link(ref('acs_hms_nephrology.acs_nephrology_department'))]"/>
+        </record>
+
+        <!-- Séquences pour Imagerie Médicale -->
+        <record id="seq_acs_nephro_echography" model="ir.sequence">
+            <field name="name">Échographie</field>
+            <field name="code">acs.nephro.echography</field>
+            <field name="prefix">ECHO/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_acs_nephro_radio" model="ir.sequence">
+            <field name="name">Radiographie</field>
+            <field name="code">acs.nephro.radio</field>
+            <field name="prefix">RADIO/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_acs_nephro_tdm" model="ir.sequence">
+            <field name="name">TDM</field>
+            <field name="code">acs.nephro.tdm</field>
+            <field name="prefix">TDM/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_acs_nephro_irm" model="ir.sequence">
+            <field name="name">IRM</field>
+            <field name="code">acs.nephro.irm</field>
+            <field name="prefix">IRM/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

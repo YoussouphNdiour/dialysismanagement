@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="patient_information_template" inherit_id="acs_hms_base.patient_information_template">
+        <xpath expr="//tr[@name='patient_gov_phone_tr']" position="after">
+            <tr name="nephrology_app_date_blood" t-if="nephrology">
+                <td name="nephrology_date">
+                    <strong class="text-center ms-2">Appointment Date:</strong> <span t-field="nephrology.date"/>
+                </td>
+                <td name="nephrology_blood">
+                    <strong class="text-center">Blood Group:</strong> <span t-field="nephrology.blood_group"/>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
+    <template id="report_acs_nephrology_document">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <h4 class="mt16 row mt8">
+                        <div class="mt64 col-auto mw-50 mb-1"> 
+                            <strong class="col-12 text-center">MEDICAL REPORT</strong>
+                        </div>
+                    </h4>
+
+                    <div style="border: 1px solid black;"/>
+                    <br/>
+                    <t t-call="acs_hms_base.patient_information_template">
+                        <t t-set="patient" t-value="doc.patient_id"/>
+                        <t t-set="nephrology" t-value="doc"/>
+                    </t>
+                    <br/>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Blood Pressure</th>
+                                <th>Pulse</th>
+                                <th>Blood Flow</th>
+                                <th>Venous Pressure</th>
+                                <th>Temperature</th>
+                                <th>Observation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><t t-esc="doc.date"/></td>
+                                <td><t t-esc="doc.systolic_bp"/>/<t t-esc="doc.diastolic_bp"/></td>
+                                <td><t t-esc="doc.hr"/></td>
+                                <td><t t-esc="doc.blood_flow"/></td>
+                                <td><t t-esc="doc.venous_pressure"/></td>
+                                <td><t t-esc="doc.temp"/></td>
+                                <td><t t-esc="doc.observation"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_acs_nephrology">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="acs_hms_nephrology.report_acs_nephrology_document" t-lang="doc.patient_id.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="acs_nephrology_report_action" model="ir.actions.report">
+        <field name="name">Nephrology Report</field>
+        <field name="model">hms.appointment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">acs_hms_nephrology.report_acs_nephrology</field>
+        <field name="report_file">acs_hms_nephrology.report_acs_nephrology</field>
+        <field name="print_report_name">(object.name or 'Nephrology').replace('/','_')</field>
+        <field name="binding_model_id" ref="acs_hms.model_hms_appointment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

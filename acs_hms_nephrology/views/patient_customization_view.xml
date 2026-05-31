@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Customisation de la vue patient selon les demandes -->
+    <record id="view_patient_form_customization" model="ir.ui.view">
+        <field name="name">hms.patient.form.customization</field>
+        <field name="model">hms.patient</field>
+        <field name="inherit_id" ref="acs_hms.view_patient_form"/>
+        <field name="arch" type="xml">
+
+            <!-- 1. Déplacer le groupe sanguin vers l'onglet Biologie -->
+            <!-- D'abord le retirer de "Other Info" -->
+            <xpath expr="//page[@name='hospital_info']//field[@name='blood_group']" position="replace"/>
+
+            <!-- Puis l'ajouter dans l'onglet Biologie -->
+            <xpath expr="//page[@name='biologie']//div[1]" position="after">
+                <group>
+                    <group>
+                        <field name="blood_group"/>
+                    </group>
+                </group>
+                <separator/>
+            </xpath>
+
+            <!-- 2. Ajouter "Soins de néphrologie" juste après "Médecin de soins primaires" -->
+            <xpath expr="//field[@name='primary_physician_id']" position="after">
+                <field name="nephrology_care" string="Soins de néphrologie"/>
+            </xpath>
+
+            <!-- 3. Ajouter un bouton "Ajouter une nouvelle évaluation" dans Examens Physiques -->
+            <xpath expr="//page[@name='clinical_ass']//div[1]" position="after">
+                <div class="mb-3">
+                    <button name="action_evaluation"
+                            type="object"
+                            string="Ajouter une nouvelle évaluation"
+                            class="btn-primary"
+                            icon="fa-plus"/>
+                </div>
+            </xpath>
+
+            <!-- 4. Remplacer le contenu de "Other Info" par les informations diagnostiques (similaire à Néphropathie Initiale) -->
+            <xpath expr="//page[@name='hospital_info']" position="attributes">
+                <attribute name="string">Antécédants</attribute>
+            </xpath>
+
+            <!-- Vider d'abord la page "Other Info" et la remplacer par le contenu similaire à Néphropathie Initiale -->
+            <xpath expr="//page[@name='hospital_info']/group[1]" position="replace">
+                <!-- <group>
+                    <group>
+                        <field name="main_complaint" placeholder="Plainte Principale"/>
+                    </group>
+                </group>
+
+                <separator string="Histoire de la maladie" colspan="4"/>
+                <group>
+                    <field name="disease_history" nolabel="1" placeholder="Histoire de la maladie"/>
+                </group> -->
+
+                <separator string="Antécédants personnels" colspan="4"/>
+                <group>
+                    <group>
+                        <label for="medical_antecedent" string="Médicaux"/>
+                        <field name="medical_antecedent" nolabel="1" placeholder="Maladie"/>
+                        <field name="surgical_antecedent_ids" widget="many2many_tags" options="{'no_open': True, 'no_create_edit': False}"/>
+                    </group>
+                    <group string="GO (Gynéco-Obstétrique)">
+                        <field name="menarche_date"/>
+                        <field name="ddr_date"/>
+                        <field name="grossesse"/>
+                        <field name="parite"/>
+                        <field name="avortement"/>
+                        <field name="deces"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="lifestyle_ids" widget="many2many_tags"/>
+                </group>
+
+                <separator string="Allergies" colspan="4"/>
+                <group>
+                    <field name="allergy_ids" widget="many2many_tags"/>
+                </group>
+
+                <separator string="Antécédants Familiaux (Ascendants, Descendants, Collatéraux)" colspan="4"/>
+                <group string="Ascendants">
+                    <field name="family_ascendant_ids" nolabel="1" colspan="4">
+                        <list editable="bottom">
+                            <field name="relation_type_id" options="{'no_open': True, 'no_create_edit': False}"/>
+                            <field name="disease_id"/>
+                            <field name="notes"/>
+                        </list>
+                    </field>
+                </group>
+                <group string="Collatéraux">
+                    <field name="family_collateral_ids" nolabel="1" colspan="4">
+                        <list editable="bottom">
+                            <field name="relation_type_id" options="{'no_open': True, 'no_create_edit': False}"/>
+                            <field name="disease_id"/>
+                            <field name="notes"/>
+                        </list>
+                    </field>
+                </group>
+                <group string="Descendants">
+                    <field name="family_descendant_ids" nolabel="1" colspan="4">
+                        <list editable="bottom">
+                            <field name="relation_type_id" options="{'no_open': True, 'no_create_edit': False}"/>
+                            <field name="disease_id"/>
+                            <field name="notes"/>
+                        </list>
+                    </field>
+                </group>
+
+                <!-- Garder les informations de facturation et autres -->
+                <separator string="Facturation et Accès"/>
+                <!-- <group>
+                    <group string="Invoicing">
+                        <field name="property_product_pricelist" groups="product.group_product_pricelist" options="{'no_open':True,'no_create': True}"/>
+                        <field name="property_account_position_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="partner_id" groups="base.group_no_one" required="0" readonly="1"/>
+                        <field name="company_id" groups="base.group_multi_company"  options="{'no_create': True}"/>
+                    </group>
+                    <group name="death_details" string="Death">
+                        <field name="date_of_death" force_save="True"/>
+                    </group>
+                </group> -->
+                <!-- <group>
+                    <group name="corporate_tieup" string="Corporate Tie-up">
+                        <field name="is_corpo_tieup"/>
+                        <field name="corpo_company_id" invisible="not is_corpo_tieup" required="is_corpo_tieup" context="{'default_is_company':True}"/>
+                        <field name="emp_code" invisible="not is_corpo_tieup" required="is_corpo_tieup"/>
+                    </group>
+                </group> -->
+            </xpath>
+
+            <!-- Retirer le second group de "Other Info" qui contient le Corporate Tie-up (déjà déplacé) -->
+            <xpath expr="//page[@name='hospital_info']/group[2]" position="replace"/>
+
+            <!-- 5. Rendre l'onglet Imagerie visible partout (enlever la condition invisible) -->
+            <xpath expr="//page[@name='nephrology_imaging']" position="attributes">
+                <attribute name="invisible"></attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Historique du Poids Sec dans l'onglet Néphropathie Initiale -->
+    <record id="view_patient_form_dry_weight_history" model="ir.ui.view">
+        <field name="name">hms.patient.form.dry.weight.history</field>
+        <field name="model">hms.patient</field>
+        <field name="inherit_id" ref="acs_hms_nephrology.view_patient_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='nephrology_history']//field[@name='nephro_fav_location_id']/.." position="after">
+                <separator string="Historique du Poids Sec"/>
+                <field name="dry_weight_history_ids" nolabel="1">
+                    <list editable="bottom">
+                        <field name="date"/>
+                        <field name="weight"/>
+                        <field name="changed_by"/>
+                        <field name="reason"/>
+                    </list>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

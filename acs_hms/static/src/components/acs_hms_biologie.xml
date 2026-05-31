@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="acs_hms.AcsHmsBiologieChart">
+        <div class="acs_hms_graph_control">
+            <div class="hms-graph-header">
+                <div class="row">
+                    <div class="ms-2 btn-group graph-filter-button col-12 d-flex flex-wrap flex-md-nowrap" role="group" aria-label="Filtres">
+                        <button t-att-class="state.period === 'Today' ? 'graph-filter-btn active' : 'graph-filter-btn'"
+                                t-on-click="() => { this.state.period = 'Today'; this.acsOnChangePeriod(); }"
+                                t-att-style="'background-color: ' + state.biologieChartColor + ';'">
+                            <span>Aujourd'hui</span>
+                        </button>
+                        <button t-att-class="state.period === 'Week' ? 'graph-filter-btn active' : 'graph-filter-btn'"
+                                t-on-click="() => { this.state.period = 'Week'; this.acsOnChangePeriod(); }"
+                                t-att-style="'background-color: ' + state.biologieChartColor + ';'">
+                            <span>Semaine</span>
+                        </button>
+                        <button t-att-class="state.period === 'Month' ? 'graph-filter-btn active' : 'graph-filter-btn'"
+                                t-on-click="() => { this.state.period = 'Month'; this.acsOnChangePeriod(); }"
+                                t-att-style="'background-color: ' + state.biologieChartColor + ';'">
+                            <span>Mois</span>
+                        </button>
+                        <button t-att-class="state.period === 'Year' ? 'graph-filter-btn active' : 'graph-filter-btn'"
+                                t-on-click="() => { this.state.period = 'Year'; this.acsOnChangePeriod(); }"
+                                t-att-style="'background-color: ' + state.biologieChartColor + ';'">
+                            <span>Année</span>
+                        </button>
+                        <button t-att-class="state.period === 'Till_Now' ? 'graph-filter-btn active' : 'graph-filter-btn'"
+                                t-on-click="() => { this.state.period = 'Till_Now'; this.acsOnChangePeriod(); }"
+                                t-att-style="'background-color: ' + state.biologieChartColor + ';'">
+                            <span>Depuis le début</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="hms-graph-content">
+                <div class="hms-graph-main-content">
+                    <div class="hms-graph-section">
+                        <div class="row">
+                            <!-- Hématologie -->
+                            <div class="col-12"><h4 class="mt-3 mb-3 text-primary">Hématologie</h4></div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">GB (Globules Blancs)</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsGBChartContainer" id='acsGBChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">HB (Hémoglobine)</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsHBChartContainer" id='acsHBChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">PLT (Plaquettes)</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsPLTChartContainer" id='acsPLTChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">CRP</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsCRPChartContainer" id='acsCRPChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fonction Rénale -->
+                            <div class="col-12"><h4 class="mt-4 mb-3 text-primary">Fonction Rénale</h4></div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">Urée</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsUreeChartContainer" id='acsUreeChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">Créatinine</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsCreatChartContainer" id='acsCreatChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">DFG (MDRD)</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsDFGChartContainer" id='acsDFGChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Électrolytes -->
+                            <div class="col-12"><h4 class="mt-4 mb-3 text-primary">Électrolytes</h4></div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">Sodium</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsSodiumChartContainer" id='acsSodiumChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">Potassium</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsPotassiumChartContainer" id='acsPotassiumChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bilan Lipidique -->
+                            <div class="col-12"><h4 class="mt-4 mb-3 text-primary">Bilan Lipidique</h4></div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">HDL</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsHDLChartContainer" id='acsHDLChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">LDL</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsLDLChartContainer" id='acsLDLChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bilan Hépatique -->
+                            <div class="col-12"><h4 class="mt-4 mb-3 text-primary">Bilan Hépatique</h4></div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">ALAT</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsALATChartContainer" id='acsALATChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">ASAT</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsASATChartContainer" id='acsASATChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Minéraux et Vitamines -->
+                            <div class="col-12"><h4 class="mt-4 mb-3 text-primary">Minéraux et Vitamines</h4></div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">Calcium</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsCalciumChartContainer" id='acsCalciumChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="hms-graph-card">
+                                    <div class="hms-graph-chart-header" t-att-style="'background-color: ' + state.biologieChartColor + '; opacity: 0.9;'">
+                                        <span class="hms-chart-header-text">PTHi</span>
+                                    </div>
+                                    <div class="hms-graph-chart-body">
+                                        <div t-ref="acsPTHiChartContainer" id='acsPTHiChartContainer' style="width: 100%; height: 300px;padding:10px"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

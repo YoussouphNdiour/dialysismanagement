@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Ajouter les boutons dans la vue Procédure -->
+    <record id="view_acs_patient_procedure_form_nephrology_appointments" model="ir.ui.view">
+        <field name="name">acs.patient.procedure.form.nephrology.appointments</field>
+        <field name="model">acs.patient.procedure</field>
+        <field name="inherit_id" ref="acs_hms.view_acs_patient_procedure_form"/>
+        <field name="arch" type="xml">
+            <!-- Ajouter les boutons dans le button_box -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_appointments"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-calendar"
+                        invisible="generated_appointments_count == 0">
+                    <field name="generated_appointments_count" widget="statinfo" string="Rendez-vous"/>
+                </button>
+            </xpath>
+
+            <!-- Ajouter les boutons dans le header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_create_appointment_from_schedule"
+                        string="Créer RDV depuis planning"
+                        type="object"
+                        class="btn-primary"
+                        invisible="appointment_id or not nephrology_schedule_ids"
+                        help="Créer un rendez-vous automatiquement basé sur le planning de néphrologie"/>
+
+                <button name="action_generate_recurring_appointments"
+                        string="Générer RDV récurrents"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not nephrology_schedule_ids"
+                        help="Générer plusieurs rendez-vous récurrents selon le planning"/>
+            </xpath>
+
+            <!-- Ajouter le champ appointment_id dans le formulaire -->
+            <xpath expr="//field[@name='nephrology_schedule_ids']" position="after">
+                <field name="appointment_id" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Wizard pour générer les rendez-vous récurrents -->
+    <record id="view_nephrology_appointment_generator_form" model="ir.ui.view">
+        <field name="name">nephrology.appointment.generator.form</field>
+        <field name="model">nephrology.appointment.generator</field>
+        <field name="arch" type="xml">
+            <form string="Générer des rendez-vous récurrents">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="procedure_id" readonly="1"/>
+                            <field name="patient_id" readonly="1"/>
+                            <field name="schedule_id"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+
+                    <group string="Informations du rendez-vous">
+                        <group>
+                            <field name="physician_id"/>
+                            <field name="department_id"/>
+                        </group>
+                        <group>
+                            <field name="product_id"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <div class="alert alert-info" role="alert">
+                            <p>
+                                <strong>Aperçu :</strong>
+                                <field name="appointment_count_preview" readonly="1"/>
+                                rendez-vous seront créés entre
+                                <field name="start_date" readonly="1" nolabel="1"/>
+                                et
+                                <field name="end_date" readonly="1" nolabel="1"/>
+                            </p>
+                            <p>
+                                Les rendez-vous seront créés selon les jours définis dans le planning :
+                                <field name="schedule_id" readonly="1" nolabel="1"/>
+                            </p>
+                        </div>
+                    </group>
+                </sheet>
+
+                <footer>
+                    <button name="action_generate_appointments"
+                            string="Générer les rendez-vous"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action pour le wizard -->
+    <record id="action_nephrology_appointment_generator" model="ir.actions.act_window">
+        <field name="name">Générer des rendez-vous récurrents</field>
+        <field name="res_model">nephrology.appointment.generator</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

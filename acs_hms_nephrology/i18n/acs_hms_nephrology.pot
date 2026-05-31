@@ -1,0 +1,749 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* acs_hms_nephrology
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0-20250115\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-04-08 14:58+0000\n"
+"PO-Revision-Date: 2025-04-08 14:58+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.report,print_report_name:acs_hms_nephrology.acs_nephrology_report_action
+msgid "(object.name or 'Nephrology').replace('/','_')"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid ""
+"<br/>\n"
+"                            <strong>Age:-</strong>"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid ""
+"<br/>\n"
+"                            <strong>Appointment Date:-</strong>"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid ""
+"<br/>\n"
+"                            <strong>Blood Group:-</strong>"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid "<strong class=\"col-12 text-center\">MEDICAL REPORT</strong>"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid "<strong>Patient:-</strong>"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid "<strong>Sex:-</strong>"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,help:acs_hms_nephrology.field_acs_patient_procedure__dialyzer_type
+msgid "A dialyser is also known as an artificial kidney"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__actual_treatment
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Actual Treatment"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Actual Treatment..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__adverse_reactions
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Adverse Reactions"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Adverse Reactions..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.act_window,name:acs_hms_nephrology.action_appointment
+#: model:ir.model,name:acs_hms_nephrology.model_hms_appointment
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_acs_appointment
+msgid "Appointment"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__bicarbonate
+msgid "Bicarbonate"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__blood_culture
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Blood Culture"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Blood Culture..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_evaluation__blood_flow
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__blood_flow
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__blood_flow
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Blood Flow"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Blood Flow..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__blood_group
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__blood_group
+msgid "Blood Group"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid "Blood Pressure"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__calcium
+msgid "Ca"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__cesarean_operations
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Cesarean Operations"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Cesarean Operations..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_treatment
+msgid "Click to add a Nephrology Treatment."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_nephrology_procedure
+msgid "Click to add a Patient Nephrology Procedure."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_hms_patient
+msgid "Click to add a Patient."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_appointment
+msgid "Click to add an Nephrology Appointment."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_dialysate
+msgid "Click to add new Dialysate types."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_dialyer
+msgid "Click to add new Dialyzer types."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_nephrology_schedule
+msgid "Click to add new Nephrology Schedule."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_race
+msgid "Click to add new Race."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_vscular_types
+msgid "Click to add new Vascular Access Types."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialysate__code
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialyzer__code
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_nephrology_schedule__code
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_race__code
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_vascular_access__code
+msgid "Code"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_nephrology_config
+msgid "Configuration"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialysate__create_uid
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialyzer__create_uid
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_nephrology_schedule__create_uid
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_race__create_uid
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_vascular_access__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialysate__create_date
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialyzer__create_date
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_nephrology_schedule__create_date
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_race__create_date
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_vascular_access__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__debugging_treatment
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_patient__debugging_treatment_start_date
+msgid "Debugging Treatment Start Date"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model,name:acs_hms_nephrology.model_hr_department
+msgid "Department"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialysate__description
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialyzer__description
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_race__description
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_vascular_access__description
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_dialysate_form
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_dialyser_form
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_race_form
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_vascular_access_form
+msgid "Description"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model,name:acs_hms_nephrology.model_acs_dialysate
+msgid "Dialysate"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.act_window,name:acs_hms_nephrology.action_acs_dialysate
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_acs_dialysate
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_dialysate
+msgid "Dialysate Types"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__dialysis_number
+msgid "Dialysis #"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__dialysis_fluid_flow
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Dialysis Fluid Flow"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Dialysis Fluid Flow..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model,name:acs_hms_nephrology.model_acs_dialyzer
+msgid "Dialyzer"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__dialyzer_type
+msgid "Dialyzer Type"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.act_window,name:acs_hms_nephrology.action_acs_dialyer
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_acs_dialyer
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_dialyser
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_vascular_access
+msgid "Dialyzer Types"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialysate__display_name
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialyzer__display_name
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_nephrology_schedule__display_name
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_race__display_name
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_vascular_access__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__dry_weight
+msgid "Dry Weight"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__erythropoietin_units
+msgid "Erythropoietin"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__etiology_of_chronic_renal_failure
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Etiology Of Chronic Renal Failure"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Etiology Of Chronic Renal Failure..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Hemodialysis Regimen"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__heparin_others
+msgid "Heparin (others)"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__heparinization
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Heparinization"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,help:acs_hms_nephrology.field_acs_patient_procedure__heparinization
+msgid ""
+"Heparinization refers to the administration of heparin, a commonly used "
+"anticoagulant, to prevent blood clotting during renal replacement therapy"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Heparinization..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hr_department__department_type
+msgid "Hospital Department"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_product_product__hospital_product_type
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_product_template__hospital_product_type
+msgid "Hospital Product Type"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialysate__id
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialyzer__id
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_nephrology_schedule__id
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_race__id
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_vascular_access__id
+msgid "ID"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__interdialysis_increase
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Interdialysis Increase"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Interdialysis Increase..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__interdialysis_medication
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Interdialysis Medication"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Interdialysis Medication..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__last_ktv
+msgid "Last KTV"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialysate__write_uid
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialyzer__write_uid
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_nephrology_schedule__write_uid
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_race__write_uid
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_vascular_access__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialysate__write_date
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialyzer__write_date
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_nephrology_schedule__write_date
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_race__write_date
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_vascular_access__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_procedures_document_inherit
+msgid "Lot/Serial Number"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__sodium
+msgid "Na"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialysate__name
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_dialyzer__name
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_nephrology_schedule__name
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_race__name
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_vascular_access__name
+msgid "Name"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:hr.department,name:acs_hms_nephrology.acs_nephrology_department
+msgid "Nefrología"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields.selection,name:acs_hms_nephrology.selection__hr_department__department_type__nephrology
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_acs_main_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Nephrology"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_patient__nephrology_care
+msgid "Nephrology Care"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.act_window,name:acs_hms_nephrology.action_nephrology_procedure
+msgid "Nephrology Procedure"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_acs_patient_procedure
+msgid "Nephrology Procedures"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields.selection,name:acs_hms_nephrology.selection__product_template__hospital_product_type__nephrology_procedure
+msgid "Nephrology Process"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.report,name:acs_hms_nephrology.acs_nephrology_report_action
+msgid "Nephrology Report"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.act_window,name:acs_hms_nephrology.action_acs_nephrology_schedule
+#: model:ir.model,name:acs_hms_nephrology.model_acs_nephrology_schedule
+msgid "Nephrology Schedule"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:res.groups,name:acs_hms_nephrology.group_hms_nephrology_user
+msgid "Nephrology User"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_dialyer
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_dialysate
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_hms_patient
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_nephrology_schedule
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_race
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_treatment
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_acs_vscular_types
+#: model_terms:ir.actions.act_window,help:acs_hms_nephrology.action_appointment
+msgid "No Record Found"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_procedures_document_inherit
+msgid "No."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_procedures_document_inherit
+msgid "Notes"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__observation
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid "Observation"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.act_window,name:acs_hms_nephrology.action_acs_hms_patient
+#: model:ir.model,name:acs_hms_nephrology.model_hms_patient
+msgid "Patient"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model,name:acs_hms_nephrology.model_acs_patient_evaluation
+msgid "Patient Evaluation"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model,name:acs_hms_nephrology.model_acs_patient_procedure
+msgid "Patient Procedure"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.act_window,name:acs_hms_nephrology.action_acs_nephrology_procedure
+msgid "Patient Procedures"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_acs_patient
+msgid "Patients"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_acs_nephrology_procedures
+msgid "Procedures"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model,name:acs_hms_nephrology.model_product_template
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_procedures_document_inherit
+msgid "Product"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid "Pulse"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_procedures_document_inherit
+msgid "Qty"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.act_window,name:acs_hms_nephrology.action_acs_race
+#: model:ir.model,name:acs_hms_nephrology.model_acs_race
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_acs_race
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_dialysate_form
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_dialyser_form
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_nephrology_schedule_form
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_race
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_race_form
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_vascular_access_form
+msgid "Race"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__nephrology_schedule_ids
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_acs_schedule
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.acs_hms_nephrology_schedule_list
+msgid "Schedule"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__show_adverse_reactions
+msgid "Show Adverse Reactions"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__show_cesarean_operations
+msgid "Show Cesarean Operations"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__show_etiology
+msgid "Show Etiology Of Chronic Renal Failure"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__show_toxic_habits
+msgid "Show Toxic Habits"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__show_transfusions
+msgid "Show Transfusions"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__show_transplant_waiting_list
+msgid "Show Transplant Waiting List"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__show_trauma
+msgid "Show Trauma"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__show_vaccinations
+msgid "Show Vaccinations"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__show_way_of_arrival
+msgid "Show Way Of Arrival"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid "Temperature"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid "Time"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__toxic_habits
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Toxic Habits"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Toxic Habits..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__transfusions
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Transfusions"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Transfusions..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__transplant_waiting_list
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Transplant Waiting List"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Transplant Waiting List..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__trauma
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Trauma"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Trauma..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.act_window,name:acs_hms_nephrology.action_acs_treatment
+msgid "Treatment"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_acs_treatment
+msgid "Treatments"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__type_of_dialysate
+msgid "Type Of Dialysate"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_procedure__type_of_vascular_access
+msgid "Type Of Vascular Access"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_acs_patient_procedure_form
+msgid "Units"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__vaccinations
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Vaccinations"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Vaccinations..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model,name:acs_hms_nephrology.model_acs_vascular_access
+msgid "Vascular Access"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.actions.act_window,name:acs_hms_nephrology.action_acs_vscular_types
+#: model:ir.ui.menu,name:acs_hms_nephrology.menu_vascular_types
+msgid "Vascular Access Types"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_acs_patient_evaluation__venous_pressure
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__venous_pressure
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.report_acs_nephrology_document
+msgid "Venous Pressure"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,field_description:acs_hms_nephrology.field_hms_appointment__way_of_arrival
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Way Of Arrival"
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model_terms:ir.ui.view,arch_db:acs_hms_nephrology.view_hms_appointment_form
+msgid "Way Of Arrival..."
+msgstr ""
+
+#. module: acs_hms_nephrology
+#: model:ir.model.fields,help:acs_hms_nephrology.field_acs_patient_procedure__interdialysis_medication
+msgid "occurring or carried out during hemodialysis"
+msgstr ""

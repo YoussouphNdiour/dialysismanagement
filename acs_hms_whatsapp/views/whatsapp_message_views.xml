@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- WhatsApp Message Tree View -->
+    <record id="whatsapp_message_view_tree" model="ir.ui.view">
+        <field name="name">whatsapp.message.view.tree</field>
+        <field name="model">whatsapp.message</field>
+        <field name="arch" type="xml">
+            <list string="WhatsApp Messages">
+                <field name="name"/>
+                <field name="create_date"/>
+                <field name="recipient_phone"/>
+                <field name="message_type"/>
+                <field name="state" decoration-success="state == 'sent'" decoration-danger="state == 'failed'" decoration-warning="state == 'sending'" widget="badge"/>
+                <field name="msg_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- WhatsApp Message Form View -->
+    <record id="whatsapp_message_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.message.view.form</field>
+        <field name="model">whatsapp.message</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp Message">
+                <header>
+                    <button name="action_send_message" string="Send" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_retry" string="Retry" type="object" class="oe_highlight" invisible="state != 'failed'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sending,sent"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- Add smart buttons here if needed -->
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Recipient">
+                            <field name="recipient_phone"/>
+                            <field name="message_type"/>
+                        </group>
+                        <group string="Status">
+                            <field name="msg_id" readonly="1"/>
+                            <field name="jid" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Message Content">
+                            <field name="message_text" widget="text"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Attachments">
+                            <field name="attachment_id" readonly="1"/>
+                            <field name="document_url" widget="url" readonly="1"/>
+                            <field name="image_url" widget="url" readonly="1"/>
+                            <field name="file_name" readonly="1"/>
+                        </group>
+                        <group string="Related Document">
+                            <field name="model" readonly="1"/>
+                            <field name="res_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Response" name="response" invisible="not response_data">
+                            <group>
+                                <field name="response_data" widget="text" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Error" name="error" invisible="not error_message">
+                            <group>
+                                <field name="error_message" widget="text" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- WhatsApp Message Action -->
+    <record id="whatsapp_message_action" model="ir.actions.act_window">
+        <field name="name">WhatsApp Messages</field>
+        <field name="res_model">whatsapp.message</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No WhatsApp messages yet
+            </p>
+            <p>
+                WhatsApp messages will appear here once you start sending prescriptions via WhatsApp.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_whatsapp_message"
+              name="WhatsApp Messages"
+              parent="acs_hms.main_menu_prescription"
+              action="whatsapp_message_action"
+              sequence="50"/>
+
+    <!-- Add WhatsApp button to Prescription Form View -->
+    <record id="prescription_order_view_form_inherit_whatsapp" model="ir.ui.view">
+        <field name="name">prescription.order.view.form.inherit.whatsapp</field>
+        <field name="model">prescription.order</field>
+        <field name="inherit_id" ref="acs_hms.view_hms_prescription_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_prescription_send']" position="after">
+                <button name="action_send_whatsapp"
+                        string="Send via WhatsApp"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'prescription'"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_whatsapp_messages"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-whatsapp"
+                        invisible="whatsapp_message_count == 0">
+                    <field name="whatsapp_message_count" widget="statinfo" string="WhatsApp"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

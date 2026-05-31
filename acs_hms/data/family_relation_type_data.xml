@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Ascendants -->
+        <record id="family_relation_type_pere" model="acs.family.relation.type">
+            <field name="name">Père</field>
+            <field name="category">ascendant</field>
+        </record>
+        <record id="family_relation_type_mere" model="acs.family.relation.type">
+            <field name="name">Mère</field>
+            <field name="category">ascendant</field>
+        </record>
+        <record id="family_relation_type_grand_pere_paternel" model="acs.family.relation.type">
+            <field name="name">Grand-père paternel</field>
+            <field name="category">ascendant</field>
+        </record>
+        <record id="family_relation_type_grand_mere_paternelle" model="acs.family.relation.type">
+            <field name="name">Grand-mère paternelle</field>
+            <field name="category">ascendant</field>
+        </record>
+        <record id="family_relation_type_grand_pere_maternel" model="acs.family.relation.type">
+            <field name="name">Grand-père maternel</field>
+            <field name="category">ascendant</field>
+        </record>
+        <record id="family_relation_type_grand_mere_maternelle" model="acs.family.relation.type">
+            <field name="name">Grand-mère maternelle</field>
+            <field name="category">ascendant</field>
+        </record>
+
+        <!-- Collatéraux -->
+        <record id="family_relation_type_frere" model="acs.family.relation.type">
+            <field name="name">Frère</field>
+            <field name="category">collateral</field>
+        </record>
+        <record id="family_relation_type_soeur" model="acs.family.relation.type">
+            <field name="name">Soeur</field>
+            <field name="category">collateral</field>
+        </record>
+        <record id="family_relation_type_oncle_paternel" model="acs.family.relation.type">
+            <field name="name">Oncle paternel</field>
+            <field name="category">collateral</field>
+        </record>
+        <record id="family_relation_type_tante_paternelle" model="acs.family.relation.type">
+            <field name="name">Tante paternelle</field>
+            <field name="category">collateral</field>
+        </record>
+        <record id="family_relation_type_oncle_maternel" model="acs.family.relation.type">
+            <field name="name">Oncle maternel</field>
+            <field name="category">collateral</field>
+        </record>
+        <record id="family_relation_type_tante_maternelle" model="acs.family.relation.type">
+            <field name="name">Tante maternelle</field>
+            <field name="category">collateral</field>
+        </record>
+
+        <!-- Descendants -->
+        <record id="family_relation_type_fils" model="acs.family.relation.type">
+            <field name="name">Fils</field>
+            <field name="category">descendant</field>
+        </record>
+        <record id="family_relation_type_fille" model="acs.family.relation.type">
+            <field name="name">Fille</field>
+            <field name="category">descendant</field>
+        </record>
+        <record id="family_relation_type_petit_fils" model="acs.family.relation.type">
+            <field name="name">Petit-fils</field>
+            <field name="category">descendant</field>
+        </record>
+        <record id="family_relation_type_petite_fille" model="acs.family.relation.type">
+            <field name="name">Petite-fille</field>
+            <field name="category">descendant</field>
+        </record>
+
+    </data>
+</odoo>

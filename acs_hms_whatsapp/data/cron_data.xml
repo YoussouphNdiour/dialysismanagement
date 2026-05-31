@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Cron job for 24h appointment reminders -->
+        <record id="ir_cron_send_appointment_reminders_24h" model="ir.cron">
+            <field name="name">WhatsApp: Send Appointment Reminders 24h Before</field>
+            <field name="model_id" ref="acs_hms.model_hms_appointment"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_appointment_reminders_24h()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Cron job for 12h appointment reminders -->
+        <record id="ir_cron_send_appointment_reminders_12h" model="ir.cron">
+            <field name="name">WhatsApp: Send Appointment Reminders 12h Before</field>
+            <field name="model_id" ref="acs_hms.model_hms_appointment"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_send_appointment_reminders_12h()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

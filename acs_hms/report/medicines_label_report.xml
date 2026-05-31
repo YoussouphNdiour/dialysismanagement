@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="report_hms_medicines_label_document">
+        <t t-set="doc" t-value="doc.with_context({'lang':doc.patient_id.lang})"/>
+        <t t-foreach="doc.prescription_line_ids" t-as="line">
+            <t t-call="web.basic_layout">
+                <div class="page" style="font-size:12px; border: 1px solid black; padding: 5px; border-radius: 5px;">
+                    <div>
+                        <span class="fw-bold">Patient Name :</span><span t-field="doc.patient_id.name"/>
+                    </div>
+                    <div>
+                        <span class="fw-bold"><span t-field="doc.patient_id.gov_code_label"/> :</span><span t-field="doc.patient_id.gov_code"/>
+                    </div>
+                    <div>
+                        <span class="fw-bold">Medicine Name :</span><span t-field="line.product_id.name"/>
+                    </div>
+                    <div>
+                        <span class="fw-bold">Frequency :</span><span t-field="line.common_dosage_id.abbreviation"/>
+                    </div>
+                    <div>
+                        <span class="fw-bold">Dose :</span><span t-field="line.dose"/>
+                    </div>
+                </div>
+            </t>
+        </t>    
+    </template>
+
+    <template id="report_hms_medicines_label">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="acs_hms.report_hms_medicines_label_document" t-lang="doc.patient_id.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_hms_medicines_label" model="ir.actions.report">
+        <field name="name">Medicines Label</field>
+        <field name="model">prescription.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">acs_hms.report_hms_medicines_label</field>
+        <field name="report_file">acs_hms.report_hms_medicines_label</field>
+        <field name="print_report_name">(object.name or 'Medicine Label').replace('/','_')</field>
+        <field name="binding_model_id" ref="model_prescription_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+     <record id="paperformat_acs_medicines_label" model="report.paperformat">
+        <field name="name">Medicine Label Paper</field>
+        <field name="default" eval="True" />
+        <field name="format">custom</field>
+        <field name="page_height">35</field>
+        <field name="page_width">60</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">2</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">0</field>
+        <field name="dpi">95</field>
+        <field name="report_ids" eval="[(6,0, [ref('acs_hms.action_report_hms_medicines_label')])]"/>
+    </record>
+
+</odoo>

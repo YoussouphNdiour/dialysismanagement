@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="patient_information_template" inherit_id="acs_hms_base.patient_information_template">
+        <xpath expr="//tr[@name='patient_gov_phone_tr']" position="after">
+            <!-- appointment -->
+            <tr name="patient_appointment_data" t-if="appointment">
+                <td name="appointment_physician">
+                    <strong class="text-center ms-2">Physician:</strong> <span t-field="appointment.sudo().physician_id.name"/>
+                </td>
+                <td name="appointment_date">
+                    <strong>Date.:</strong> <span t-field="appointment.date"/>
+                </td>
+            </tr>
+
+            <!-- evaluation -->
+            <tr name="patient_evaluationt_data" t-if="evaluation">
+                <td name="evaluation_physician">
+                    <strong class="text-center ms-2">Physician:</strong> <span t-field="evaluation.physician_id"/>
+                </td>
+                <td name="evaluation_date">
+                    <strong>Date.:</strong> <span t-field="evaluation.date"/>
+                </td>
+            </tr>
+
+            <!-- procedure -->
+            <tr name="patient_procedure_disease_physician" t-if="patient_procedure">
+                <td name="patient_procedure_disease">
+                    <strong class="text-center ms-2">Disease:</strong> <span t-field="patient_procedure.diseas_id"/>
+                </td>
+                <td name="patient_procedure_physician">
+                    <strong>Physician:</strong> <span t-field="patient_procedure.physician_id"/>
+                </td>
+            </tr>
+
+            <tr name="patient_procedure_start_end_date" t-if="patient_procedure">
+                <td name="patient_procedure_start">
+                    <strong class="text-center ms-2">Start Date:</strong> <span t-field="patient_procedure.date"/>
+                </td>
+                <td name="patient_procedure_end">
+                    <strong>End Date:</strong> <span t-field="patient_procedure.date_stop"/>
+                </td>
+            </tr>
+
+            <tr name="patient_procedure_product_duration" t-if="patient_procedure">
+                <td name="patient_procedure_product">
+                    <strong class="text-center ms-2">Procedure:</strong> <span t-field="patient_procedure.product_id"/>
+                </td>
+                <td name="patient_procedure_duration">
+                    <strong>Duration:</strong> <span t-field="patient_procedure.duration"/>
+                </td>
+            </tr>
+
+            <tr name="patient_procedure_treatment_price" t-if="patient_procedure">
+                <td name="patient_procedure_treatment">
+                    <strong class="text-center ms-2">Treatment:</strong> <span t-field="patient_procedure.treatment_id"/>
+                </td>
+                <td name="patient_procedure_price">
+                    <strong>Price:</strong> <span t-field="patient_procedure.price_unit"/>
+                </td>
+            </tr>
+
+            <tr name="patient_procedure_department_appointment" t-if="patient_procedure">
+                <td name="patient_procedure_department">
+                    <strong class="text-center ms-2">Department:</strong> <span t-field="patient_procedure.department_id"/>
+                </td>
+                <td name="patient_procedure_appointment">
+                    <strong>Appointments:</strong> <span t-field="patient_procedure.appointment_ids"/>
+                </td>
+            </tr>
+
+            <tr name="patient_procedure_invoice_blank" t-if="patient_procedure">
+                <td name="patient_procedure_invoice">
+                    <strong class="text-center ms-2">Invoice:</strong> <span t-field="patient_procedure.invoice_id"/>
+                </td>
+                <td name="patient_procedure_blank">
+                </td>
+            </tr>
+
+            <!-- medical advice -->
+            <tr name="patient_medical_advice_doctor_date" t-if="medical_advice">
+                <td name="medical_advice_physician">
+                    <strong class="text-center ms-2">Advising Doctor:</strong> <span t-field="medical_advice.physician_id"/>
+                </td>
+                <td name="medical_advice_date">
+                    <strong>Advice Date:</strong> <span t-field="medical_advice.date"/>
+                </td>
+            </tr>
+
+            <!-- prescription -->
+            <tr name="patient_prescription_physician_date" t-if="prescription">
+                <td name="prescription_physician">
+                    <strong class="text-center ms-2">Physician:</strong> <span t-field="prescription.physician_id"/>
+                </td>
+                <td name="prescription_date">
+                    <strong>Date:</strong> <span t-field="prescription.prescription_date"/>
+                </td>
+            </tr>
+
+            <tr name="patient_treatment_diagnosis_department" t-if="treatment">
+                <td name="treatment_diagnosis">
+                    <strong class="text-center ms-2">Diagnosis:</strong> <span t-field="treatment.diagnosis_id"/>
+                </td>
+                <td name="treatment_department">
+                    <strong>Department:</strong> <span t-field="treatment.department_id"/>
+                </td>
+            </tr>
+            <tr name="patient_treatment_dates" t-if="treatment">
+                <td name="treatment_start_date">
+                    <strong class="text-center ms-2">Date of Diagnosis:</strong> <span t-field="treatment.date"/>
+                </td>
+                <td name="treatment_end_date">
+                    <strong>End Date:</strong> <span t-field="treatment.end_date"/>
+                </td>
+            </tr>
+            <tr name="patient_treatment_physician_null" t-if="treatment">
+                <td name="treatment_physician">
+                    <strong class="text-center ms-2">Physician:</strong> <span t-field="treatment.physician_id"/>
+                </td>
+                <td name="treatment"></td>
+            </tr>
+        </xpath>
+    </template>
+
+</odoo>

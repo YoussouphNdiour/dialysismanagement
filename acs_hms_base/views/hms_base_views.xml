@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="sequence_view" model="ir.ui.view">
+        <field name="name">ir.sequence.filter</field>
+        <field name="model">ir.sequence</field>
+        <field name="inherit_id" ref="base.sequence_view"/>
+        <field name="arch" type="xml">
+            <field name="implementation" position="after">
+                <field name="acs_auto_create"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Partner -->
+    <!-- MKA: Moved from acs_hms to acs_hms_base-->
+    <!-- NOTE: not added any simple view because for commission payment and all we need many features --> 
+    <record id="acs_view_hms_partner_form" model="ir.ui.view">
+        <field name="name">Referring Doctors</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page" position="after">
+                <page string="Hospital Info" name="hms_info">
+                    <group>
+                        <group>
+                            <field name="acs_patient_id"/>
+                        </group>
+                        <group>
+                            <button name="create_patient" string="Create Patient" class="oe_highlight oe_inline" invisible="acs_patient_id" type="object"/>
+                        </group>
+                    </group>
+                    <separator string="Referring Doctor"/>
+                    <group>
+                        <group>
+                            <field name="is_referring_doctor"/>
+                        </group>
+                        <group>
+                            <field name="hospital_name" invisible="not is_referring_doctor"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_referring_doctors" model="ir.actions.act_window">
+        <field name="name">Referring Doctors</field>
+        <field name="path">almightyhms-referring-doctors</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_is_referring_doctor':1, 'default_is_referring_doctor':1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Record Found
+            </p>
+            <p>
+                Click to add a Referring Doctor.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter" model="ir.ui.view">
+        <field name="name">res.partner.search</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <filter name="type_person" position="before">
+                <filter string="Today's Birthday" name="today_birthday" domain="[('birthday', 'like', 'today')]"/>
+            </filter>
+            <filter name="customer" position="before">
+                <filter string="Is Patient" name="is_patient" domain="[('is_patient','=',True)]"/>
+                <filter string="Referring Doctors" name="is_referring_doctor" domain="[('is_referring_doctor','=',True)]"/>
+            </filter>
+        </field>
+    </record>
+
+    <!-- Patient Tag -->
+    <record id="view_patient_tag_list" model="ir.ui.view">
+        <field name="name">hms.patient.tag.list</field>
+        <field name="model">hms.patient.tag</field>
+        <field name="arch" type="xml">
+            <list string="Patient Tag" editable="bottom" sample="1">
+                <field name="name"/>
+                <field name="color" widget="color_picker" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_patient_tag_form" model="ir.ui.view">
+        <field name="name">hms.patient.tag.form</field>
+        <field name="model">hms.patient.tag</field>
+        <field name="arch" type="xml">
+            <form string="Patient Tag">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Patient Tag"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="color" required="True" widget="color_picker"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_patient_tag_search" model="ir.ui.view">
+        <field name="name">hms.patient.tag.search</field>
+        <field name="model">hms.patient.tag</field>
+        <field name="arch" type="xml">
+            <search string="Patient Tag">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_open_patient_tag">
+        <field name="name">Patient Tag</field>
+        <field name="path">almightyhms-patient-tag</field>
+        <field name="res_model">hms.patient.tag</field>
+        <field name="view_id" ref="view_patient_tag_list"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Record Found
+            </p>
+            <p>
+                Click to add a Patient Tag.
+            </p>
+        </field>
+    </record>
+
+    <!-- Therapeutic Effect -->
+    <record id="view_therapeutic_effect_list" model="ir.ui.view">
+        <field name="name">hms.therapeutic.effect.list</field>
+        <field name="model">hms.therapeutic.effect</field>
+        <field name="arch" type="xml">
+            <list string="Therapeutic Effect">
+                <field name="name"/>
+                <field name="code"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_therapeutic_effect_form" model="ir.ui.view">
+        <field name="name">hms.therapeutic.effect.form</field>
+        <field name="model">hms.therapeutic.effect</field>
+        <field name="arch" type="xml">
+            <form string="Therapeutic Effect">
+                <sheet>
+                     <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_therapeutic_effect_search" model="ir.ui.view">
+        <field name="name">hms.therapeutic.effect.search</field>
+        <field name="model">hms.therapeutic.effect</field>
+        <field name="arch" type="xml">
+            <search string="Therapeutic Effect">
+                <field name="name"/>
+                <field name="code"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_open_therapeutic_effect">
+        <field name="name">Therapeutic Effect</field>
+        <field name="path">almightyhms-therapeutic-effect</field>
+        <field name="res_model">hms.therapeutic.effect</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Record Found
+            </p>
+            <p>
+                Click to add a Therapeutic Effect.
+            </p>
+        </field>
+    </record>
+
+    <!-- Source -->
+    <record id="view_acs_source_list" model="ir.ui.view">
+        <field name="name">acs.source.list</field>
+        <field name="model">acs.source</field>
+        <field name="arch" type="xml">
+            <list string="Source" editable="bottom" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="description"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_acs_source_form" model="ir.ui.view">
+        <field name="name">acs.source.form</field>
+        <field name="model">acs.source</field>
+        <field name="arch" type="xml">
+            <form string="Source">
+                <sheet>
+                     <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_acs_source_search" model="ir.ui.view">
+        <field name="name">acs.source.search</field>
+        <field name="model">acs.source</field>
+        <field name="arch" type="xml">
+            <search string="Source">
+                <field name="name"/>
+                <field name="description"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_acs_source" model="ir.actions.act_window">
+        <field name="name">Source</field>
+        <field name="path">almightyhms-source</field>
+        <field name="res_model">acs.source</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Record Found
+            </p>
+            <p>
+                Click to add a Source.
+            </p>
+        </field>
+    </record>
+
+    <!-- Consumable Lines -->
+    <record id="view_hms_consumable_line_form" model="ir.ui.view">
+        <field name="name">hms.consumable.line.form</field>
+        <field name="model">hms.consumable.line</field>
+        <field name="arch" type="xml">
+            <form string="consumable Lines">
+                <sheet>
+                     <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="product_id"/>
+                            <field name="product_uom_id"/>
+                            <field name="qty"/>
+                            <field name="price_unit"/>
+                            <field name="subtotal"/>
+                            <field name="tracking" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="lot_id"/>
+                            <field name="move_id"/>
+                            <field name="physician_id"/>
+                            <field name="department_id" options="{'no_open': True, 'no_create': True}"/>
+                            <field name="patient_id"/>
+                            <field name="invoice_id"/>
+                        </group>
+                    </group>
+                    <field name="note"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Religion view -->
+    <record id="view_acs_religion_list" model="ir.ui.view">
+        <field name="name">acs.religion.list</field>
+        <field name="model">acs.religion</field>
+        <field name="arch" type="xml">
+            <list string="Religion">
+                <field name="notes"/>
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_acs_religion_form" model="ir.ui.view">
+        <field name="name">acs.religion.form</field>
+        <field name="model">acs.religion</field>
+        <field name="arch" type="xml">
+            <form string="Religion">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="notes"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_acs_religion_search" model="ir.ui.view">
+        <field name="name">acs.religion.search</field>
+        <field name="model">acs.religion</field>
+        <field name="arch" type="xml">
+            <search string="Religion">
+                <field name="notes"/>
+                <field name="code"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_acs_religion_view">
+        <field name="name">Religion</field>
+        <field name="path">almightyhms-religion</field>
+        <field name="res_model">acs.religion</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_acs_religion_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Record Found
+            </p>
+            <p>
+                Click to add a Religion.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="module_category_hms" model="ir.module.category">
+            <field name="name">Hospital</field>
+            <field name="description">Hospital Management System</field>
+            <field name="sequence">60</field>
+        </record>
+
+        <record id="module_category_hms_department" model="ir.module.category">
+            <field name="name">Hospital (Department)</field>
+            <field name="description">Hospital Management System Department Level Access</field>
+            <field name="sequence">61</field>
+        </record>
+
+        <record id="module_category_hms_specialty" model="ir.module.category">
+            <field name="name">Hospital (Specialty)</field>
+            <field name="description">Hospital Management System Specialty Access</field>
+            <field name="sequence">62</field>
+        </record>
+
+        <record id="module_category_hms_extra" model="ir.module.category">
+            <field name="name">Hospital Extra</field>
+            <field name="description">Hospital Management System Extra</field>
+            <field name="sequence">63</field>
+        </record>
+
+        <!-- privilege -->
+        <record model="res.groups.privilege" id="res_groups_privilege_acs_hms">
+            <field name="name">Medical Data</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="acs_hms_base.module_category_hms"/>
+        </record>
+
+        <record model="res.groups.privilege" id="res_groups_privilege_acs_hms_department">
+            <field name="name">Hospital (Department)</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="acs_hms_base.module_category_hms_department"/>
+        </record>
+
+        <record model="res.groups.privilege" id="res_groups_privilege_acs_hms_specialty">
+            <field name="name">Hospital (Specialty)</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="acs_hms_base.module_category_hms_specialty"/>
+        </record>
+
+        <record model="res.groups.privilege" id="res_groups_privilege_acs_hms_extra">
+            <field name="name">Hospital Extra</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="acs_hms_base.module_category_hms_extra"/>
+        </record>
+
+        <record id="group_hms_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="privilege_id" ref="acs_hms_base.res_groups_privilege_acs_hms"/>
+        </record>
+ 
+        <record id="group_hms_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="privilege_id" ref="acs_hms_base.res_groups_privilege_acs_hms"/>
+            <field name="implied_ids" eval="[Command.link(ref('acs_hms_base.group_hms_user'))]"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="privilege_acs_manage_services" model="res.groups.privilege">
+            <field name="name">Manage Services</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="acs_hms_base.module_category_hms_extra"/>
+        </record>
+        <record id ="group_manage_services" model="res.groups">
+            <field name="name">Allow</field>
+            <field name="privilege_id" ref="acs_hms_base.privilege_acs_manage_services"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="privilege_acs_manage_medicines" model="res.groups.privilege">
+            <field name="name">Manage Medicines</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="acs_hms_base.module_category_hms_extra"/>
+        </record>
+        <record id ="group_manage_medicines" model="res.groups">
+            <field name="name">Allow</field>
+            <field name="privilege_id" ref="acs_hms_base.privilege_acs_manage_medicines"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="privilege_acs_invoice_exemption" model="res.groups.privilege">
+            <field name="name">Invoice Exemption</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="acs_hms_base.module_category_hms_extra"/>
+        </record>
+        <record id="group_acs_invoice_exemption" model="res.groups">
+            <field name="name">Allow</field>
+            <field name="privilege_id" ref="acs_hms_base.privilege_acs_invoice_exemption"/>
+        </record>
+
+        <record id="privilege_acs_invoice_exemption_request" model="res.groups.privilege">
+            <field name="name">Invoice Exemption Request</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="acs_hms_base.module_category_hms_extra"/>
+        </record>
+        <record id="group_acs_invoice_exemption_request" model="res.groups">
+            <field name="name">Allow</field>
+            <field name="privilege_id" ref="acs_hms_base.privilege_acs_invoice_exemption_request"/>
+        </record>
+
+        <record id="privilege_manage_ethnic_religion_tribe" model="res.groups.privilege">
+            <field name="name">Manage Religion/Tribe/Ethnic</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="acs_hms_base.module_category_hms_extra"/>
+        </record>
+        <record id ="group_manage_ethnic_religion_tribe" model="res.groups">
+            <field name="name">Allow</field>
+            <field name="privilege_id" ref="acs_hms_base.privilege_manage_ethnic_religion_tribe"/>
+            <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
+        </record>
+
+        <record id="privilege_show_consumed_product_prices" model="res.groups.privilege">
+            <field name="name">Consumed Product Prices</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="acs_hms_base.module_category_hms_extra"/>
+        </record>
+        <record id="acs_group_show_consumed_product_prices" model="res.groups">
+            <field name="name">Manage</field>
+            <field name="privilege_id" ref="acs_hms_base.privilege_show_consumed_product_prices"/>
+        </record>
+    </data>
+</odoo>

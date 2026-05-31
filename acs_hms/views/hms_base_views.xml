@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Product -->
+    <record id="product_template_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.template.product.form.drug.details</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="acs_hms_base.product_template_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <field name="active_component_ids" position="before">
+                <field name="common_dosage_id"/>
+                <field name="acs_allow_substitution"/>
+            </field>
+            <field name="drug_company_id" position="before">
+                <field name="manual_prescription_qty"/>
+                <field name="short_comment"/>
+            </field>
+            <field name="hospital_product_type" position="after">
+                <field name="procedure_time" invisible="type!='service'" widget="float_time"/>
+                <field name="appointment_invoice_policy" groups="acs_hms_base.group_hms_manager" invisible="hospital_product_type!='consultation'"/>
+            </field>
+        </field>
+    </record>
+
+   <!-- Department -->
+   <record id="view_hr_department_list" model="ir.ui.view">
+        <field name="name">hr.department.hms.list</field>
+        <field name="model">hr.department</field>
+        <field name="arch" type="xml">
+            <list string="Department">
+                <field name="display_name"/>
+            </list>
+        </field>
+    </record>
+
+   <record id="view_department_form" model="ir.ui.view">
+        <field name="name">hr.department.form</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <field name="parent_id" position="after">
+                <field name='patient_department'/>
+            </field>
+            <xpath expr="//group" position="after">
+                <notebook>
+                    <page name="info" string="Hospital Information" invisible="not patient_department">
+                        <group>
+                            <group name="left_data">
+                                <field name='department_type'/>
+                                <field name='followup_service_id'/>
+                                <field name='consultation_service_id'/>
+                            </group>
+                            <group name="right_data">
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Family Disease -->
+    <record id="view_patient_family_disease_form" model="ir.ui.view">
+        <field name="name">patient.family.disease.form</field>
+        <field name="model">hms.patient.family.diseases</field>
+        <field name="arch" type="xml">
+            <form string="Patient Genetic Family Diseases">
+                <sheet>
+                    <group> 
+                        <group>
+                            <field name="diseases_ids" widget="many2many_tags"/>
+                            <field name="xory"/>
+                        </group>
+                        <group>
+                            <field name="relative"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_patient_family_disease_list" model="ir.ui.view">
+        <field name="name">patient.family.disease.list</field>
+        <field name="model">hms.patient.family.diseases</field>
+        <field name="arch" type="xml">
+            <list string="Genetic Family Diseases">
+                <field name="diseases_ids" widget="many2many_tags"/>
+                <field name="xory"/>
+                <field name="relative"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Genetic Risk -->
+    <record id="view_hms_patient_genetic_risk_form" model="ir.ui.view">
+        <field name="name">hms.patient.genetic.risk.form</field>
+        <field name="model">hms.patient.genetic.risk</field>
+        <field name="arch" type="xml">
+            <form string="Patient Genetic Risks">
+                <sheet>
+                    <group>
+                        <field name="disease_gene">
+                            <list string="Disease Gene">
+                                <field name="info"/>
+                                <field name="name"/>
+                                <field name="gene_id"/>
+                                <field name="long_name"/>
+                                <field name="location"/>
+                                <field name="dominance"/>
+                                <field name="chromosome"/>
+                            </list>
+                            <form string="Disease Gene">   
+                                <group>
+                                    <field name="name"/>
+                                    <field name="gene_id"/>
+                                    <field name="long_name"/>
+                                    <field name="location"/>
+                                    <field name="dominance"/>
+                                    <field name="chromosome"/>
+                                    <newline/>
+                                    <field name="info" colspan="4"/>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hms_patient_genetic_risk_list" model="ir.ui.view">
+        <field name="name">hms.patient.genetic.risk.list</field>
+        <field name="model">hms.patient.genetic.risk</field>
+        <field name="arch" type="xml">
+            <list string="Patient Genetic Risks" editable="bottom">
+                <field name="disease_gene"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="acs_view_hms_referring_partner_form" model="ir.ui.view">
+        <field name="name">Referring Doctors</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='hms_info']//field[@name='acs_patient_id']" position="after">
+                <field name="assignee_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Ethnicity view -->
+    <record id="view_acs_ethnicity_list" model="ir.ui.view">
+        <field name="name">acs.ethnicity.list</field>
+        <field name="model">acs.ethnicity</field>
+        <field name="arch" type="xml">
+            <list string="ACS Ethnicity">
+                <field name="notes"/>
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_acs_ethnicity_form" model="ir.ui.view">
+        <field name="name">acs.ethnicity.form</field>
+        <field name="model">acs.ethnicity</field>
+        <field name="arch" type="xml">
+            <form string="ACS Ethnicity">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="notes"/>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_acs_ethnicity_search" model="ir.ui.view">
+        <field name="name">acs.ethnicity.search</field>
+        <field name="model">acs.ethnicity</field>
+        <field name="arch" type="xml">
+            <search string="ACS Ethnicity">
+                <field name="notes"/>
+                <field name="code"/>
+                <field name="name"/>
+                <newline/>
+                <group name="group_by">
+                    <filter string="Notes" name="note_groupby" domain="[]" context="{'group_by':'notes'}"/>
+                    <filter string="Code" name="code_groupby" domain="[]" context="{'group_by':'code'}"/>
+                    <filter string="Name" name="name_groupby" domain="[]" context="{'group_by':'name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_open_acs_ethnicity_view">
+        <field name="name">Ethnicity</field>
+        <field name="path">almightyhms-ethnicity</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">acs.ethnicity</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_acs_ethnicity_search"/>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Record Found
+            </p>
+            <p>
+                Click to add a Ethnicity.
+            </p>
+        </field>
+    </record>
+
+    <!-- Family Relation view -->
+    <record id="view_acs_family_relation_list" model="ir.ui.view">
+        <field name="name">acs.family.relation.list</field>
+        <field name="model">acs.family.relation</field>
+        <field name="arch" type="xml">
+            <list string="Family Relation" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="inverse_relation_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_acs_family_relation" model="ir.actions.act_window">
+        <field name="name">Family Relation</field>
+        <field name="path">almightyhms-family-relation</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">acs.family.relation</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Record Found
+            </p>
+            <p>
+                Click to add Family Relation.
+            </p>
+        </field>
+    </record>
+
+</odoo>
