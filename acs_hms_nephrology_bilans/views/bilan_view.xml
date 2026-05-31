@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===== LIST VIEW ===== -->
+    <record id="view_acs_nephro_bilan_list" model="ir.ui.view">
+        <field name="name">acs.nephro.bilan.list</field>
+        <field name="model">acs.nephro.bilan</field>
+        <field name="arch" type="xml">
+            <list string="Bilans Biologiques"
+                  decoration-danger="hemoglobin_status == 'low' or potassium_status == 'high'"
+                  decoration-warning="phosphorus_status == 'high' or albumin_status == 'low'"
+                  decoration-success="hemoglobin_status == 'ok' and potassium_status == 'ok'">
+                <field name="name"/>
+                <field name="exam_date"/>
+                <field name="patient_id"/>
+                <field name="bilan_type"/>
+                <field name="hemoglobin"/>
+                <field name="hemoglobin_status" widget="badge"
+                       decoration-danger="hemoglobin_status == 'low'"
+                       decoration-success="hemoglobin_status == 'ok'"
+                       decoration-warning="hemoglobin_status == 'high'"/>
+                <field name="potassium"/>
+                <field name="potassium_status" widget="badge"
+                       decoration-danger="potassium_status == 'high'"
+                       decoration-success="potassium_status == 'ok'"
+                       decoration-warning="potassium_status == 'low'"/>
+                <field name="phosphorus" optional="show"/>
+                <field name="phosphorus_status" widget="badge" optional="show"
+                       decoration-danger="phosphorus_status == 'high'"
+                       decoration-success="phosphorus_status == 'ok'"
+                       decoration-warning="phosphorus_status == 'low'"/>
+                <field name="albumin" optional="show"/>
+                <field name="albumin_status" widget="badge" optional="show"
+                       decoration-danger="albumin_status == 'low'"
+                       decoration-success="albumin_status == 'ok'"/>
+                <field name="physician_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ===== FORM VIEW ===== -->
+    <record id="view_acs_nephro_bilan_form" model="ir.ui.view">
+        <field name="name">acs.nephro.bilan.form</field>
+        <field name="model">acs.nephro.bilan</field>
+        <field name="arch" type="xml">
+            <form string="Bilan Biologique">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="exam_date"/>
+                            <field name="bilan_type"/>
+                        </group>
+                        <group>
+                            <field name="physician_id"/>
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <!-- Hématologie -->
+                        <page string="Hématologie" name="hematology">
+                            <group>
+                                <group string="NFS">
+                                    <field name="hemoglobin"/>
+                                    <field name="hemoglobin_status" widget="badge"
+                                           decoration-danger="hemoglobin_status == 'low'"
+                                           decoration-success="hemoglobin_status == 'ok'"
+                                           decoration-warning="hemoglobin_status == 'high'"/>
+                                    <field name="hematocrit"/>
+                                    <field name="white_blood_cells"/>
+                                    <field name="platelets"/>
+                                </group>
+                                <group string="Bilan martial">
+                                    <field name="ferritin"/>
+                                    <field name="transferrin_saturation"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Biochimie Rénale -->
+                        <page string="Biochimie Rénale" name="renal_biochemistry">
+                            <group>
+                                <group>
+                                    <field name="creatinine"/>
+                                    <field name="urea_pre"/>
+                                    <field name="urea_post"/>
+                                    <field name="urr_calculated"/>
+                                </group>
+                                <group>
+                                    <field name="uric_acid"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Électrolytes -->
+                        <page string="Électrolytes" name="electrolytes">
+                            <group>
+                                <group>
+                                    <field name="sodium"/>
+                                    <field name="potassium"/>
+                                    <field name="potassium_status" widget="badge"
+                                           decoration-danger="potassium_status == 'high'"
+                                           decoration-success="potassium_status == 'ok'"
+                                           decoration-warning="potassium_status == 'low'"/>
+                                    <field name="bicarbonate"/>
+                                </group>
+                                <group>
+                                    <field name="calcium"/>
+                                    <field name="phosphorus"/>
+                                    <field name="phosphorus_status" widget="badge"
+                                           decoration-danger="phosphorus_status == 'high'"
+                                           decoration-success="phosphorus_status == 'ok'"
+                                           decoration-warning="phosphorus_status == 'low'"/>
+                                    <field name="caxp_product"/>
+                                    <field name="caxp_status" widget="badge"
+                                           decoration-danger="caxp_status == 'high'"
+                                           decoration-success="caxp_status == 'ok'"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Minéraux - Os -->
+                        <page string="Minéraux - Os" name="minerals_bone">
+                            <group>
+                                <group>
+                                    <field name="pth"/>
+                                    <field name="pth_status" widget="badge"
+                                           decoration-danger="pth_status == 'high'"
+                                           decoration-success="pth_status == 'ok'"
+                                           decoration-warning="pth_status == 'low'"/>
+                                </group>
+                                <group>
+                                    <field name="vitamin_d"/>
+                                    <field name="alkaline_phosphatase"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Nutrition & Inflammation -->
+                        <page string="Nutrition / Inflammation" name="nutrition_inflammation">
+                            <group>
+                                <group string="Nutrition">
+                                    <field name="albumin"/>
+                                    <field name="albumin_status" widget="badge"
+                                           decoration-danger="albumin_status == 'low'"
+                                           decoration-success="albumin_status == 'ok'"/>
+                                    <field name="prealbumin"/>
+                                    <field name="total_proteins"/>
+                                </group>
+                                <group string="Inflammation">
+                                    <field name="crp"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Sérologies -->
+                        <page string="Sérologies" name="serologies">
+                            <group>
+                                <group string="Hépatite B">
+                                    <field name="hbs_ag"/>
+                                    <field name="anti_hbs"/>
+                                    <field name="anti_hbc"/>
+                                </group>
+                                <group string="Autres">
+                                    <field name="anti_hcv"/>
+                                    <field name="anti_hiv"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Notes -->
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Observations, commentaires..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ===== ACTION ===== -->
+    <record id="action_acs_nephro_bilan" model="ir.actions.act_window">
+        <field name="name">Bilans Biologiques</field>
+        <field name="res_model">acs.nephro.bilan</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucun bilan biologique enregistré.
+            </p>
+            <p>
+                Cliquez pour créer un nouveau bilan de suivi biologique.
+            </p>
+        </field>
+    </record>
+
+</odoo>

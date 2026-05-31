@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Séquence bilans -->
+        <record id="seq_acs_nephro_bilan" model="ir.sequence">
+            <field name="name">Bilan Biologique Dialyse</field>
+            <field name="code">acs.nephro.bilan</field>
+            <field name="prefix">BIO/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="threshold_hemoglobin" model="acs.nephro.bilan.threshold">
+            <field name="name">Hémoglobine</field>
+            <field name="code">hemoglobin</field>
+            <field name="unit">g/dL</field>
+            <field name="min_target">10.0</field>
+            <field name="max_target">12.0</field>
+            <field name="notes">Cible KDIGO : 10-12 g/dL en dialyse</field>
+        </record>
+        <record id="threshold_potassium" model="acs.nephro.bilan.threshold">
+            <field name="name">Potassium</field>
+            <field name="code">potassium</field>
+            <field name="unit">mmol/L</field>
+            <field name="min_target">3.5</field>
+            <field name="max_target">5.5</field>
+            <field name="notes">Hyperkaliémie si &gt; 5.5 mmol/L</field>
+        </record>
+        <record id="threshold_phosphorus" model="acs.nephro.bilan.threshold">
+            <field name="name">Phosphore</field>
+            <field name="code">phosphorus</field>
+            <field name="unit">mmol/L</field>
+            <field name="min_target">1.1</field>
+            <field name="max_target">1.8</field>
+            <field name="notes">Cible KDIGO : 1.1-1.8 mmol/L</field>
+        </record>
+        <record id="threshold_albumin" model="acs.nephro.bilan.threshold">
+            <field name="name">Albumine</field>
+            <field name="code">albumin</field>
+            <field name="unit">g/L</field>
+            <field name="min_target">35.0</field>
+            <field name="notes">Dénutrition si &lt; 35 g/L</field>
+        </record>
+        <record id="threshold_pth" model="acs.nephro.bilan.threshold">
+            <field name="name">PTH</field>
+            <field name="code">pth</field>
+            <field name="unit">pg/mL</field>
+            <field name="min_target">150.0</field>
+            <field name="max_target">300.0</field>
+            <field name="notes">Cible KDIGO : 2-9x limite supérieure normale (environ 150-300)</field>
+        </record>
+        <record id="threshold_ferritin" model="acs.nephro.bilan.threshold">
+            <field name="name">Ferritine</field>
+            <field name="code">ferritin</field>
+            <field name="unit">µg/L</field>
+            <field name="min_target">200.0</field>
+            <field name="max_target">500.0</field>
+            <field name="notes">Carence martiale si &lt; 200, surcharge si &gt; 500</field>
+        </record>
+        <record id="threshold_caxp" model="acs.nephro.bilan.threshold">
+            <field name="name">Produit CaxP</field>
+            <field name="code">caxp_product</field>
+            <field name="unit">mmol2/L2</field>
+            <field name="max_target">4.4</field>
+            <field name="notes">Risque calcification vasculaire si &gt; 4.4</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inject "Bilans Biologiques" tab in patient nephrology form -->
+    <record id="view_patient_form_bilan_tab" model="ir.ui.view">
+        <field name="name">hms.patient.form.bilan.tab</field>
+        <field name="model">hms.patient</field>
+        <field name="inherit_id" ref="acs_hms_nephrology.view_patient_form"/>
+        <field name="priority">50</field>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='nephrology_history']" position="before">
+                <page string="Bilans Biologiques" name="bilans_biologiques">
+                    <field name="bilan_ids" nolabel="1"
+                           context="{'default_patient_id': id}">
+                        <list string="Bilans Biologiques"
+                              decoration-danger="hemoglobin_status == 'low' or potassium_status == 'high'"
+                              decoration-warning="phosphorus_status == 'high' or albumin_status == 'low'">
+                            <field name="name"/>
+                            <field name="exam_date"/>
+                            <field name="bilan_type"/>
+                            <field name="hemoglobin"/>
+                            <field name="hemoglobin_status" widget="badge"
+                                   decoration-danger="hemoglobin_status == 'low'"
+                                   decoration-success="hemoglobin_status == 'ok'"
+                                   decoration-warning="hemoglobin_status == 'high'"/>
+                            <field name="potassium"/>
+                            <field name="potassium_status" widget="badge"
+                                   decoration-danger="potassium_status == 'high'"
+                                   decoration-success="potassium_status == 'ok'"
+                                   decoration-warning="potassium_status == 'low'"/>
+                            <field name="phosphorus"/>
+                            <field name="albumin"/>
+                            <field name="pth"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

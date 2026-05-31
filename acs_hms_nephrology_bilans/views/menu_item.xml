@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Bilans Biologiques menu under main nephrology menu -->
+    <menuitem id="menu_acs_nephro_bilans"
+        name="Bilans Biologiques"
+        parent="acs_hms_nephrology.menu_acs_main_nephrology"
+        action="action_acs_nephro_bilan"
+        sequence="15"/>
+
+    <!-- Seuils biologiques under Configuration -->
+    <menuitem id="menu_acs_bilan_thresholds"
+        name="Seuils biologiques (KDIGO)"
+        parent="acs_hms_nephrology.menu_nephrology_config"
+        action="action_acs_nephro_bilan_threshold"
+        sequence="25"/>
+
+</odoo>
