@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_acs_complications"
+              name="Complications"
+              parent="acs_hms_nephrology.menu_nephrology_config"
+              action="action_acs_dialysis_complication"
+              sequence="30"/>
+</odoo>

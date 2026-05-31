@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_acs_dialysis_complication_list" model="ir.ui.view">
+        <field name="name">acs.dialysis.complication.list</field>
+        <field name="model">acs.dialysis.complication</field>
+        <field name="arch" type="xml">
+            <list string="Complications"
+                  decoration-danger="resolution == 'no'"
+                  decoration-warning="resolution == 'partial'">
+                <field name="occurrence_time"/>
+                <field name="complication_type"/>
+                <field name="bp_at_occurrence"/>
+                <field name="action_taken"/>
+                <field name="resolution" widget="badge"
+                       decoration-success="resolution == 'yes'"
+                       decoration-warning="resolution == 'partial'"
+                       decoration-danger="resolution == 'no'"/>
+                <field name="early_stop_duration" optional="show"
+                       invisible="complication_type != 'early_stop'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_acs_dialysis_complication_form" model="ir.ui.view">
+        <field name="name">acs.dialysis.complication.form</field>
+        <field name="model">acs.dialysis.complication</field>
+        <field name="arch" type="xml">
+            <form string="Complication">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="procedure_id"/>
+                            <field name="complication_type"/>
+                            <field name="occurrence_time"/>
+                            <field name="bp_at_occurrence"/>
+                        </group>
+                        <group>
+                            <field name="resolution" widget="radio"/>
+                            <field name="early_stop_duration"
+                                   invisible="complication_type != 'early_stop'"
+                                   required="complication_type == 'early_stop'"/>
+                        </group>
+                    </group>
+                    <separator string="Action prise"/>
+                    <field name="action_taken" nolabel="1"
+                           placeholder="Décrire l'action prise..."/>
+                    <separator string="Notes complémentaires"/>
+                    <field name="notes" nolabel="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Extension vue séance : onglet complications -->
+    <record id="view_procedure_complication_tab" model="ir.ui.view">
+        <field name="name">acs.patient.procedure.complication.tab</field>
+        <field name="model">acs.patient.procedure</field>
+        <field name="inherit_id" ref="acs_hms_nephrology.view_acs_patient_procedure_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Complications" name="complications">
+                    <field name="complication_ids"
+                           context="{'default_procedure_id': active_id}">
+                        <list>
+                            <field name="occurrence_time"/>
+                            <field name="complication_type"/>
+                            <field name="bp_at_occurrence"/>
+                            <field name="resolution" widget="badge"
+                                   decoration-success="resolution == 'yes'"
+                                   decoration-warning="resolution == 'partial'"
+                                   decoration-danger="resolution == 'no'"/>
+                        </list>
+                    </field>
+                    <group>
+                        <field name="complication_count" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_acs_dialysis_complication" model="ir.actions.act_window">
+        <field name="name">Complications</field>
+        <field name="res_model">acs.dialysis.complication</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

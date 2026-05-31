@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_acs_dialysis_complication_user,acs.dialysis.complication user,model_acs_dialysis_complication,acs_hms_base.group_hms_user,1,1,1,0
+access_acs_dialysis_complication_manager,acs.dialysis.complication manager,model_acs_dialysis_complication,acs_hms_base.group_hms_manager,1,1,1,1
