@@ -253,6 +253,21 @@
         </field>
     </record>
 
+    <!-- Planning étendu : poste, médecin, infirmiers, capacité -->
+    <record id="view_acs_nephrology_schedule_form_extended" model="ir.ui.view">
+        <field name="name">acs.nephrology.schedule.form.extended</field>
+        <field name="model">acs.nephrology.schedule</field>
+        <field name="inherit_id" ref="acs_hms_nephrology.acs_hms_nephrology_schedule_form"/>
+        <field name="arch" type="xml">
+            <field name="end_time" position="after">
+                <field name="station_id"/>
+                <field name="physician_id"/>
+                <field name="nurse_ids" widget="many2many_tags"/>
+                <field name="max_patients"/>
+            </field>
+        </field>
+    </record>
+
     <!-- Postes de Dialyse -->
     <record id="view_acs_dialysis_station_list" model="ir.ui.view">
         <field name="name">acs.dialysis.station.list</field>

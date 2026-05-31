@@ -56,6 +56,26 @@ class ACSNephrologySchedule(models.Model):
     sunday = fields.Boolean(string="Dimanche", default=False)
     start_time = fields.Float(string="Heure de début", help="Heure en format 24h (ex: 7.0 pour 7h, 13.5 pour 13h30)")
     end_time = fields.Float(string="Heure de fin", help="Heure en format 24h (ex: 11.0 pour 11h, 17.0 pour 17h)")
+    station_id = fields.Many2one(
+        'acs.dialysis.station',
+        string='Poste de dialyse',
+        help='Poste assigné à ce créneau'
+    )
+    physician_id = fields.Many2one(
+        'hms.physician',
+        string='Médecin référent du créneau'
+    )
+    nurse_ids = fields.Many2many(
+        'res.users',
+        'nephro_schedule_nurse_rel',
+        'schedule_id', 'nurse_id',
+        string='Infirmiers assignés'
+    )
+    max_patients = fields.Integer(
+        string='Capacité max (patients)',
+        default=0,
+        help='0 = illimité. Alerte si dépassé.'
+    )
 
     def get_weekdays(self):
         """Retourne la liste des jours de la semaine actifs (0=Lundi, 6=Dimanche)"""

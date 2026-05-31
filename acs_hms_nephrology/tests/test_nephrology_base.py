@@ -193,3 +193,33 @@ class TestProcedureKTV(TransactionCase):
         self.procedure.invalidate_recordset()
         expected_urr = (1 - 8.0 / 25.0) * 100
         self.assertAlmostEqual(self.procedure.urr_calculated, expected_urr, places=1)
+
+
+class TestNephrologyScheduleExtended(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.station = self.env['acs.dialysis.station'].create({
+            'name': 'Poste 1', 'room': 'Salle A', 'station_type': 'standard',
+        })
+
+    def test_schedule_has_station(self):
+        schedule = self.env['acs.nephrology.schedule'].create({
+            'name': 'LMV Matin',
+            'monday': True, 'wednesday': True, 'friday': True,
+            'start_time': 7.0, 'end_time': 11.0,
+            'station_id': self.station.id,
+            'max_patients': 10,
+        })
+        self.assertEqual(schedule.station_id.id, self.station.id)
+        self.assertEqual(schedule.max_patients, 10)
+
+    def test_schedule_nurse_assignment(self):
+        nurse = self.env['res.users'].search([], limit=1)
+        schedule = self.env['acs.nephrology.schedule'].create({
+            'name': 'LMV Matin',
+            'monday': True,
+            'start_time': 7.0, 'end_time': 11.0,
+            'nurse_ids': [(4, nurse.id)],
+        })
+        self.assertIn(nurse, schedule.nurse_ids)
