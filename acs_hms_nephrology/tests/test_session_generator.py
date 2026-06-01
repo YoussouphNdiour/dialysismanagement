@@ -131,3 +131,88 @@ class TestSessionGeneratorDates(TransactionCase):
         generator.invalidate_recordset()
         # 3 séances LMV du 1 au 7 juin
         self.assertEqual(generator.preview_count, 3)
+
+
+class TestSessionGeneratorLines(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.station = self.env['acs.dialysis.station'].create({
+            'name': 'Poste A',
+        })
+        self.schedule = self.env['acs.nephrology.schedule'].create({
+            'name': 'LMV', 'start_time': 7.0, 'end_time': 11.0,
+            'monday': True, 'wednesday': True, 'friday': True,
+            'station_id': self.station.id,
+        })
+        self.product = self.env['product.product'].search([
+            ('hospital_product_type', 'in', ['nephrology_procedure', 'consultation'])
+        ], limit=1)
+        if not self.product:
+            self.product = self.env['product.product'].create({
+                'name': 'Hémodialyse Test', 'type': 'service',
+            })
+        self.patient = self.env['hms.patient'].create({
+            'name': 'Patient Lignes Test', 'nephrology_care': True,
+        })
+
+    def test_prepopulate_station_from_last_procedure(self):
+        """station_id pré-rempli depuis le schedule de la dernière procédure"""
+        station2 = self.env['acs.dialysis.station'].create({
+            'name': 'Poste B',
+        })
+        schedule2 = self.env['acs.nephrology.schedule'].create({
+            'name': 'LMV-2', 'start_time': 13.0, 'end_time': 17.0,
+            'monday': True, 'wednesday': True, 'friday': True,
+            'station_id': station2.id,
+        })
+        self.env['acs.patient.procedure'].create({
+            'patient_id': self.patient.id,
+            'product_id': self.product.id,
+            'date': '2026-01-05 07:00:00',
+            'nephrology_schedule_ids': [(4, schedule2.id)],
+        })
+        generator = self.env['nephrology.session.generator'].create({
+            'date_start': date(2026, 6, 1),
+            'date_end': date(2026, 6, 7),
+            'exclude_holidays': False,
+            'patient_ids': [(4, self.patient.id)],
+        })
+        generator.action_open_validator()
+        line = generator.line_ids.filtered(lambda l: l.patient_id == self.patient)
+        self.assertTrue(line)
+        self.assertEqual(line.station_id.id, station2.id)
+
+    def test_no_last_procedure_uses_schedule_default(self):
+        """Sans procédure précédente, fallback sur station du schedule du patient"""
+        self.env['acs.patient.procedure'].create({
+            'patient_id': self.patient.id,
+            'product_id': self.product.id,
+            'date': '2026-01-05 07:00:00',
+            'nephrology_schedule_ids': [(4, self.schedule.id)],
+        })
+        generator = self.env['nephrology.session.generator'].create({
+            'date_start': date(2026, 6, 1),
+            'date_end': date(2026, 6, 7),
+            'exclude_holidays': False,
+            'patient_ids': [(4, self.patient.id)],
+        })
+        generator.action_open_validator()
+        line = generator.line_ids.filtered(lambda l: l.patient_id == self.patient)
+        self.assertTrue(line)
+        self.assertEqual(line.station_id.id, self.station.id)
+        self.assertEqual(line.schedule_id.id, self.schedule.id)
+
+    def test_patient_without_schedule_ignored(self):
+        """Un patient sans procédure et sans schedule n'apparaît pas dans les lignes"""
+        patient_sans_schedule = self.env['hms.patient'].create({
+            'name': 'Patient Sans Schedule', 'nephrology_care': True,
+        })
+        generator = self.env['nephrology.session.generator'].create({
+            'date_start': date(2026, 6, 1),
+            'date_end': date(2026, 6, 7),
+            'exclude_holidays': False,
+            'patient_ids': [(4, patient_sans_schedule.id)],
+        })
+        generator.action_open_validator()
+        self.assertEqual(len(generator.line_ids), 0)
