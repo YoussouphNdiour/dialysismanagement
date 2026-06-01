@@ -145,6 +145,7 @@ class NephrologySessionGenerator(models.TransientModel):
         # Erreur bloquante : procédure existante pour ce patient sur la période
         existing = self.env['acs.patient.procedure'].search([
             ('patient_id', '=', patient.id),
+            ('nephrology_schedule_ids', '!=', False),
             ('date', '>=', datetime.combine(self.date_start, datetime.min.time())),
             ('date', '<=', datetime.combine(self.date_end, datetime.max.time())),
         ], limit=1)
@@ -231,13 +232,13 @@ class NephrologySessionValidator(models.TransientModel):
                     'physician_id': line.physician_id.id if line.physician_id else False,
                     'nephrology_schedule_ids': [(4, line.schedule_id.id)],
                 })
-                self.env['hms.appointment'].create({
+                appointment = self.env['hms.appointment'].create({
                     'patient_id': line.patient_id.id,
                     'date': dt,
                     'product_id': product.id,
                     'physician_id': line.physician_id.id if line.physician_id else False,
-                    'procedure_id': procedure.id,
                 })
+                procedure.write({'appointment_ids': [(4, appointment.id)]})
                 created_count += 1
 
         return {

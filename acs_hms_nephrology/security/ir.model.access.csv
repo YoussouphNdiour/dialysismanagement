@@ -76,6 +76,7 @@ access_acs_dialysis_station_manager,acs.dialysis.station manager,model_acs_dialy
 access_acs_dry_weight_history_user,acs.dry.weight.history user,model_acs_dry_weight_history,acs_hms_base.group_hms_user,1,1,1,0
 access_acs_dry_weight_history_manager,acs.dry.weight.history manager,model_acs_dry_weight_history,acs_hms_base.group_hms_manager,1,1,1,1
 access_acs_nephrology_holiday_user,acs.nephrology.holiday user,model_acs_nephrology_holiday,acs_hms_base.group_hms_user,1,0,0,0
+access_acs_nephrology_holiday_receptionist,acs.nephrology.holiday receptionist,model_acs_nephrology_holiday,acs_hms.group_hms_receptionist,1,0,0,0
 access_acs_nephrology_holiday_manager,acs.nephrology.holiday manager,model_acs_nephrology_holiday,acs_hms_base.group_hms_manager,1,1,1,1
 access_nephrology_session_generator_user,nephrology.session.generator user,model_nephrology_session_generator,acs_hms_base.group_hms_user,1,1,1,1
 access_nephrology_session_generator_receptionist,nephrology.session.generator receptionist,model_nephrology_session_generator,acs_hms.group_hms_receptionist,1,1,1,1
