@@ -285,6 +285,16 @@
         <field name="arch" type="xml">
             <!-- Statut arrivée — avant le bloc poids -->
             <field name="arrival_weight" position="before">
+                <field name="has_active_hypotension" invisible="1"/>
+                <div class="alert alert-danger d-flex align-items-center gap-2 mb-2"
+                     invisible="not has_active_hypotension"
+                     role="alert">
+                    <i class="fa fa-exclamation-triangle fa-lg me-2"/>
+                    <span>
+                        <strong>HYPOTENSION DÉTECTÉE</strong>
+                        — TA systolique &lt; 90 mmHg sur un ou plusieurs signes vitaux.
+                    </span>
+                </div>
                 <group string="Statut à l'arrivée">
                     <field name="arrival_status"/>
                     <field name="pre_dialysis_bp"/>

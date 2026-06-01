@@ -184,6 +184,17 @@ class AcsPatientProcedure(models.Model):
     # Signes vitaux (6 fois pendant l'hémodialyse)
     vital_sign_ids = fields.One2many('hemodialysis.vital.sign', 'procedure_id', string='Signes Vitaux')
 
+    has_active_hypotension = fields.Boolean(
+        string='Hypotension active',
+        compute='_compute_has_active_hypotension',
+        store=True,
+    )
+
+    @api.depends('vital_sign_ids.is_hypotension')
+    def _compute_has_active_hypotension(self):
+        for rec in self:
+            rec.has_active_hypotension = any(rec.vital_sign_ids.mapped('is_hypotension'))
+
     last_ktv = fields.Float(string="Last KTV")
     last_ktv_sp = fields.Float(string="DERNIER KT/V sp")
     last_ktv_dp = fields.Float(string="DERNIER KT/V dp")

@@ -244,3 +244,59 @@ class TestNephrologyScheduleExtended(TransactionCase):
             'nurse_ids': [(4, nurse.id)],
         })
         self.assertIn(nurse, schedule.nurse_ids)
+
+
+class TestHypotensionBanner(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.patient = self.env['hms.patient'].create({'name': 'Patient Banner'})
+        product = self.env['product.product'].search([
+            ('hospital_product_type', '=', 'nephrology_procedure')
+        ], limit=1) or self.env['product.product'].create({
+            'name': 'Hémodialyse', 'type': 'service',
+            'hospital_product_type': 'nephrology_procedure',
+        })
+        self.procedure = self.env['acs.patient.procedure'].create({
+            'patient_id': self.patient.id,
+            'product_id': product.id,
+        })
+
+    def test_has_active_hypotension_true_when_vital_bp_low(self):
+        """Banner actif si au moins un signe vital a TA systolique < 90"""
+        self.env['hemodialysis.vital.sign'].create({
+            'procedure_id': self.procedure.id,
+            'blood_pressure': '85/50',
+        })
+        self.procedure.invalidate_recordset()
+        self.assertTrue(self.procedure.has_active_hypotension)
+
+    def test_has_active_hypotension_false_when_all_normal(self):
+        """Banner inactif si tous les signes vitaux sont normaux"""
+        self.env['hemodialysis.vital.sign'].create({
+            'procedure_id': self.procedure.id,
+            'blood_pressure': '120/80',
+        })
+        self.env['hemodialysis.vital.sign'].create({
+            'procedure_id': self.procedure.id,
+            'blood_pressure': '115/75',
+        })
+        self.procedure.invalidate_recordset()
+        self.assertFalse(self.procedure.has_active_hypotension)
+
+    def test_has_active_hypotension_false_when_no_vitals(self):
+        """Banner inactif si aucun signe vital enregistré"""
+        self.assertFalse(self.procedure.has_active_hypotension)
+
+    def test_has_active_hypotension_resets_when_vital_deleted(self):
+        """Banner se désactive si le signe vital hypotensif est supprimé"""
+        vital = self.env['hemodialysis.vital.sign'].create({
+            'procedure_id': self.procedure.id,
+            'blood_pressure': '80/50',
+        })
+        self.procedure.invalidate_recordset()
+        self.assertTrue(self.procedure.has_active_hypotension)
+
+        vital.unlink()
+        self.procedure.invalidate_recordset()
+        self.assertFalse(self.procedure.has_active_hypotension)
