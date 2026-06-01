@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_nurse_dashboard" model="ir.actions.client">
+        <field name="name">Interface Infirmier</field>
+        <field name="tag">acs_nurse_dashboard</field>
+    </record>
+
+    <menuitem
+        id="menu_nurse_dashboard"
+        name="Interface Infirmier"
+        action="action_nurse_dashboard"
+        parent="acs_hms_nephrology.menu_nephrology"
+        groups="acs_hms.group_hms_nurse,acs_hms_base.group_hms_manager,acs_hms_nephrology.group_hms_nephrology_user"
+        sequence="5"/>
+</odoo>

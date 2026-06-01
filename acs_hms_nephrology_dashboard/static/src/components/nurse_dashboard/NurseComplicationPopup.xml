@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="acs_hms_nephrology_dashboard.NurseComplicationPopup">
+        <!-- Backdrop -->
+        <div class="o_complication_backdrop position-fixed top-0 start-0 w-100 h-100"
+             style="background: rgba(0,0,0,0.5); z-index: 1050;"
+             t-on-click="props.onCancel"/>
+
+        <!-- Modal -->
+        <div class="o_complication_modal position-fixed bg-white rounded shadow-lg p-4"
+             style="top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1060; width: min(560px, 95vw); max-height: 90vh; overflow-y: auto;">
+
+            <h5 class="mb-3 fw-bold">Signaler une complication</h5>
+
+            <!-- Type complication — boutons tactiles -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Type de complication <span class="text-danger">*</span></label>
+                <div class="d-flex flex-wrap gap-2">
+                    <t t-foreach="types" t-as="ct" t-key="ct.value">
+                        <button
+                            t-att-class="form.complication_type === ct.value
+                                ? 'btn btn-danger'
+                                : 'btn btn-outline-secondary'"
+                            t-on-click="() => selectType(ct.value)">
+                            <t t-esc="ct.label"/>
+                        </button>
+                    </t>
+                </div>
+            </div>
+
+            <!-- Durée arrêt prématuré (conditionnel) -->
+            <div t-if="showEarlyStop" class="mb-3">
+                <label class="form-label fw-semibold">Durée d'arrêt (minutes)</label>
+                <input type="number" class="form-control" t-model="form.early_stop_duration"/>
+            </div>
+
+            <!-- Heure de survenue -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Heure de survenue</label>
+                <input type="datetime-local" class="form-control"
+                       t-model="form.occurrence_time"/>
+            </div>
+
+            <!-- TA au moment -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">TA au moment (ex: 85/50)</label>
+                <input type="text" class="form-control" placeholder="—" t-model="form.bp_at_occurrence"/>
+            </div>
+
+            <!-- Action prise -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Action prise <span class="text-danger">*</span></label>
+                <textarea class="form-control" rows="2"
+                          placeholder="Décrivez l'action prise..."
+                          t-model="form.action_taken"/>
+            </div>
+
+            <!-- Résolution -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Résolution <span class="text-danger">*</span></label>
+                <div class="d-flex gap-2">
+                    <button t-att-class="form.resolution === 'yes' ? 'btn btn-success' : 'btn btn-outline-success'"
+                            t-on-click="() => form.resolution = 'yes'">Résolue</button>
+                    <button t-att-class="form.resolution === 'partial' ? 'btn btn-warning' : 'btn btn-outline-warning'"
+                            t-on-click="() => form.resolution = 'partial'">Partielle</button>
+                    <button t-att-class="form.resolution === 'no' ? 'btn btn-danger' : 'btn btn-outline-danger'"
+                            t-on-click="() => form.resolution = 'no'">Non résolue</button>
+                </div>
+            </div>
+
+            <!-- Boutons -->
+            <div class="d-flex justify-content-end gap-2 mt-3">
+                <button class="btn btn-secondary" t-on-click="props.onCancel">Annuler</button>
+                <button class="btn btn-danger"
+                        t-att-disabled="!isValid or saving.pending"
+                        t-on-click="onSave">
+                    <t t-if="saving.pending">Enregistrement...</t>
+                    <t t-else="">Enregistrer la complication</t>
+                </button>
+            </div>
+
+        </div>
+    </t>
+</templates>

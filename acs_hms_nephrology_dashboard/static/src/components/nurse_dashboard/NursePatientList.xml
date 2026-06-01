@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="acs_hms_nephrology_dashboard.NursePatientList">
+        <div class="o_nurse_patient_list p-3">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h4 class="mb-0">Patients du jour — <t t-esc="today"/></h4>
+                <div class="d-flex align-items-center gap-2">
+                    <label class="mb-0 fw-semibold">Planning :</label>
+                    <select class="form-select form-select-sm" t-on-change="onScheduleChange">
+                        <option value="">-- Tous --</option>
+                        <t t-foreach="props.schedules" t-as="s" t-key="s.id">
+                            <option t-att-value="s.id" t-att-selected="s.id === props.scheduleId">
+                                <t t-esc="s.name"/>
+                            </option>
+                        </t>
+                    </select>
+                    <span class="badge bg-primary">
+                        <t t-esc="props.procedures.length"/> patients
+                    </span>
+                </div>
+            </div>
+
+            <!-- État vide : aucun planning assigné -->
+            <div t-if="!props.scheduleId and props.procedures.length === 0"
+                 class="alert alert-warning">
+                <strong>Aucun poste assigné aujourd'hui.</strong>
+                Sélectionnez un planning manuellement ci-dessus pour voir les patients.
+            </div>
+
+            <!-- État vide : planning sélectionné mais aucun patient -->
+            <div t-if="props.scheduleId and props.procedures.length === 0"
+                 class="alert alert-info">
+                Aucun patient programmé pour ce planning aujourd'hui.
+            </div>
+
+            <!-- Tableau patients -->
+            <div t-if="props.procedures.length > 0" class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Poste</th>
+                            <th>Patient</th>
+                            <th>Heure prévue</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="props.procedures" t-as="proc" t-key="proc.id">
+                            <tr>
+                                <td><t t-esc="posteFor(proc)"/></td>
+                                <td class="fw-semibold"><t t-esc="proc.patient_id[1]"/></td>
+                                <td><t t-esc="formatTime(proc.date)"/></td>
+                                <td>
+                                    <span t-att-class="stateBadgeClass(proc.state)">
+                                        <t t-esc="stateLabel(proc.state)"/>
+                                    </span>
+                                </td>
+                                <td class="d-flex gap-1 flex-wrap">
+                                    <button t-if="proc.state === 'scheduled'"
+                                            class="btn btn-sm btn-success"
+                                            t-on-click="() => props.onSelectProcedure(proc.id)">
+                                        Démarrer
+                                    </button>
+                                    <button t-if="proc.state === 'running'"
+                                            class="btn btn-sm btn-primary"
+                                            t-on-click="() => props.onSelectProcedure(proc.id)">
+                                        Reprendre
+                                    </button>
+                                    <button t-if="proc.state === 'done'"
+                                            class="btn btn-sm btn-outline-secondary"
+                                            t-on-click="() => props.onSelectProcedure(proc.id)">
+                                        Voir
+                                    </button>
+                                    <button t-if="proc.state !== 'cancel' and proc.state !== 'done'"
+                                            class="btn btn-sm btn-outline-danger"
+                                            t-on-click="() => props.onMarkAbsent(proc.id)">
+                                        Absent
+                                    </button>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+</templates>

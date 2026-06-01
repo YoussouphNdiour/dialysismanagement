@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_acs_patient_procedure_nurse_dashboard,acs.patient.procedure nurse dashboard,acs_hms.model_acs_patient_procedure,acs_hms.group_hms_nurse,1,1,0,0

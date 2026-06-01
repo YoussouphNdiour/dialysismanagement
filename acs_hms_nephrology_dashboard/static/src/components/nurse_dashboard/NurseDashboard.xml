@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="acs_hms_nephrology_dashboard.NurseDashboard">
+        <div class="o_action o_nurse_dashboard">
+            <NursePatientList
+                t-if="state.screen === 'list'"
+                procedures="state.procedures"
+                schedules="state.schedules"
+                scheduleId="state.scheduleId"
+                onSelectProcedure.bind="onSelectProcedure"
+                onScheduleChange.bind="onScheduleChange"
+                onMarkAbsent.bind="onMarkAbsent"
+            />
+            <NurseSessionForm
+                t-if="state.screen === 'session' and state.procedure"
+                procedure="state.procedure"
+                vitals="state.vitals"
+                timer="timer"
+                onTimerReset.bind="onTimerReset"
+                onSaveVitals.bind="onSaveVitals"
+                onSaveComplication.bind="onSaveComplication"
+                onGoToEnd.bind="onGoToEnd"
+                onBackToList.bind="onBackToList"
+            />
+            <NurseEndSession
+                t-if="state.screen === 'end' and state.procedure"
+                procedure="state.procedure"
+                vitals="state.vitals"
+                onValidateSession.bind="onValidateSession"
+                onBackToSession.bind="onBackToSession"
+            />
+        </div>
+    </t>
+</templates>
