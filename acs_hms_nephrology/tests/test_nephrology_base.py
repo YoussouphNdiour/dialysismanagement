@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import math
+from datetime import datetime
 
 from odoo.tests.common import TransactionCase
 
@@ -196,7 +197,6 @@ class TestProcedureKTV(TransactionCase):
 
     def test_actual_duration_auto_from_dates(self):
         """actual_duration calculé depuis date/date_stop si non overridé"""
-        from datetime import datetime
         self.procedure.write({
             'date': datetime(2026, 1, 1, 7, 0, 0),
             'date_stop': datetime(2026, 1, 1, 11, 0, 0),
@@ -206,7 +206,6 @@ class TestProcedureKTV(TransactionCase):
 
     def test_actual_duration_manual_overrides_dates(self):
         """Saisie manuelle prend le dessus sur le calcul auto"""
-        from datetime import datetime
         self.procedure.write({
             'date': datetime(2026, 1, 1, 7, 0, 0),
             'date_stop': datetime(2026, 1, 1, 11, 0, 0),
@@ -214,6 +213,15 @@ class TestProcedureKTV(TransactionCase):
         })
         self.procedure.invalidate_recordset()
         self.assertAlmostEqual(self.procedure.actual_duration, 3.5, places=1)
+
+    def test_actual_duration_zero_when_date_stop_before_date(self):
+        """actual_duration = 0.0 si date_stop est avant date (garde durée négative)"""
+        self.procedure.write({
+            'date': datetime(2026, 1, 1, 11, 0, 0),
+            'date_stop': datetime(2026, 1, 1, 7, 0, 0),  # date_stop < date
+        })
+        self.procedure.invalidate_recordset()
+        self.assertEqual(self.procedure.actual_duration, 0.0)
 
 
 class TestNephrologyScheduleExtended(TransactionCase):

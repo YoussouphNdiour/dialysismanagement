@@ -287,7 +287,7 @@
             <group string="Poids" position="before">
                 <field name="has_active_hypotension" invisible="1"/>
                 <div class="alert alert-danger d-flex align-items-center gap-2 mb-2"
-                     invisible="not has_active_hypotension"
+                     invisible="department_type != 'nephrology' or not has_active_hypotension"
                      role="alert">
                     <i class="fa fa-exclamation-triangle fa-lg me-2"/>
                     <span>
