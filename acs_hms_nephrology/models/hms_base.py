@@ -193,7 +193,7 @@ class AcsPatientProcedure(models.Model):
     @api.depends('vital_sign_ids.is_hypotension')
     def _compute_has_active_hypotension(self):
         for rec in self:
-            rec.has_active_hypotension = any(rec.vital_sign_ids.mapped('is_hypotension'))
+            rec.has_active_hypotension = bool(rec.vital_sign_ids.filtered('is_hypotension'))
 
     last_ktv = fields.Float(string="Last KTV")
     last_ktv_sp = fields.Float(string="DERNIER KT/V sp")

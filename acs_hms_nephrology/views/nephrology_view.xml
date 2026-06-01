@@ -283,8 +283,8 @@
         <field name="model">acs.patient.procedure</field>
         <field name="inherit_id" ref="acs_hms_nephrology.view_acs_patient_procedure_form"/>
         <field name="arch" type="xml">
-            <!-- Statut arrivée — avant le bloc poids -->
-            <field name="arrival_weight" position="before">
+            <!-- Bannière HYPOTENSION — avant le groupe Poids, pleine largeur -->
+            <group string="Poids" position="before">
                 <field name="has_active_hypotension" invisible="1"/>
                 <div class="alert alert-danger d-flex align-items-center gap-2 mb-2"
                      invisible="not has_active_hypotension"
@@ -295,6 +295,9 @@
                         — TA systolique &lt; 90 mmHg sur un ou plusieurs signes vitaux.
                     </span>
                 </div>
+            </group>
+            <!-- Statut arrivée — avant le bloc poids -->
+            <field name="arrival_weight" position="before">
                 <group string="Statut à l'arrivée">
                     <field name="arrival_status"/>
                     <field name="pre_dialysis_bp"/>

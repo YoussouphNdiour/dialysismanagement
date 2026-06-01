@@ -300,3 +300,20 @@ class TestHypotensionBanner(TransactionCase):
         vital.unlink()
         self.procedure.invalidate_recordset()
         self.assertFalse(self.procedure.has_active_hypotension)
+
+    def test_has_active_hypotension_recomputes_on_bp_update(self):
+        """Banner recomputes when an existing vital sign's BP changes via write()"""
+        vital = self.env['hemodialysis.vital.sign'].create({
+            'procedure_id': self.procedure.id,
+            'blood_pressure': '120/80',
+        })
+        self.procedure.invalidate_recordset()
+        self.assertFalse(self.procedure.has_active_hypotension)
+
+        vital.write({'blood_pressure': '80/50'})
+        self.procedure.invalidate_recordset()
+        self.assertTrue(self.procedure.has_active_hypotension)
+
+        vital.write({'blood_pressure': '95/60'})
+        self.procedure.invalidate_recordset()
+        self.assertFalse(self.procedure.has_active_hypotension)
