@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="holiday_new_year" model="acs.nephrology.holiday">
+            <field name="name">Jour de l'An</field>
+            <field name="date">2026-01-01</field>
+            <field name="recurring">True</field>
+        </record>
+        <record id="holiday_independance" model="acs.nephrology.holiday">
+            <field name="name">Fête Nationale (Indépendance)</field>
+            <field name="date">2026-04-04</field>
+            <field name="recurring">True</field>
+        </record>
+        <record id="holiday_labour" model="acs.nephrology.holiday">
+            <field name="name">Fête du Travail</field>
+            <field name="date">2026-05-01</field>
+            <field name="recurring">True</field>
+        </record>
+        <record id="holiday_assumption" model="acs.nephrology.holiday">
+            <field name="name">Assomption</field>
+            <field name="date">2026-08-15</field>
+            <field name="recurring">True</field>
+        </record>
+        <record id="holiday_toussaint" model="acs.nephrology.holiday">
+            <field name="name">Toussaint</field>
+            <field name="date">2026-11-01</field>
+            <field name="recurring">True</field>
+        </record>
+        <record id="holiday_christmas" model="acs.nephrology.holiday">
+            <field name="name">Noël</field>
+            <field name="date">2026-12-25</field>
+            <field name="recurring">True</field>
+        </record>
+    </data>
+</odoo>
