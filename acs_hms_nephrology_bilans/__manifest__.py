@@ -15,6 +15,7 @@
         'security/ir.model.access.csv',
         'data/default_thresholds.xml',
         'data/cron_data.xml',
+        'report/bilan_report.xml',
         'views/bilan_threshold_view.xml',
         'views/bilan_view.xml',
         'views/patient_bilan_tab.xml',

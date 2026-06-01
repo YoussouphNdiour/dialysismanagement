@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_nephro_bilan" model="ir.actions.report">
+        <field name="name">Bilan Biologique</field>
+        <field name="model">acs.nephro.bilan</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">acs_hms_nephrology_bilans.report_nephro_bilan</field>
+        <field name="report_file">acs_hms_nephrology_bilans.report_nephro_bilan</field>
+        <field name="print_report_name">'Bilan_%s_%s' % (object.patient_id.name.replace(' ', '_'), object.exam_date.strftime('%Y%m%d'))</field>
+        <field name="binding_model_id" ref="model_acs_nephro_bilan"/>
+    </record>
+
+    <template id="report_nephro_bilan">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Bilan Biologique — <t t-esc="o.patient_id.name"/></h2>
+                        <p>
+                            <strong>Date :</strong> <t t-esc="o.exam_date.strftime('%d/%m/%Y')"/> |
+                            <strong>Type :</strong> <t t-esc="dict(o._fields['bilan_type'].selection).get(o.bilan_type, '')"/> |
+                            <strong>Médecin :</strong> <t t-esc="o.physician_id.name or 'N/A'"/>
+                        </p>
+
+                        <h3>Hématologie</h3>
+                        <table class="table table-sm table-bordered">
+                            <thead><tr><th>Paramètre</th><th>Résultat</th><th>Unité</th><th>Cible</th><th>Statut</th></tr></thead>
+                            <tbody>
+                                <tr t-if="o.hemoglobin">
+                                    <td>Hémoglobine</td><td><t t-esc="o.hemoglobin"/></td>
+                                    <td>g/dL</td><td>10–12</td>
+                                    <td><t t-esc="dict(o._fields['hemoglobin_status'].selection).get(o.hemoglobin_status, '')"/></td>
+                                </tr>
+                                <tr t-if="o.ferritin">
+                                    <td>Ferritine</td><td><t t-esc="o.ferritin"/></td>
+                                    <td>µg/L</td><td>200–500</td><td>—</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Électrolytes</h3>
+                        <table class="table table-sm table-bordered">
+                            <thead><tr><th>Paramètre</th><th>Résultat</th><th>Unité</th><th>Cible</th><th>Statut</th></tr></thead>
+                            <tbody>
+                                <tr t-if="o.potassium">
+                                    <td>Potassium K</td><td><t t-esc="o.potassium"/></td>
+                                    <td>mmol/L</td><td>3.5–5.5</td>
+                                    <td><t t-esc="dict(o._fields['potassium_status'].selection).get(o.potassium_status, '')"/></td>
+                                </tr>
+                                <tr t-if="o.phosphorus">
+                                    <td>Phosphore P</td><td><t t-esc="o.phosphorus"/></td>
+                                    <td>mmol/L</td><td>1.1–1.8</td>
+                                    <td><t t-esc="dict(o._fields['phosphorus_status'].selection).get(o.phosphorus_status, '')"/></td>
+                                </tr>
+                                <tr t-if="o.caxp_product">
+                                    <td>Produit CaxP</td><td><t t-esc="o.caxp_product"/></td>
+                                    <td>mmol²/L²</td><td>&lt; 4.4</td>
+                                    <td><t t-esc="dict(o._fields['caxp_status'].selection).get(o.caxp_status, '')"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3>Nutrition / Inflammation</h3>
+                        <table class="table table-sm table-bordered">
+                            <thead><tr><th>Paramètre</th><th>Résultat</th><th>Unité</th><th>Cible</th><th>Statut</th></tr></thead>
+                            <tbody>
+                                <tr t-if="o.albumin">
+                                    <td>Albumine</td><td><t t-esc="o.albumin"/></td>
+                                    <td>g/L</td><td>&gt; 35</td>
+                                    <td><t t-esc="dict(o._fields['albumin_status'].selection).get(o.albumin_status, '')"/></td>
+                                </tr>
+                                <tr t-if="o.crp">
+                                    <td>CRP</td><td><t t-esc="o.crp"/></td>
+                                    <td>mg/L</td><td>&lt; 5</td><td>—</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <t t-if="o.notes">
+                            <h3>Notes cliniques</h3>
+                            <p><t t-esc="o.notes"/></p>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>
