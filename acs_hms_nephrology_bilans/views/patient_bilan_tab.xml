@@ -33,6 +33,46 @@
                             <field name="pth"/>
                         </list>
                     </field>
+                    <separator string="Evolution sur 12 mois"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <widget name="bilan_chart"
+                                    patient_id="id"
+                                    parameter="'hemoglobin'"
+                                    label="'Hemoglobine'"
+                                    unit="'g/dL'"
+                                    target_min="10.0"
+                                    target_max="12.0"/>
+                        </div>
+                        <div class="col-md-6">
+                            <widget name="bilan_chart"
+                                    patient_id="id"
+                                    parameter="'phosphorus'"
+                                    label="'Phosphore'"
+                                    unit="'mmol/L'"
+                                    target_min="1.1"
+                                    target_max="1.8"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <widget name="bilan_chart"
+                                    patient_id="id"
+                                    parameter="'potassium'"
+                                    label="'Potassium'"
+                                    unit="'mmol/L'"
+                                    target_min="3.5"
+                                    target_max="5.5"/>
+                        </div>
+                        <div class="col-md-6">
+                            <widget name="bilan_chart"
+                                    patient_id="id"
+                                    parameter="'albumin'"
+                                    label="'Albumine'"
+                                    unit="'g/L'"
+                                    target_min="35.0"/>
+                        </div>
+                    </div>
                 </page>
             </xpath>
         </field>

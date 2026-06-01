@@ -1,1 +1,7 @@
-/* bilan chart styles — placeholder */
+.acs_bilan_chart_container {
+    padding: 12px;
+    background: #fafafa;
+    border-radius: 6px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 16px;
+}

@@ -1,2 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<templates/>
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="acs_hms_nephrology_bilans.BilanChart">
+        <div class="acs_bilan_chart_container">
+            <t t-if="state.loading">
+                <div class="text-center p-3">
+                    <i class="fa fa-spinner fa-spin"/> Chargement du graphique...
+                </div>
+            </t>
+            <t t-elif="!state.data.length">
+                <div class="text-center text-muted p-3">
+                    Aucune donnee disponible sur les 12 derniers mois
+                </div>
+            </t>
+            <t t-else="">
+                <canvas t-ref="canvas" style="height: 220px;"/>
+            </t>
+        </div>
+    </t>
+
+</templates>
