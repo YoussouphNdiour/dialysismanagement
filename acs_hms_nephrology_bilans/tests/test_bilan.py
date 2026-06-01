@@ -78,3 +78,35 @@ class TestBilanBiologique(TransactionCase):
             'bilan_type': 'monthly',
         })
         self.assertTrue(bilan.name.startswith('BIO/'))
+
+
+class TestBilanOverdueAlert(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        from datetime import timedelta
+        self.patient_ok = self.env['hms.patient'].create({'name': 'Patient avec bilan récent'})
+        self.patient_overdue = self.env['hms.patient'].create({'name': 'Patient sans bilan récent'})
+
+        # Activer le flag néphro
+        self.patient_ok.write({'nephrology_care': True})
+        self.patient_overdue.write({'nephrology_care': True})
+
+        # Bilan récent pour patient_ok
+        self.env['acs.nephro.bilan'].create({
+            'patient_id': self.patient_ok.id,
+            'bilan_type': 'monthly',
+            'exam_date': fields.Datetime.now(),
+        })
+        # Vieux bilan pour patient_overdue (35 jours)
+        old_date = fields.Datetime.now() - timedelta(days=35)
+        self.env['acs.nephro.bilan'].create({
+            'patient_id': self.patient_overdue.id,
+            'bilan_type': 'monthly',
+            'exam_date': old_date,
+        })
+
+    def test_overdue_patients_detected(self):
+        overdue = self.env['acs.nephro.bilan']._get_overdue_patients(days=30)
+        self.assertIn(self.patient_overdue.id, overdue.ids)
+        self.assertNotIn(self.patient_ok.id, overdue.ids)

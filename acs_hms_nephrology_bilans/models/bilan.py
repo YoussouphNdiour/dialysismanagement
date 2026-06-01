@@ -175,6 +175,41 @@ class ACSNephroBilan(models.Model):
                 )
         return super().create(vals_list)
 
+    @api.model
+    def _get_overdue_patients(self, days=30):
+        """Retourne les patients néphro sans bilan depuis X jours"""
+        from datetime import timedelta
+        cutoff = fields.Datetime.now() - timedelta(days=days)
+
+        # Patients néphro actifs
+        nephro_patients = self.env['hms.patient'].search([
+            ('nephrology_care', '=', True),
+            ('active', '=', True),
+        ])
+
+        overdue_patients = self.env['hms.patient']
+        for patient in nephro_patients:
+            last_bilan = self.search([
+                ('patient_id', '=', patient.id),
+            ], order='exam_date desc', limit=1)
+
+            if not last_bilan or last_bilan.exam_date < cutoff:
+                overdue_patients |= patient
+
+        return overdue_patients
+
+    @api.model
+    def action_check_overdue_bilans(self):
+        """Cron : crée des activités mail pour les bilans en retard"""
+        overdue = self._get_overdue_patients(days=30)
+        for patient in overdue:
+            patient.activity_schedule(
+                'mail.mail_activity_data_todo',
+                summary='Bilan biologique en retard (> 30 jours)',
+                note=f'Le patient {patient.name} n\'a pas eu de bilan depuis plus de 30 jours.',
+                user_id=patient.physician_id.user_id.id if patient.physician_id else self.env.uid,
+            )
+
 
 class ACSPatientBilanRelation(models.Model):
     _inherit = 'hms.patient'
