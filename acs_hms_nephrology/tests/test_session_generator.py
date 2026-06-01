@@ -54,13 +54,6 @@ class TestSessionGeneratorDates(TransactionCase):
             'wednesday': True, # 2
             'friday': True,    # 4
         })
-        self.schedule_mj = self.env['acs.nephrology.schedule'].create({
-            'name': 'MJ Test',
-            'start_time': 13.0,
-            'end_time': 17.0,
-            'tuesday': True,   # 1
-            'thursday': True,  # 3
-        })
 
     def test_schedule_days_respected(self):
         """Seuls Lu/Me/Ve sont générés pour un planning LMV"""
