@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState, onWillStart, useRef } from "@odoo/owl";
+import { Component, useState, onWillStart, onMounted, onWillUnmount, useRef } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
@@ -11,12 +11,12 @@ import { registry } from "@web/core/registry";
 export class BilanChartWidget extends Component {
     static template = "acs_hms_nephrology_bilans.BilanChart";
     static props = {
-        patientId: { type: Number },
+        patient_id: { type: Number },
         parameter: { type: String },    // 'hemoglobin', 'potassium', 'phosphorus', 'albumin', 'pth'
         label: { type: String },
         unit: { type: String },
-        targetMin: { type: Number, optional: true },
-        targetMax: { type: Number, optional: true },
+        target_min: { type: Number, optional: true },
+        target_max: { type: Number, optional: true },
     };
 
     setup() {
@@ -27,17 +27,22 @@ export class BilanChartWidget extends Component {
         onWillStart(async () => {
             await this._loadData();
         });
+        onMounted(() => this._renderChart());
+        onWillUnmount(() => {
+            if (this._chart) this._chart.destroy();
+        });
     }
 
     async _loadData() {
         const twelveMonthsAgo = new Date();
         twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
 
+        const dateStr = twelveMonthsAgo.toISOString().split("T")[0];
         const bilans = await this.orm.searchRead(
             "acs.nephro.bilan",
             [
-                ["patient_id", "=", this.props.patientId],
-                ["exam_date", ">=", twelveMonthsAgo.toISOString()],
+                ["patient_id", "=", this.props.patient_id],
+                ["exam_date", ">=", dateStr],
             ],
             ["exam_date", this.props.parameter],
             { order: "exam_date asc", limit: 24 }
@@ -47,11 +52,11 @@ export class BilanChartWidget extends Component {
             const d = new Date(b.exam_date);
             return `${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
         });
-        this.state.data = bilans.map((b) => b[this.props.parameter] || null);
+        this.state.data = bilans.map((b) => {
+            const val = b[this.props.parameter];
+            return val !== undefined && val !== false ? val : null;
+        });
         this.state.loading = false;
-
-        // Rendu Chart.js apres le prochain tick
-        setTimeout(() => this._renderChart(), 50);
     }
 
     _renderChart() {
@@ -71,10 +76,10 @@ export class BilanChartWidget extends Component {
         ];
 
         // Ligne cible min (pointillee verte)
-        if (this.props.targetMin) {
+        if (this.props.target_min) {
             datasets.push({
-                label: `Cible min (${this.props.targetMin})`,
-                data: new Array(this.state.labels.length).fill(this.props.targetMin),
+                label: `Cible min (${this.props.target_min})`,
+                data: new Array(this.state.labels.length).fill(this.props.target_min),
                 borderColor: "#2E7D32",
                 borderDash: [5, 5],
                 pointRadius: 0,
@@ -83,10 +88,10 @@ export class BilanChartWidget extends Component {
         }
 
         // Ligne cible max (pointillee orange)
-        if (this.props.targetMax) {
+        if (this.props.target_max) {
             datasets.push({
-                label: `Cible max (${this.props.targetMax})`,
-                data: new Array(this.state.labels.length).fill(this.props.targetMax),
+                label: `Cible max (${this.props.target_max})`,
+                data: new Array(this.state.labels.length).fill(this.props.target_max),
                 borderColor: "#E65100",
                 borderDash: [5, 5],
                 pointRadius: 0,
@@ -95,7 +100,8 @@ export class BilanChartWidget extends Component {
         }
 
         // Chart.js est disponible dans Odoo via /web/static/lib/Chart/Chart.js
-        new Chart(canvas, {
+        if (this._chart) this._chart.destroy();
+        this._chart = new Chart(canvas, {
             type: "line",
             data: { labels: this.state.labels, datasets },
             options: {
