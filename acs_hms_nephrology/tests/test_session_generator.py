@@ -216,3 +216,86 @@ class TestSessionGeneratorLines(TransactionCase):
         })
         generator.action_open_validator()
         self.assertEqual(len(generator.line_ids), 0)
+
+
+class TestSessionGeneratorConflicts(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.station = self.env['acs.dialysis.station'].create({
+            'name': 'Poste Conflit',
+        })
+        self.schedule = self.env['acs.nephrology.schedule'].create({
+            'name': 'LMV Conflit', 'start_time': 7.0, 'end_time': 11.0,
+            'monday': True, 'wednesday': True, 'friday': True,
+            'station_id': self.station.id,
+        })
+        self.product = self.env['product.product'].search([
+            ('hospital_product_type', 'in', ['nephrology_procedure', 'consultation'])
+        ], limit=1)
+        if not self.product:
+            self.product = self.env['product.product'].create({
+                'name': 'Hémodialyse Conflit', 'type': 'service',
+            })
+        self.patient_a = self.env['hms.patient'].create({
+            'name': 'Patient A Conflit', 'nephrology_care': True,
+        })
+        self.patient_b = self.env['hms.patient'].create({
+            'name': 'Patient B Conflit', 'nephrology_care': True,
+        })
+
+    def _make_procedure(self, patient, schedule, date_str):
+        return self.env['acs.patient.procedure'].create({
+            'patient_id': patient.id,
+            'product_id': self.product.id,
+            'date': date_str,
+            'nephrology_schedule_ids': [(4, schedule.id)],
+        })
+
+    def test_conflict_station_warning(self):
+        """Poste déjà utilisé → warning_station (pas bloquant)"""
+        # Patient B a déjà une procédure sur le même poste sur la période
+        self._make_procedure(self.patient_b, self.schedule, '2026-06-03 07:00:00')
+
+        # Patient A a une procédure passée (pour avoir un schedule) mais pas sur la période
+        self._make_procedure(self.patient_a, self.schedule, '2026-01-05 07:00:00')
+
+        generator = self.env['nephrology.session.generator'].create({
+            'date_start': date(2026, 6, 1),
+            'date_end': date(2026, 6, 7),
+            'exclude_holidays': False,
+            'patient_ids': [(4, self.patient_a.id)],
+        })
+        generator.action_open_validator()
+        line = generator.line_ids.filtered(lambda l: l.patient_id == self.patient_a)
+        self.assertEqual(line.conflict_status, 'warning_station')
+
+    def test_conflict_duplicate_error(self):
+        """Patient déjà planifié sur la période → error_duplicate (bloquant)"""
+        # Patient A a déjà une procédure sur la période
+        self._make_procedure(self.patient_a, self.schedule, '2026-06-03 07:00:00')
+
+        generator = self.env['nephrology.session.generator'].create({
+            'date_start': date(2026, 6, 1),
+            'date_end': date(2026, 6, 7),
+            'exclude_holidays': False,
+            'patient_ids': [(4, self.patient_a.id)],
+        })
+        generator.action_open_validator()
+        line = generator.line_ids.filtered(lambda l: l.patient_id == self.patient_a)
+        self.assertEqual(line.conflict_status, 'error_duplicate')
+
+    def test_no_conflict_ok(self):
+        """Aucun conflit → statut ok"""
+        # Patient A has a past procedure (not on the period) to get a schedule
+        self._make_procedure(self.patient_a, self.schedule, '2026-01-05 07:00:00')
+
+        generator = self.env['nephrology.session.generator'].create({
+            'date_start': date(2026, 6, 1),
+            'date_end': date(2026, 6, 7),
+            'exclude_holidays': False,
+            'patient_ids': [(4, self.patient_a.id)],
+        })
+        generator.action_open_validator()
+        line = generator.line_ids.filtered(lambda l: l.patient_id == self.patient_a)
+        self.assertEqual(line.conflict_status, 'ok')
