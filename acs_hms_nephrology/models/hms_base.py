@@ -17,37 +17,37 @@ class ACSPatient(models.Model):
     )
 
     # Medical History Fields for Nephrology
-    nephro_main_complaint = fields.Text(string="Plainte Principale", help="Main Complaint")
-    nephro_disease_history = fields.Text(string="Histoire de la maladie", help="Disease History")
+    nephro_main_complaint = fields.Text(string="Plainte Principale (Néphro)", help="Main Complaint")
+    nephro_disease_history = fields.Text(string="Histoire de la maladie (Néphro)", help="Disease History")
 
     # Personal History (Antecedants personnels)
-    nephro_medical_antecedent = fields.Text(string="Médicaux", help="Medical Antecedents - Disease")
-    nephro_surgical_antecedent_ids = fields.Many2many('acs.surgical.history', 'nephro_patient_surgical_rel', 'patient_id', 'surgical_id', string="Chirurgicaux", help="Surgical Antecedents")
+    nephro_medical_antecedent = fields.Text(string="Médicaux (Néphro)", help="Medical Antecedents - Disease")
+    nephro_surgical_antecedent_ids = fields.Many2many('acs.surgical.history', 'nephro_patient_surgical_rel', 'patient_id', 'surgical_id', string="Chirurgicaux (Néphro)", help="Surgical Antecedents")
 
     # GO (Gyneco-Obstetric) History
-    nephro_menarche_date = fields.Date(string="Ménarche", help="Date of first menstruation")
-    nephro_ddr_date = fields.Date(string="DDR", help="Date des Dernières Règles")
-    nephro_grossesse = fields.Integer(string="Grossesse", help="Number of pregnancies")
-    nephro_parite = fields.Integer(string="Parité", help="Number of births")
-    nephro_avortement = fields.Integer(string="Avortement", help="Number of abortions")
-    nephro_deces = fields.Integer(string="Décès", help="Number of deceased children")
+    nephro_menarche_date = fields.Date(string="Ménarche (Néphro)", help="Date of first menstruation")
+    nephro_ddr_date = fields.Date(string="DDR (Néphro)", help="Date des Dernières Règles")
+    nephro_grossesse = fields.Integer(string="Grossesse (Néphro)", help="Number of pregnancies")
+    nephro_parite = fields.Integer(string="Parité (Néphro)", help="Number of births")
+    nephro_avortement = fields.Integer(string="Avortement (Néphro)", help="Number of abortions")
+    nephro_deces = fields.Integer(string="Décès (Néphro)", help="Number of deceased children")
 
     # Lifestyle (Mode de vie)
-    nephro_lifestyle_ids = fields.Many2many('acs.lifestyle', 'nephro_patient_lifestyle_rel', 'patient_id', 'lifestyle_id', string="Mode de vie", help="Lifestyle")
+    nephro_lifestyle_ids = fields.Many2many('acs.lifestyle', 'nephro_patient_lifestyle_rel', 'patient_id', 'lifestyle_id', string="Mode de vie (Néphro)", help="Lifestyle")
 
     # Family History (Antecedants Familiaux)
-    nephro_family_ascendant_ids = fields.One2many('hms.nephro.family.ascendant', 'patient_id', string="Ascendants")
-    nephro_family_collateral_ids = fields.One2many('hms.nephro.family.collateral', 'patient_id', string="Collatéraux")
-    nephro_family_descendant_ids = fields.One2many('hms.nephro.family.descendant', 'patient_id', string="Descendants")
+    nephro_family_ascendant_ids = fields.One2many('hms.nephro.family.ascendant', 'patient_id', string="Ascendants (Néphro)")
+    nephro_family_collateral_ids = fields.One2many('hms.nephro.family.collateral', 'patient_id', string="Collatéraux (Néphro)")
+    nephro_family_descendant_ids = fields.One2many('hms.nephro.family.descendant', 'patient_id', string="Descendants (Néphro)")
 
     # Nephropathy (Néphropathie initiale)
-    nephro_dialysis_start_date = fields.Date(string="Date de début de dialyse", help="Date of dialysis start")
-    nephro_dialysis_start_center = fields.Char(string="Centre de début", help="Center where dialysis started")
-    nephro_tunneled_catheter_date = fields.Date(string="Date de Premiere pose de cathétére tunnelisé", help="Date of first tunneled catheter placement")
-    nephro_catheter_count_simple = fields.Integer(string="Nombre de cathétére Simple (fémoral, jugulaire)", help="Number of simple catheters")
-    nephro_catheter_count_tunneled = fields.Integer(string="Nombre de cathétére Tunnélisé (droite ou gauche)", help="Number of tunneled catheters")
-    nephro_fav_creation_date = fields.Date(string="Date de la confection de la FAV", help="Date of FAV (arteriovenous fistula) creation")
-    nephro_fav_location_id = fields.Many2one('acs.fav.location', string="Localisation de la FAV", help="FAV Location")
+    nephro_dialysis_start_date = fields.Date(string="Date de début de dialyse (Néphro)", help="Date of dialysis start")
+    nephro_dialysis_start_center = fields.Char(string="Centre de début (Néphro)", help="Center where dialysis started")
+    nephro_tunneled_catheter_date = fields.Date(string="Date de Premiere pose de cathétére tunnelisé (Néphro)", help="Date of first tunneled catheter placement")
+    nephro_catheter_count_simple = fields.Integer(string="Nombre de cathétére Simple (Néphro)", help="Number of simple catheters")
+    nephro_catheter_count_tunneled = fields.Integer(string="Nombre de cathétére Tunnélisé (Néphro)", help="Number of tunneled catheters")
+    nephro_fav_creation_date = fields.Date(string="Date de la confection de la FAV (Néphro)", help="Date of FAV (arteriovenous fistula) creation")
+    nephro_fav_location_id = fields.Many2one('acs.fav.location', string="Localisation de la FAV (Néphro)", help="FAV Location")
 
     # Imagerie (Medical Imaging) - Relations
     echography_ids = fields.One2many('acs.nephro.echography', 'patient_id', string='Échographies')

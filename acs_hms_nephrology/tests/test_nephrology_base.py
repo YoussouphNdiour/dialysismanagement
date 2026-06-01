@@ -42,7 +42,7 @@ class TestDryWeightHistory(TransactionCase):
         super().setUp()
         self.patient = self.env['hms.patient'].create({
             'name': 'Test Patient Dialyse',
-            'date_of_birth': '1965-03-15',
+            'birthday': '1965-03-15',
         })
 
     def test_dry_weight_history_creation(self):
