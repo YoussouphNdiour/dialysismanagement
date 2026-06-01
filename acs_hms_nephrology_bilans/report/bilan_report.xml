@@ -7,7 +7,7 @@
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">acs_hms_nephrology_bilans.report_nephro_bilan</field>
         <field name="report_file">acs_hms_nephrology_bilans.report_nephro_bilan</field>
-        <field name="print_report_name">'Bilan_%s_%s' % (object.patient_id.name.replace(' ', '_'), object.exam_date.strftime('%Y%m%d'))</field>
+        <field name="print_report_name">'Bilan_%s_%s' % ((object.patient_id.name or 'NA').replace(' ', '_'), object.exam_date.strftime('%Y%m%d') if object.exam_date else 'NODATE')</field>
         <field name="binding_model_id" ref="model_acs_nephro_bilan"/>
     </record>
 
