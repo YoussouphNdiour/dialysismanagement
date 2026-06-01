@@ -1,2 +1,113 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo/>
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════════════════════
+         MODAL 1 — Générateur : sélection patients + période
+    ══════════════════════════════════════════════════════════ -->
+    <record id="view_nephrology_session_generator_form" model="ir.ui.view">
+        <field name="name">nephrology.session.generator.form</field>
+        <field name="model">nephrology.session.generator</field>
+        <field name="arch" type="xml">
+            <form string="Générer des séances en masse">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Générer des séances d'hémodialyse</h1>
+                    </div>
+
+                    <group string="1. Sélection des patients">
+                        <field name="patient_ids"
+                               widget="many2many_tags"
+                               domain="[('nephrology_care', '=', True)]"
+                               options="{'no_create': True}"
+                               placeholder="Sélectionnez les patients à planifier..."/>
+                    </group>
+
+                    <group string="2. Période">
+                        <group>
+                            <field name="date_start" required="1"/>
+                            <field name="date_end" required="1"/>
+                        </group>
+                        <group>
+                            <field name="exclude_holidays"/>
+                        </group>
+                    </group>
+
+                    <group invisible="preview_count == 0">
+                        <div class="alert alert-info" role="alert">
+                            <strong>Aperçu :</strong>
+                            <field name="preview_count" readonly="1" nolabel="1"/>
+                            séances seront créées.
+                        </div>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_open_validator"
+                            string="Continuer →"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Modal 1 -->
+    <record id="action_nephrology_session_generator" model="ir.actions.act_window">
+        <field name="name">Générer des séances en masse</field>
+        <field name="res_model">nephrology.session.generator</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════════
+         MODAL 2 — Validateur : tableau par patient + confirmation
+    ══════════════════════════════════════════════════════════ -->
+    <record id="view_nephrology_session_validator_form" model="ir.ui.view">
+        <field name="name">nephrology.session.validator.form</field>
+        <field name="model">nephrology.session.validator</field>
+        <field name="arch" type="xml">
+            <form string="Validation des séances">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Récapitulatif — Séances à créer</h1>
+                    </div>
+
+                    <div class="alert alert-info" role="alert">
+                        Les lignes <strong>orange</strong> = conflit de poste (confirmable). Les lignes <strong>rouges</strong> = patient déjà planifié (bloquant, sera ignoré).
+                    </div>
+
+                    <field name="line_ids">
+                        <list editable="bottom"
+                              decoration-warning="conflict_status == 'warning_station'"
+                              decoration-danger="conflict_status == 'error_duplicate'">
+                            <field name="patient_id" readonly="1"/>
+                            <field name="schedule_id" readonly="1"/>
+                            <field name="session_count" readonly="1"
+                                   string="Nb séances"/>
+                            <field name="station_id" optional="show"/>
+                            <field name="physician_id" optional="show"/>
+                            <field name="conflict_status" readonly="1"/>
+                            <field name="conflict_details" readonly="1"
+                                   optional="hide"/>
+                        </list>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_confirm"
+                            string="✅ Confirmer tout"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="← Retour" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action liste jours fériés (menu config) -->
+    <record id="action_acs_nephrology_holiday" model="ir.actions.act_window">
+        <field name="name">Jours Fériés</field>
+        <field name="res_model">acs.nephrology.holiday</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
