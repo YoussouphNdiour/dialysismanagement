@@ -25,6 +25,14 @@
         action="action_nephrology_procedure"
         sequence="20"/>
 
+    <!-- Générer séances en masse (accès rapide secrétaire) -->
+    <menuitem id="menu_nephrology_generate_sessions"
+        name="Générer séances en masse"
+        parent="menu_acs_main_nephrology"
+        action="action_nephrology_session_generator"
+        sequence="25"
+        groups="acs_hms_base.group_hms_user"/>
+
     <!-- 3. Séances de Dialyse (traitements) -->
     <menuitem id="menu_acs_treatment"
         name="Séances de Dialyse"
@@ -92,6 +100,13 @@
         parent="menu_nephrology_config"
         action="action_acs_nephrology_schedule"
         sequence="50"/>
+
+    <!-- Jours Fériés -->
+    <menuitem id="menu_nephrology_holidays"
+        name="Jours Fériés"
+        parent="menu_nephrology_config"
+        action="action_acs_nephrology_holiday"
+        sequence="60"/>
 
     <menuitem id="menu_nephrology_config_settings"
         name="Paramètres généraux"
