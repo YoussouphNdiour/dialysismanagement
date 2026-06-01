@@ -299,3 +299,95 @@ class TestSessionGeneratorConflicts(TransactionCase):
         generator.action_open_validator()
         line = generator.line_ids.filtered(lambda l: l.patient_id == self.patient_a)
         self.assertEqual(line.conflict_status, 'ok')
+
+
+class TestSessionGeneratorConfirm(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.station = self.env['acs.dialysis.station'].create({
+            'name': 'Poste Confirm',
+        })
+        self.schedule = self.env['acs.nephrology.schedule'].create({
+            'name': 'LMV Confirm', 'start_time': 7.0, 'end_time': 11.0,
+            'monday': True, 'wednesday': True, 'friday': True,
+            'station_id': self.station.id,
+        })
+        self.product = self.env['product.product'].search([
+            ('hospital_product_type', 'in', ['nephrology_procedure', 'consultation'])
+        ], limit=1)
+        if not self.product:
+            self.product = self.env['product.product'].create({
+                'name': 'Hémodialyse Confirm', 'type': 'service',
+            })
+        self.patient = self.env['hms.patient'].create({
+            'name': 'Patient Confirm', 'nephrology_care': True,
+        })
+        # Procédure passée pour que le patient ait un schedule
+        self.env['acs.patient.procedure'].create({
+            'patient_id': self.patient.id,
+            'product_id': self.product.id,
+            'date': '2026-01-05 07:00:00',
+            'nephrology_schedule_ids': [(4, self.schedule.id)],
+        })
+
+    def test_confirm_creates_procedures_and_appointments(self):
+        """action_confirm crée les procédures et RDVs pour toutes les lignes OK"""
+        generator = self.env['nephrology.session.generator'].create({
+            'date_start': date(2026, 6, 1),   # Lundi
+            'date_end': date(2026, 6, 5),     # Vendredi
+            'exclude_holidays': False,
+            'patient_ids': [(4, self.patient.id)],
+        })
+        result = generator.action_open_validator()
+        validator_id = result['res_id']
+        validator = self.env['nephrology.session.validator'].browse(validator_id)
+
+        proc_before = self.env['acs.patient.procedure'].search_count([
+            ('patient_id', '=', self.patient.id),
+        ])
+        validator.action_confirm()
+        proc_after = self.env['acs.patient.procedure'].search_count([
+            ('patient_id', '=', self.patient.id),
+        ])
+        # 3 séances LMV du 1 au 5 juin (Lu=1, Me=3, Ve=5)
+        self.assertEqual(proc_after - proc_before, 3)
+
+        # Vérifier que les RDVs ont aussi été créés
+        appts = self.env['hms.appointment'].search([
+            ('patient_id', '=', self.patient.id),
+            ('date', '>=', '2026-06-01 00:00:00'),
+        ])
+        self.assertEqual(len(appts), 3)
+
+    def test_red_lines_excluded_from_confirm(self):
+        """Les lignes error_duplicate ne génèrent aucune procédure"""
+        # Patient a déjà une procédure sur la période → error_duplicate
+        self.env['acs.patient.procedure'].create({
+            'patient_id': self.patient.id,
+            'product_id': self.product.id,
+            'date': '2026-06-03 07:00:00',
+            'nephrology_schedule_ids': [(4, self.schedule.id)],
+        })
+        generator = self.env['nephrology.session.generator'].create({
+            'date_start': date(2026, 6, 1),
+            'date_end': date(2026, 6, 5),
+            'exclude_holidays': False,
+            'patient_ids': [(4, self.patient.id)],
+        })
+        result = generator.action_open_validator()
+        validator = self.env['nephrology.session.validator'].browse(result['res_id'])
+
+        line = generator.line_ids[0]
+        self.assertEqual(line.conflict_status, 'error_duplicate')
+
+        proc_before = self.env['acs.patient.procedure'].search_count([
+            ('patient_id', '=', self.patient.id),
+            ('date', '>=', '2026-06-01 00:00:00'),
+        ])
+        validator.action_confirm()
+        proc_after = self.env['acs.patient.procedure'].search_count([
+            ('patient_id', '=', self.patient.id),
+            ('date', '>=', '2026-06-01 00:00:00'),
+        ])
+        self.assertEqual(proc_after - proc_before, 0)  # Rien créé
