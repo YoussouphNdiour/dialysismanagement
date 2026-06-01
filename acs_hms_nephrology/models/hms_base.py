@@ -220,10 +220,18 @@ class AcsPatientProcedure(models.Model):
         digits=(7, 0),
         help='Calculé : (poids arrivée - poids sortie) × 1000'
     )
+    actual_duration_override = fields.Float(
+        string='Override durée (h)',
+        digits=(4, 2),
+        help='Rempli automatiquement si infirmier saisit manuellement la durée'
+    )
     actual_duration = fields.Float(
         string='Durée effective (heures)',
+        compute='_compute_actual_duration',
+        inverse='_inverse_actual_duration',
+        store=True,
         digits=(4, 2),
-        help='Calculé depuis heure début et fin, ou saisi manuellement'
+        help='Calculé automatiquement depuis heure début/fin. Saisie manuelle possible.'
     )
     global_tolerance = fields.Selection([
         ('good', 'Bonne'),
@@ -273,6 +281,21 @@ class AcsPatientProcedure(models.Model):
                 )
             else:
                 rec.actual_uf = 0.0
+
+    @api.depends('date', 'date_stop', 'actual_duration_override')
+    def _compute_actual_duration(self):
+        for rec in self:
+            if rec.actual_duration_override:
+                rec.actual_duration = rec.actual_duration_override
+            elif rec.date and rec.date_stop:
+                diff = rec.date_stop - rec.date
+                rec.actual_duration = round(diff.total_seconds() / 3600, 2)
+            else:
+                rec.actual_duration = 0.0
+
+    def _inverse_actual_duration(self):
+        for rec in self:
+            rec.actual_duration_override = rec.actual_duration
 
     @api.depends('urea_pre', 'urea_post', 'actual_duration', 'actual_uf', 'departure_weight')
     def _compute_ktv(self):

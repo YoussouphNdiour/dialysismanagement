@@ -194,6 +194,27 @@ class TestProcedureKTV(TransactionCase):
         expected_urr = (1 - 8.0 / 25.0) * 100
         self.assertAlmostEqual(self.procedure.urr_calculated, expected_urr, places=1)
 
+    def test_actual_duration_auto_from_dates(self):
+        """actual_duration calculé depuis date/date_stop si non overridé"""
+        from datetime import datetime
+        self.procedure.write({
+            'date': datetime(2026, 1, 1, 7, 0, 0),
+            'date_stop': datetime(2026, 1, 1, 11, 0, 0),
+        })
+        self.procedure.invalidate_recordset()
+        self.assertAlmostEqual(self.procedure.actual_duration, 4.0, places=1)
+
+    def test_actual_duration_manual_overrides_dates(self):
+        """Saisie manuelle prend le dessus sur le calcul auto"""
+        from datetime import datetime
+        self.procedure.write({
+            'date': datetime(2026, 1, 1, 7, 0, 0),
+            'date_stop': datetime(2026, 1, 1, 11, 0, 0),
+            'actual_duration': 3.5,
+        })
+        self.procedure.invalidate_recordset()
+        self.assertAlmostEqual(self.procedure.actual_duration, 3.5, places=1)
+
 
 class TestNephrologyScheduleExtended(TransactionCase):
 
