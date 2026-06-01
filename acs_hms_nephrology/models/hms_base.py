@@ -285,9 +285,11 @@ class AcsPatientProcedure(models.Model):
     @api.depends('date', 'date_stop', 'actual_duration_override')
     def _compute_actual_duration(self):
         for rec in self:
+            # Note: 0.0 override is treated as "not set" (clinically, a 0-duration dialysis session
+            # never occurs). If needed, add a Boolean flag field.
             if rec.actual_duration_override:
                 rec.actual_duration = rec.actual_duration_override
-            elif rec.date and rec.date_stop:
+            elif rec.date and rec.date_stop and rec.date_stop > rec.date:
                 diff = rec.date_stop - rec.date
                 rec.actual_duration = round(diff.total_seconds() / 3600, 2)
             else:
