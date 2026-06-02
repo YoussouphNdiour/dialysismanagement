@@ -44,7 +44,7 @@ class TestDoctorDashboard(TransactionCase):
 
     def _make_procedure(self, state='running', hours_ago=2, **kwargs):
         """Crée une procédure liée à cls.station via cls.schedule."""
-        now = datetime.now()
+        now = datetime.utcnow()
         start = now - timedelta(hours=hours_ago)
         stop = start + timedelta(hours=4)
         vals = {
@@ -68,10 +68,12 @@ class TestDoctorDashboard(TransactionCase):
         self.assertIn('alerts', result)
         self.assertIsInstance(result['stations'], list)
         self.assertIsInstance(result['alerts'], list)
-        kpis = result['kpis']
-        self.assertEqual(kpis['total_sessions'], 0)
-        self.assertEqual(kpis['occupation_rate'], 0)
-        self.assertEqual(kpis['avg_ktv'], 0.0)
+        # Vérifier que le poste test n'a pas de procédure (isolation)
+        station_entry = next(
+            (s for s in result['stations'] if s['id'] == self.station.id), None
+        )
+        self.assertIsNotNone(station_entry, "Le poste test doit apparaître dans la liste")
+        self.assertIsNone(station_entry['procedure'], "Sans procédure créée, procedure doit être None")
 
     def test_get_dashboard_data_running_session(self):
         """Procédure 'running' du jour → présente dans stations avec état running."""

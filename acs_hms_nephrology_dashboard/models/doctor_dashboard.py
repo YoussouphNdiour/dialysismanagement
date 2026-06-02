@@ -37,7 +37,7 @@ class ACSDialysisStationDashboard(models.Model):
         for p in all_today_procs:
             for sched in p.nephrology_schedule_ids:
                 sid = sched.station_id.id
-                if sid not in proc_by_station:
+                if sid and sid not in proc_by_station:
                     proc_by_station[sid] = p
 
         for station in stations:
@@ -155,6 +155,8 @@ class ACSDialysisStationDashboard(models.Model):
         Procedure = self.env['acs.patient.procedure']
         proc = Procedure.browse(procedure_id)
         if not proc.exists():
+            return {}
+        if proc.department_id.department_type != 'nephrology':
             return {}
 
         patient = proc.patient_id
