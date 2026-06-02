@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.DoctorPatientPanel">
+    <div class="doctor-patient-panel">
+
+      <!-- En-tête -->
+      <div class="dpp-header">
+        <span class="dpp-name" t-esc="patient.name"/>
+        <button class="dpp-close" t-on-click="props.onClose">✕</button>
+      </div>
+      <div class="dpp-meta">
+        <t t-esc="patient.age"/> ans
+        <t t-if="patient.blood_group"> · Gr. <t t-esc="patient.blood_group"/></t>
+        <t t-if="patient.vascular_access"> · <t t-esc="patient.vascular_access"/></t>
+      </div>
+      <t t-if="patient.dialysis_since">
+        <div class="dpp-since">Dialyse depuis <t t-esc="patient.dialysis_since"/></div>
+      </t>
+
+      <!-- Alertes actives -->
+      <t t-if="procedure.active_complications and procedure.active_complications.length">
+        <div class="dpp-alert-block">
+          <t t-foreach="procedure.active_complications" t-as="comp" t-key="comp_index">
+            <div>🔴 <t t-esc="comp.label"/>
+              <t t-if="comp.bp"> — TA <t t-esc="comp.bp"/></t>
+            </div>
+          </t>
+        </div>
+      </t>
+      <t t-elif="procedure.has_active_hypotension">
+        <div class="dpp-alert-block">🔴 Hypotension active</div>
+      </t>
+
+      <!-- Séance en cours -->
+      <div class="dpp-section-title">SÉANCE EN COURS</div>
+      <div class="dpp-grid-3">
+        <div class="dpp-cell">
+          <div class="dpp-cell-label">Durée</div>
+          <div t-esc="fmt(procedure.actual_duration) + ' / ' + fmt(procedure.expected_duration)"/>
+        </div>
+        <div class="dpp-cell">
+          <div class="dpp-cell-label">UF réelle</div>
+          <div t-esc="procedure.actual_uf > 0 ? procedure.actual_uf + ' ml' : '—'"/>
+        </div>
+        <div class="dpp-cell">
+          <div class="dpp-cell-label">KT/V</div>
+          <div t-att-class="procedure.ktv_status === 'adequate' ? 'ktv-ok' : procedure.ktv_status === 'insufficient' ? 'ktv-low' : ''"
+               t-esc="procedure.ktv_calculated > 0 ? procedure.ktv_calculated.toFixed(2) : '—'"/>
+        </div>
+      </div>
+      <div class="dpp-bp">TA pré-dialyse : <span t-esc="procedure.pre_dialysis_bp || '—'"/></div>
+
+      <!-- Dernière séance -->
+      <t t-if="prevSession">
+        <div class="dpp-section-title">DERNIÈRE SÉANCE (<t t-esc="prevSession.date"/>)</div>
+        <div class="dpp-grid-3">
+          <div class="dpp-cell">
+            <div class="dpp-cell-label">Durée</div>
+            <div t-esc="fmt(prevSession.actual_duration)"/>
+          </div>
+          <div class="dpp-cell">
+            <div class="dpp-cell-label">UF</div>
+            <div t-esc="prevSession.actual_uf > 0 ? prevSession.actual_uf + ' ml' : '—'"/>
+          </div>
+          <div class="dpp-cell">
+            <div class="dpp-cell-label">KT/V</div>
+            <div t-att-class="prevSession.ktv_status === 'adequate' ? 'ktv-ok' : prevSession.ktv_status === 'insufficient' ? 'ktv-low' : ''"
+                 t-esc="prevSession.ktv_calculated > 0 ? prevSession.ktv_calculated.toFixed(2) : '—'"/>
+          </div>
+        </div>
+      </t>
+
+      <!-- Poids sec -->
+      <div class="dpp-dry-weight">
+        Poids sec : <span t-esc="procedure.dry_weight > 0 ? procedure.dry_weight + ' kg' : '—'"/>
+      </div>
+
+      <!-- Traitement -->
+      <t t-if="patient.treatment">
+        <div class="dpp-treatment">
+          <div class="dpp-section-title">TRAITEMENT</div>
+          <div t-esc="patient.treatment"/>
+        </div>
+      </t>
+
+      <!-- Boutons d'action -->
+      <div class="dpp-actions">
+        <button class="dpp-btn dpp-btn-primary" t-on-click="openFullRecord">Dossier complet</button>
+        <button class="dpp-btn dpp-btn-secondary" t-on-click="openPrescription">Prescrire</button>
+        <button class="dpp-btn dpp-btn-secondary" t-on-click="openHistory">Historique</button>
+        <button class="dpp-btn dpp-btn-secondary" t-on-click="scheduleAppointment">Planifier RDV</button>
+      </div>
+
+    </div>
+  </t>
+</templates>
