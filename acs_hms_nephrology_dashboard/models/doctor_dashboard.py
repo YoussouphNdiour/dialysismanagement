@@ -1,7 +1,7 @@
 # acs_hms_nephrology_dashboard/models/doctor_dashboard.py
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 
 
 class ACSDialysisStationDashboard(models.Model):
@@ -162,7 +162,7 @@ class ACSDialysisStationDashboard(models.Model):
             return {}
 
         patient = proc.patient_id
-        today = date.today()
+        today = fields.Datetime.now().date()
 
         age = 0
         if patient.birthday:
@@ -242,7 +242,7 @@ class ACSDialysisStationDashboard(models.Model):
     @api.model
     def get_ktv_chart_data(self):
         """KT/V moyen par jour sur les 30 derniers jours (séances done avec ktv > 0)."""
-        today = date.today()
+        today = fields.Datetime.now().date()
         since = datetime.combine(today - timedelta(days=30), datetime.min.time())
 
         procs = self.env['acs.patient.procedure'].search([
