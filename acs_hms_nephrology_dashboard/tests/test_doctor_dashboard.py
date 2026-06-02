@@ -95,7 +95,7 @@ class TestDoctorDashboard(TransactionCase):
             'procedure_id': proc.id,
             'blood_pressure': '82/50',
             'is_hypotension': True,
-            'measurement_time': fields.Datetime.now(),
+            'measurement_time': fields.Datetime.to_string(datetime.utcnow()),
             'heart_rate': 95,
         })
         result = self.env['acs.dialysis.station'].get_dashboard_data()
@@ -103,7 +103,9 @@ class TestDoctorDashboard(TransactionCase):
         self.assertEqual(station_entry['procedure']['alert_level'], 'critical')
         self.assertEqual(station_entry['procedure']['alert_label'], 'Hypotension')
         critical_alerts = [a for a in result['alerts'] if a['level'] == 'critical']
-        self.assertEqual(len(critical_alerts), 1)
+        self.assertGreaterEqual(len(critical_alerts), 1)
+        self.assertTrue(any(a['procedure_id'] == proc.id for a in critical_alerts),
+            "L'alerte critique doit référencer la procédure créée dans ce test")
         self.assertEqual(result['kpis']['critical_alerts'], 1)
 
     def test_alert_unresolved_complication_critical(self):
@@ -112,7 +114,7 @@ class TestDoctorDashboard(TransactionCase):
         self.env['acs.dialysis.complication'].create({
             'procedure_id': proc.id,
             'complication_type': 'cramps',
-            'occurrence_time': fields.Datetime.now(),
+            'occurrence_time': fields.Datetime.to_string(datetime.utcnow()),
             'action_taken': 'Massage',
             'resolution': 'no',
         })
@@ -126,7 +128,7 @@ class TestDoctorDashboard(TransactionCase):
         self.env['acs.dialysis.complication'].create({
             'procedure_id': proc.id,
             'complication_type': 'early_stop',
-            'occurrence_time': fields.Datetime.now(),
+            'occurrence_time': fields.Datetime.to_string(datetime.utcnow()),
             'action_taken': 'Arrêt séance',
             'resolution': 'no',
         })
@@ -144,6 +146,7 @@ class TestDoctorDashboard(TransactionCase):
         )
         result = self.env['acs.dialysis.station'].get_dashboard_data()
         station_entry = next(s for s in result['stations'] if s['id'] == self.station.id)
+        # urea_pre=50, urea_post=30 → R=0.6, t≈4h, uf=2L, W=68 → KT/V≈0.62 < 1.2 (Daugirdas II)
         self.assertEqual(station_entry['procedure']['ktv_status'], 'insufficient',
             "urea_pre=50, urea_post=30 should yield KT/V≈0.62 < 1.2 → insufficient")
         self.assertEqual(station_entry['procedure']['alert_level'], 'warning')
@@ -152,7 +155,6 @@ class TestDoctorDashboard(TransactionCase):
 
     def test_alert_late_session_warning(self):
         """Séance scheduled avec date > 30 min dans le passé → alerte attention."""
-        from datetime import datetime, timedelta
         late_start = datetime.utcnow() - timedelta(minutes=45)
         late_stop = late_start + timedelta(hours=4)
         proc = self._make_procedure(state='scheduled')
@@ -167,7 +169,6 @@ class TestDoctorDashboard(TransactionCase):
 
     def test_alerts_sorted_critical_first(self):
         """Les alertes critiques apparaissent avant les alertes attention dans result['alerts']."""
-        from datetime import datetime, timedelta
         station2 = self.env['acs.dialysis.station'].create({
             'name': 'Poste Test 2', 'station_type': 'standard', 'active': True,
         })
@@ -197,7 +198,7 @@ class TestDoctorDashboard(TransactionCase):
             'procedure_id': proc2.id,
             'blood_pressure': '80/50',
             'is_hypotension': True,
-            'measurement_time': fields.Datetime.now(),
+            'measurement_time': fields.Datetime.to_string(datetime.utcnow()),
             'heart_rate': 100,
         })
         result = self.env['acs.dialysis.station'].get_dashboard_data()
