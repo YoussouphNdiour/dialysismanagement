@@ -8,11 +8,13 @@
     'data': [
         'security/ir.model.access.csv',
         'views/nurse_dashboard_action.xml',
+        'views/doctor_dashboard_action.xml',
     ],
     'assets': {
         'web.assets_backend': [
             'acs_hms_nephrology_dashboard/static/src/**/*.js',
             'acs_hms_nephrology_dashboard/static/src/**/*.xml',
+            'acs_hms_nephrology_dashboard/static/src/**/*.css',
         ],
     },
     'application': False,

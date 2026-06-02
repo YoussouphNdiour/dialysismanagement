@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_doctor_dashboard" model="ir.actions.client">
+        <field name="name">Dashboard Médecin</field>
+        <field name="tag">acs_doctor_dashboard</field>
+    </record>
+
+    <menuitem
+        id="menu_doctor_dashboard"
+        name="Dashboard Médecin"
+        action="action_doctor_dashboard"
+        parent="acs_hms_nephrology.menu_nephrology"
+        groups="acs_hms.group_hms_doctor,acs_hms_base.group_hms_manager,acs_hms_nephrology.group_hms_nephrology_user"
+        sequence="10"/>
+</odoo>
