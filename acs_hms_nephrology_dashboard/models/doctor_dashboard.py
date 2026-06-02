@@ -12,8 +12,8 @@ class ACSDialysisStationDashboard(models.Model):
         """Retourne postes, KPIs du jour et alertes actives pour le dashboard médecin."""
         today = date.today()
         day_start = datetime.combine(today, datetime.min.time())
-        day_end = datetime.combine(today, datetime.max.time())
-        now = datetime.now()
+        day_end = datetime.combine(today + timedelta(days=1), datetime.min.time())
+        now = fields.Datetime.now()
 
         Procedure = self.env['acs.patient.procedure']
         stations = self.search([('active', '=', True)], order='name')
@@ -24,17 +24,27 @@ class ACSDialysisStationDashboard(models.Model):
         complication_total = 0
         all_alerts = []
 
+        station_ids = stations.mapped('id')
+        all_today_procs = Procedure.search([
+            ('nephrology_schedule_ids.station_id', 'in', station_ids),
+            ('date', '>=', fields.Datetime.to_string(day_start)),
+            ('date', '<', fields.Datetime.to_string(day_end)),
+            ('department_id.department_type', '=', 'nephrology'),
+        ], order='date asc')
+
+        # Map station_id → first procedure (asc date = earliest)
+        proc_by_station = {}
+        for p in all_today_procs:
+            for sched in p.nephrology_schedule_ids:
+                sid = sched.station_id.id
+                if sid not in proc_by_station:
+                    proc_by_station[sid] = p
+
         for station in stations:
-            procs = Procedure.search([
-                ('nephrology_schedule_ids.station_id', '=', station.id),
-                ('date', '>=', fields.Datetime.to_string(day_start)),
-                ('date', '<=', fields.Datetime.to_string(day_end)),
-                ('department_id.department_type', '=', 'nephrology'),
-            ], limit=1, order='date asc')
+            proc = proc_by_station.get(station.id)
 
             proc_dict = None
-            if procs:
-                proc = procs[0]
+            if proc:
                 total_sessions += 1
                 if proc.state == 'running':
                     running += 1
@@ -51,7 +61,7 @@ class ACSDialysisStationDashboard(models.Model):
                 patient = proc.patient_id
                 age = 0
                 if patient.birthday:
-                    age = (today - fields.Date.from_string(patient.birthday)).days // 365
+                    age = (today - patient.birthday).days // 365
 
                 # Durée prévue (fallback 4h si date_stop absent)
                 expected = 4.0
@@ -126,11 +136,11 @@ class ACSDialysisStationDashboard(models.Model):
         """Retourne (level, label) ou (None, None) pour une procédure."""
         if proc.has_active_hypotension:
             return 'critical', 'Hypotension'
-        unresolved = proc.complication_ids.filtered(lambda c: c.resolution == 'no')
-        if unresolved:
-            return 'critical', 'Complication non résolue'
-        if proc.complication_ids.filtered(lambda c: c.complication_type == 'early_stop'):
-            return 'critical', 'Arrêt prématuré'
+        for c in proc.complication_ids:
+            if c.resolution == 'no':
+                if c.complication_type == 'early_stop':
+                    return 'critical', 'Arrêt prématuré'
+                return 'critical', 'Complication non résolue'
         if proc.ktv_status == 'insufficient' and proc.state == 'done':
             return 'warning', 'KT/V insuffisant'
         if proc.state == 'scheduled' and proc.date:
@@ -152,7 +162,7 @@ class ACSDialysisStationDashboard(models.Model):
 
         age = 0
         if patient.birthday:
-            age = (today - fields.Date.from_string(patient.birthday)).days // 365
+            age = (today - patient.birthday).days // 365
 
         # Première séance néphro du patient (pour "dialyse depuis")
         first = Procedure.search([
