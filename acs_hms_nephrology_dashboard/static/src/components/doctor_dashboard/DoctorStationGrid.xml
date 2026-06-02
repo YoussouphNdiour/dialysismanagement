@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.DoctorStationGrid">
+    <div class="doctor-station-grid">
+      <t t-if="filteredStations.length === 0">
+        <div style="color: #6b7280; padding: 24px; text-align: center;">
+          Aucun poste à afficher.
+        </div>
+      </t>
+      <t t-foreach="filteredStations" t-as="station" t-key="station.id">
+        <DoctorStationCard station="station" onSelect="props.onSelectStation"/>
+      </t>
+    </div>
+  </t>
+</templates>
