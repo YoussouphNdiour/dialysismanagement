@@ -87,4 +87,3 @@ class TestDoctorDashboard(TransactionCase):
         self.assertEqual(station_entry['procedure']['id'], proc.id)
         self.assertEqual(station_entry['procedure']['state'], 'running')
         self.assertEqual(result['kpis']['running_sessions'], 1)
-        proc.unlink()

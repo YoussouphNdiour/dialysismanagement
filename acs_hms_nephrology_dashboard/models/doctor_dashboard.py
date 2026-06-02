@@ -10,10 +10,10 @@ class ACSDialysisStationDashboard(models.Model):
     @api.model
     def get_dashboard_data(self):
         """Retourne postes, KPIs du jour et alertes actives pour le dashboard médecin."""
-        today = date.today()
+        now = fields.Datetime.now()
+        today = now.date()
         day_start = datetime.combine(today, datetime.min.time())
         day_end = datetime.combine(today + timedelta(days=1), datetime.min.time())
-        now = fields.Datetime.now()
 
         Procedure = self.env['acs.patient.procedure']
         stations = self.search([('active', '=', True)], order='name')
@@ -33,6 +33,8 @@ class ACSDialysisStationDashboard(models.Model):
         ], order='date asc')
 
         # Map station_id → first procedure (asc date = earliest)
+        # sid guard: schedules with no station_id set return False — skip them.
+        # Inactive-station sids simply won't be looked up in the stations loop below.
         proc_by_station = {}
         for p in all_today_procs:
             for sched in p.nephrology_schedule_ids:
