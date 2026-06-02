@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.DoctorStationCard">
+    <div t-att-class="'dsc-card ' + cardClass" t-on-click="onClick">
+
+      <!-- En-tête : nom poste + badge statut -->
+      <div class="dsc-header">
+        <span class="dsc-name" t-esc="props.station.name"/>
+        <span t-att-class="'dsc-badge ' + badgeClass" t-esc="badgeLabel"/>
+      </div>
+
+      <t t-if="props.station.procedure">
+        <!-- Nom patient -->
+        <div class="dsc-patient" t-esc="props.station.procedure.patient_id[1]"/>
+
+        <!-- Âge + accès vasculaire -->
+        <div class="dsc-meta">
+          <t t-if="props.station.procedure.age">
+            <t t-esc="props.station.procedure.age"/> ans
+          </t>
+          <t t-if="props.station.procedure.vascular_access">
+            <span class="dsc-sep">·</span>
+            <t t-esc="props.station.procedure.vascular_access"/>
+          </t>
+        </div>
+
+        <!-- Barre de progression -->
+        <div class="dsc-progress-bar">
+          <div class="dsc-progress-fill" t-att-style="progressStyle"/>
+        </div>
+        <div class="dsc-time">
+          <t t-esc="elapsedFormatted"/> / <t t-esc="expectedFormatted"/>
+        </div>
+
+        <!-- Alerte critique : remplace les valeurs -->
+        <t t-if="props.station.procedure.alert_level === 'critical'">
+          <div class="dsc-alert-critical">
+            🔴 <t t-esc="props.station.procedure.alert_label"/>
+            <t t-if="props.station.procedure.pre_dialysis_bp">
+              — <t t-esc="props.station.procedure.pre_dialysis_bp"/>
+            </t>
+          </div>
+        </t>
+
+        <!-- Valeurs cliniques normales -->
+        <t t-else="">
+          <div class="dsc-values">
+            <div class="dsc-val">
+              <span class="dsc-val-label">TA</span>
+              <span t-esc="props.station.procedure.pre_dialysis_bp || '—'"/>
+            </div>
+            <div class="dsc-val">
+              <span class="dsc-val-label">KT/V</span>
+              <span t-att-class="ktvClass"
+                    t-esc="props.station.procedure.ktv_calculated > 0 ? props.station.procedure.ktv_calculated.toFixed(2) : '—'"/>
+            </div>
+            <div class="dsc-val">
+              <span class="dsc-val-label">UF</span>
+              <span t-esc="props.station.procedure.actual_uf > 0 ? props.station.procedure.actual_uf + ' ml' : '—'"/>
+            </div>
+          </div>
+        </t>
+      </t>
+
+      <!-- Poste libre -->
+      <t t-else="">
+        <div class="dsc-empty">— Libre —</div>
+      </t>
+    </div>
+  </t>
+</templates>
