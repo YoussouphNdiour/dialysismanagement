@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.DoctorStatsChart">
+    <div class="doctor-stats-chart">
+      <t t-if="state.loading">
+        <div style="color: #6b7280; padding: 24px; text-align: center;">Chargement des données…</div>
+      </t>
+      <t t-else="">
+        <div class="dsc-chart-wrapper">
+          <canvas t-ref="ktv_canvas" style="max-height: 280px;"/>
+        </div>
+        <div class="dsc-metrics">
+          <div class="dsc-metric">
+            <div class="dsc-metric-value"><t t-esc="state.adequateRate"/>%</div>
+            <div class="dsc-metric-label">Séances adéquates (KT/V ≥ 1.2) — 30 jours</div>
+          </div>
+          <div class="dsc-metric">
+            <div class="dsc-metric-value" style="color: #f59e0b;"><t t-esc="state.avgKtv.toFixed(2)"/></div>
+            <div class="dsc-metric-label">KT/V moyen global — 30 jours</div>
+          </div>
+          <div class="dsc-metric">
+            <div class="dsc-metric-value" style="color: #9ca3af;"><t t-esc="state.totalSessions"/></div>
+            <div class="dsc-metric-label">Séances avec KT/V calculé</div>
+          </div>
+        </div>
+      </t>
+    </div>
+  </t>
+</templates>
