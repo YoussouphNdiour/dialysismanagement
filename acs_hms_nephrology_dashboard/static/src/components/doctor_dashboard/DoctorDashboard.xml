@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.DoctorDashboard">
+    <div class="doctor-dashboard">
+
+      <!-- Sidebar gauche fixe -->
+      <DoctorAlertsSidebar
+        kpis="state.kpis"
+        alerts="state.alerts"
+        alertFilter="state.alertFilter"
+        onAlertFilter.bind="onAlertFilter"
+        onSelectStation.bind="onSelectStation"
+      />
+
+      <!-- Zone principale -->
+      <div class="dd-main">
+        <div class="dd-tabs">
+          <button t-att-class="'dd-tab ' + (state.tab === 'grid' ? 'active' : '')"
+                  t-on-click="() => setTab('grid')">⬛ Grille</button>
+          <button t-att-class="'dd-tab ' + (state.tab === 'list' ? 'active' : '')"
+                  t-on-click="() => setTab('list')">☰ Liste</button>
+          <button t-att-class="'dd-tab ' + (state.tab === 'stats' ? 'active' : '')"
+                  t-on-click="() => setTab('stats')">📊 Stats</button>
+        </div>
+
+        <div class="dd-content">
+          <t t-if="state.tab === 'grid'">
+            <DoctorStationGrid
+              stations="state.stations"
+              alertFilter="state.alertFilter"
+              onSelectStation.bind="onSelectStation"
+            />
+          </t>
+
+          <t t-elif="state.tab === 'list'">
+            <table class="dd-list-table">
+              <thead>
+                <tr>
+                  <th>Poste</th><th>Patient</th><th>Statut</th>
+                  <th>Durée</th><th>KT/V</th><th>Alerte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <t t-foreach="state.stations" t-as="station" t-key="station.id">
+                  <tr t-att-class="station.procedure and station.procedure.alert_level === 'critical' ? 'dd-row-critical' : ''"
+                      t-on-click="() => station.procedure and onSelectStation(station.procedure.id)">
+                    <td t-esc="station.name"/>
+                    <td t-esc="station.procedure ? station.procedure.patient_id[1] : '—'"/>
+                    <td t-esc="station.procedure ? station.procedure.state : 'Libre'"/>
+                    <td t-esc="station.procedure ? fmtDur(station.procedure.actual_duration) : '—'"/>
+                    <td t-att-class="station.procedure and station.procedure.ktv_status === 'adequate' ? 'ktv-ok' : station.procedure and station.procedure.ktv_status === 'insufficient' ? 'ktv-low' : ''"
+                        t-esc="station.procedure and station.procedure.ktv_calculated > 0 ? station.procedure.ktv_calculated.toFixed(2) : '—'"/>
+                    <td t-esc="station.procedure ? (station.procedure.alert_label || '—') : '—'"/>
+                  </tr>
+                </t>
+              </tbody>
+            </table>
+          </t>
+
+          <t t-elif="state.tab === 'stats'">
+            <DoctorStatsChart/>
+          </t>
+        </div>
+      </div>
+
+      <!-- Slide panel patient -->
+      <t t-if="state.showPanel and state.panelData">
+        <DoctorPatientPanel panelData="state.panelData" onClose.bind="onClosePanel"/>
+      </t>
+
+    </div>
+  </t>
+</templates>
