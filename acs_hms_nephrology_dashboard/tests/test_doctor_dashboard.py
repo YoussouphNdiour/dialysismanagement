@@ -235,19 +235,24 @@ class TestDoctorDashboard(TransactionCase):
         self.assertIsNotNone(result['previous_session'],
             "Une séance précédente done doit être présente")
         # previous_session doit référencer prev_proc (la seule done pour ce patient)
-        prev_date = result['previous_session']['date']
-        self.assertEqual(prev_date, fields.Datetime.to_string(past_start)[:10],
+        prev_date_str = result['previous_session']['date']
+        self.assertIsInstance(prev_date_str, str,
+            "previous_session['date'] doit être une chaîne ISO 8601")
+        from datetime import date as _date
+        parsed_date = _date.fromisoformat(prev_date_str[:10])
+        self.assertEqual(parsed_date, past_start.date(),
             "La date de la dernière séance doit correspondre à prev_proc")
 
     def test_get_patient_panel_no_previous_session(self):
         """Premier patient sans séance précédente → previous_session = None, pas d'erreur."""
         new_patient = self.env['hms.patient'].create({'name': 'Nouveau Patient Test'})
+        now_utc = datetime.utcnow()
         proc = self.env['acs.patient.procedure'].create({
             'patient_id': new_patient.id,
             'product_id': self.product.id,
             'department_id': self.dept.id,
-            'date': fields.Datetime.to_string(datetime.utcnow() - timedelta(hours=1)),
-            'date_stop': fields.Datetime.to_string(datetime.utcnow() + timedelta(hours=3)),
+            'date': fields.Datetime.to_string(now_utc - timedelta(hours=1)),
+            'date_stop': fields.Datetime.to_string(now_utc + timedelta(hours=3)),
             'state': 'running',
             'pre_dialysis_bp': '140/90',
             'nephrology_schedule_ids': [(4, self.schedule.id)],
