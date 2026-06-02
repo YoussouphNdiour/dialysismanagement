@@ -206,3 +206,59 @@ class TestDoctorDashboard(TransactionCase):
         self.assertGreaterEqual(len(levels), 2,
             "Both a warning alert (ktv insufficient) and a critical alert (hypotension) should be present")
         self.assertEqual(levels[0], 'critical', "Critical alerts must appear before warnings")
+
+    def test_get_patient_panel_data_returns_expected_structure(self):
+        """get_patient_panel_data() retourne séance en cours, dernière séance, infos patient."""
+        # Previous done session (3 days ago)
+        past_start = datetime.utcnow() - timedelta(days=3, hours=2)
+        past_stop = past_start + timedelta(hours=4)
+        prev_proc = self.env['acs.patient.procedure'].create({
+            'patient_id': self.patient.id,
+            'product_id': self.product.id,
+            'department_id': self.dept.id,
+            'date': fields.Datetime.to_string(past_start),
+            'date_stop': fields.Datetime.to_string(past_stop),
+            'state': 'done',
+            'pre_dialysis_bp': '135/85',
+            'nephrology_schedule_ids': [(4, self.schedule.id)],
+        })
+        # Current running session
+        proc = self._make_procedure(state='running')
+
+        result = self.env['acs.dialysis.station'].get_patient_panel_data(proc.id)
+
+        self.assertIn('procedure', result)
+        self.assertIn('patient', result)
+        self.assertIn('previous_session', result)
+        self.assertEqual(result['procedure']['id'], proc.id)
+        self.assertEqual(result['patient']['name'], self.patient.name)
+        self.assertIsNotNone(result['previous_session'],
+            "Une séance précédente done doit être présente")
+        # previous_session doit référencer prev_proc (la seule done pour ce patient)
+        prev_date = result['previous_session']['date']
+        self.assertEqual(prev_date, fields.Datetime.to_string(past_start)[:10],
+            "La date de la dernière séance doit correspondre à prev_proc")
+
+    def test_get_patient_panel_no_previous_session(self):
+        """Premier patient sans séance précédente → previous_session = None, pas d'erreur."""
+        new_patient = self.env['hms.patient'].create({'name': 'Nouveau Patient Test'})
+        proc = self.env['acs.patient.procedure'].create({
+            'patient_id': new_patient.id,
+            'product_id': self.product.id,
+            'department_id': self.dept.id,
+            'date': fields.Datetime.to_string(datetime.utcnow() - timedelta(hours=1)),
+            'date_stop': fields.Datetime.to_string(datetime.utcnow() + timedelta(hours=3)),
+            'state': 'running',
+            'pre_dialysis_bp': '140/90',
+            'nephrology_schedule_ids': [(4, self.schedule.id)],
+        })
+        result = self.env['acs.dialysis.station'].get_patient_panel_data(proc.id)
+        self.assertIn('procedure', result)
+        self.assertEqual(result['procedure']['id'], proc.id)
+        self.assertIsNone(result['previous_session'],
+            "Sans séance précédente, previous_session doit être None")
+
+    def test_get_patient_panel_invalid_id(self):
+        """ID inexistant → retourne {}."""
+        result = self.env['acs.dialysis.station'].get_patient_panel_data(999999999)
+        self.assertEqual(result, {})
