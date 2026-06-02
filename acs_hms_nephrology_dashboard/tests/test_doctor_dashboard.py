@@ -120,6 +120,21 @@ class TestDoctorDashboard(TransactionCase):
         station_entry = next(s for s in result['stations'] if s['id'] == self.station.id)
         self.assertEqual(station_entry['procedure']['alert_level'], 'critical')
 
+    def test_alert_early_stop_critical(self):
+        """Complication early_stop avec resolution='no' → alerte critique 'Arrêt prématuré'."""
+        proc = self._make_procedure(state='running')
+        self.env['acs.dialysis.complication'].create({
+            'procedure_id': proc.id,
+            'complication_type': 'early_stop',
+            'occurrence_time': fields.Datetime.now(),
+            'action_taken': 'Arrêt séance',
+            'resolution': 'no',
+        })
+        result = self.env['acs.dialysis.station'].get_dashboard_data()
+        station_entry = next(s for s in result['stations'] if s['id'] == self.station.id)
+        self.assertEqual(station_entry['procedure']['alert_level'], 'critical')
+        self.assertEqual(station_entry['procedure']['alert_label'], 'Arrêt prématuré')
+
     def test_alert_ktv_insufficient_warning(self):
         """Séance done avec KT/V insuffisant → alerte attention."""
         proc = self._make_procedure(
@@ -129,10 +144,11 @@ class TestDoctorDashboard(TransactionCase):
         )
         result = self.env['acs.dialysis.station'].get_dashboard_data()
         station_entry = next(s for s in result['stations'] if s['id'] == self.station.id)
-        if station_entry['procedure']['ktv_status'] == 'insufficient':
-            self.assertEqual(station_entry['procedure']['alert_level'], 'warning')
-            warning_alerts = [a for a in result['alerts'] if a['level'] == 'warning']
-            self.assertGreaterEqual(len(warning_alerts), 1)
+        self.assertEqual(station_entry['procedure']['ktv_status'], 'insufficient',
+            "urea_pre=50, urea_post=30 should yield KT/V≈0.62 < 1.2 → insufficient")
+        self.assertEqual(station_entry['procedure']['alert_level'], 'warning')
+        warning_alerts = [a for a in result['alerts'] if a['level'] == 'warning']
+        self.assertGreaterEqual(len(warning_alerts), 1)
 
     def test_alert_late_session_warning(self):
         """Séance scheduled avec date > 30 min dans le passé → alerte attention."""
@@ -186,5 +202,6 @@ class TestDoctorDashboard(TransactionCase):
         })
         result = self.env['acs.dialysis.station'].get_dashboard_data()
         levels = [a['level'] for a in result['alerts']]
-        if len(levels) >= 2:
-            self.assertEqual(levels[0], 'critical')
+        self.assertGreaterEqual(len(levels), 2,
+            "Both a warning alert (ktv insufficient) and a critical alert (hypotension) should be present")
+        self.assertEqual(levels[0], 'critical', "Critical alerts must appear before warnings")
