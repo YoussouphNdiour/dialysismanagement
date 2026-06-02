@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.DoctorAlertsSidebar">
+    <div class="doctor-alerts-sidebar">
+
+      <!-- KPIs du jour -->
+      <div class="das-section">
+        <div class="das-title">KPIs DU JOUR</div>
+        <div class="das-kpi">
+          <span class="das-kpi-label">Séances</span>
+          <span class="das-kpi-value">
+            <t t-esc="(props.kpis.running_sessions || 0) + (props.kpis.done_sessions || 0)"/>
+            / <t t-esc="props.kpis.total_sessions || 0"/>
+          </span>
+        </div>
+        <div class="das-kpi">
+          <span class="das-kpi-label">Occupation</span>
+          <span class="das-kpi-value"><t t-esc="(props.kpis.occupation_rate || 0) + '%'"/></span>
+        </div>
+        <div class="das-kpi">
+          <span class="das-kpi-label">KT/V moy.</span>
+          <span t-att-class="'das-kpi-value ' + ktvClass">
+            <t t-esc="(props.kpis.avg_ktv || 0).toFixed(2)"/>
+          </span>
+        </div>
+        <div class="das-kpi">
+          <span class="das-kpi-label">Complications</span>
+          <span class="das-kpi-value"><t t-esc="props.kpis.complication_count || 0"/></span>
+        </div>
+      </div>
+
+      <!-- Compteurs alertes -->
+      <div class="das-section">
+        <div class="das-title">ALERTES</div>
+        <button t-att-class="'das-alert-btn das-critical ' + (props.alertFilter === 'critical' ? 'active' : '')"
+                t-on-click="onFilterCritical">
+          🔴 <t t-esc="props.kpis.critical_alerts || 0"/> critiques
+        </button>
+        <button t-att-class="'das-alert-btn das-warning ' + (props.alertFilter === 'warning' ? 'active' : '')"
+                t-on-click="onFilterWarning">
+          ⚠ <t t-esc="props.kpis.warning_alerts || 0"/> attentions
+        </button>
+      </div>
+
+      <!-- Liste des alertes -->
+      <div class="das-alert-list">
+        <t t-foreach="props.alerts" t-as="alert" t-key="alert_index">
+          <div t-att-class="'das-alert-item das-alert-' + alert.level"
+               t-on-click="() => props.onSelectStation(alert.procedure_id)">
+            <div class="das-alert-station">
+              <t t-esc="alert.station_name"/> — <t t-esc="alert.patient_name"/>
+            </div>
+            <div class="das-alert-label"><t t-esc="alert.label"/></div>
+          </div>
+        </t>
+        <t t-if="!props.alerts.length">
+          <div class="das-no-alerts">Aucune alerte active</div>
+        </t>
+      </div>
+
+    </div>
+  </t>
+</templates>
