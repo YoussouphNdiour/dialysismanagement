@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from odoo.tests import TransactionCase
 from odoo import fields
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 
 
 class TestDoctorDashboard(TransactionCase):
@@ -238,8 +238,7 @@ class TestDoctorDashboard(TransactionCase):
         prev_date_str = result['previous_session']['date']
         self.assertIsInstance(prev_date_str, str,
             "previous_session['date'] doit être une chaîne ISO 8601")
-        from datetime import date as _date
-        parsed_date = _date.fromisoformat(prev_date_str[:10])
+        parsed_date = date.fromisoformat(prev_date_str[:10])
         self.assertEqual(parsed_date, past_start.date(),
             "La date de la dernière séance doit correspondre à prev_proc")
 
