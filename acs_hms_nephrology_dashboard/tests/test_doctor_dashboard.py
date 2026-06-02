@@ -296,9 +296,10 @@ class TestDoctorDashboard(TransactionCase):
         # (only done sessions with ktv > 0 contribute)
         # urea_pre=50, urea_post=15 → R=0.3, KT/V > 1.2 → adequate
         # Daugirdas II: ktv ≈ -ln(0.3 - 0.008*4) + (4 - 3.5*0.3)*2/68 ≈ 1.41
-        if kpis['avg_ktv'] > 0:
-            self.assertGreater(kpis['avg_ktv'], 1.0,
-                "KT/V avec urea_post=15 doit être > 1.0")
+        # urea_pre=50, urea_post=15 → R=0.3, t=4h, uf=2L, W=68 → KT/V≈1.41 (Daugirdas II)
+        self.assertIsInstance(kpis['avg_ktv'], float)
+        self.assertGreater(kpis['avg_ktv'], 1.0,
+            "KT/V avec urea_pre=50, urea_post=15 doit être > 1.0 (Daugirdas II ≈ 1.41)")
 
     def test_get_ktv_chart_data_groups_by_day(self):
         """3 séances done sur 2 jours → labels et valeurs cohérentes."""
@@ -337,10 +338,12 @@ class TestDoctorDashboard(TransactionCase):
             self.assertGreater(v, 0.0)
 
     def test_get_ktv_chart_data_empty(self):
-        """Sans séance done avec KT/V calculé → structure valide (listes éventuellement non vides)."""
+        """Sans séance done avec KT/V calculé → listes labels et values vides."""
+        # TransactionCase: chaque test commence avec un état propre (rollback automatique)
         result = self.env['acs.dialysis.station'].get_ktv_chart_data()
         self.assertIn('labels', result)
         self.assertIn('values', result)
-        self.assertIsInstance(result['labels'], list)
-        self.assertIsInstance(result['values'], list)
-        self.assertEqual(len(result['labels']), len(result['values']))
+        self.assertEqual(result['labels'], [],
+            "Sans procédure done avec KT/V, labels doit être []")
+        self.assertEqual(result['values'], [],
+            "Sans procédure done avec KT/V, values doit être []")
