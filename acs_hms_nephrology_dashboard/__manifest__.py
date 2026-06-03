@@ -9,6 +9,7 @@
         'security/ir.model.access.csv',
         'views/nurse_dashboard_action.xml',
         'views/doctor_dashboard_action.xml',
+        'views/dialysis_calendar_action.xml',
     ],
     'assets': {
         'web.assets_backend': [

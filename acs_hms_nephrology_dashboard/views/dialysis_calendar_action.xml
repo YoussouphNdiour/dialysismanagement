@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.actions.client" id="action_dialysis_calendar">
+        <field name="name">Planning Dialyse</field>
+        <field name="tag">acs_dialysis_calendar</field>
+    </record>
+
+    <menuitem
+        id="menu_dialysis_calendar"
+        name="Planning Dialyse"
+        parent="acs_hms_nephrology.nephrology_menu_root"
+        action="action_dialysis_calendar"
+        groups="acs_hms.group_hms_physician,acs_hms.group_hms_receptionist"
+        sequence="15"/>
+</odoo>
