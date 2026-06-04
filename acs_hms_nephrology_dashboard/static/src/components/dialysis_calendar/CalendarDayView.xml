@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.CalendarDayView">
+    <div class="dc-day-outer">
+      <div class="dc-day-grid">
+        <!-- Axe temps -->
+        <div class="dc-time-axis">
+          <div class="dc-time-header"/>
+          <t t-foreach="timeSlots" t-as="h" t-key="h">
+            <div class="dc-time-slot"><t t-esc="h"/>h</div>
+          </t>
+        </div>
+        <!-- Colonnes postes -->
+        <div class="dc-stations-area">
+          <t t-foreach="props.stations" t-as="station" t-key="station.id">
+            <div class="dc-station-col">
+              <div t-att-class="'dc-station-header ' + (station.station_type === 'isolation' ? 'dc-header-isolation' : '')">
+                <t t-if="station.station_type === 'isolation'">&#9888; </t>
+                <span t-esc="station.name"/>
+                <t t-if="station.room">
+                  <br/><small t-esc="station.room"/>
+                </t>
+              </div>
+              <div class="dc-station-body">
+                <t t-if="station.sessions.length === 0">
+                  <div class="dc-station-libre">Libre</div>
+                </t>
+                <t t-foreach="station.sessions" t-as="session" t-key="session.id">
+                  <div t-att-class="cardClass(session)"
+                       t-att-style="cardStyle(session)"
+                       t-on-click="() => props.onSelectSession(session.id)">
+                    <div class="dc-card-name" t-esc="session.patient_name"/>
+                    <div class="dc-card-time">
+                      <t t-esc="fmtTime(session.date)"/> &#8211; <t t-esc="fmtTime(session.date_stop)"/>
+                    </div>
+                    <div class="dc-card-badge" t-esc="badgeLabel(session)"/>
+                    <t t-if="session.state === 'done' and session.ktv_calculated">
+                      <div class="dc-card-ktv">KT/V : <t t-esc="session.ktv_calculated.toFixed(2)"/></div>
+                    </t>
+                  </div>
+                </t>
+              </div>
+            </div>
+          </t>
+        </div>
+      </div>
+      <!-- Légende -->
+      <div class="dc-legend">
+        <span class="dc-legend-item"><span class="dc-legend-dot dc-dot-blue"/>Planifi&#233;e</span>
+        <span class="dc-legend-item"><span class="dc-legend-dot dc-dot-green"/>En cours</span>
+        <span class="dc-legend-item"><span class="dc-legend-dot dc-dot-orange"/>Attention</span>
+        <span class="dc-legend-item"><span class="dc-legend-dot dc-dot-red"/>Critique</span>
+        <span class="dc-legend-item"><span class="dc-legend-dot dc-dot-gray"/>Termin&#233;e</span>
+      </div>
+    </div>
+  </t>
+</templates>

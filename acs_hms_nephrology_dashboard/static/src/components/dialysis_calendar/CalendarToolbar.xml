@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.CalendarToolbar">
+    <div class="dc-toolbar">
+      <div class="dc-mode-btns">
+        <button t-att-class="'dc-mode-btn ' + (props.mode === 'day' ? 'active' : '')"
+                t-on-click="() => props.onModeChange('day')">Jour</button>
+        <button t-att-class="'dc-mode-btn ' + (props.mode === 'week' ? 'active' : '')"
+                t-on-click="() => props.onModeChange('week')">Semaine</button>
+        <button t-att-class="'dc-mode-btn ' + (props.mode === 'month' ? 'active' : '')"
+                t-on-click="() => props.onModeChange('month')">Mois</button>
+      </div>
+      <div class="dc-nav">
+        <button class="dc-nav-btn" t-on-click="() => props.onNavigate(-1)">&#8249;</button>
+        <span class="dc-date-label" t-esc="dateLabel"/>
+        <button class="dc-nav-btn" t-on-click="() => props.onNavigate(1)">&#8250;</button>
+        <button class="dc-nav-btn dc-today-btn" t-on-click="() => props.onToday()">Aujourd'hui</button>
+      </div>
+      <t t-if="props.mode !== 'week'">
+        <div t-att-class="occBadgeClass">
+          &#9679; <t t-esc="props.occupationRate"/>% occupation
+        </div>
+      </t>
+    </div>
+  </t>
+</templates>

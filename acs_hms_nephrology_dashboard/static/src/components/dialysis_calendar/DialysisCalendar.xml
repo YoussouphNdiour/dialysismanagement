@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.DialysisCalendar">
+    <div class="dc-wrap">
+      <CalendarToolbar
+        mode="state.mode"
+        currentDate="new Date(state.currentDate + 'T00:00:00')"
+        occupationRate="state.occupationRate"
+        onModeChange.bind="onModeChange"
+        onNavigate.bind="onNavigate"
+        onToday.bind="onToday"
+      />
+      <div class="dc-content">
+        <t t-if="state.loading">
+          <div class="dc-loading">Chargement&#8230;</div>
+        </t>
+        <t t-elif="state.mode === 'day'">
+          <CalendarDayView
+            stations="state.stations"
+            onSelectSession.bind="onSelectSession"
+          />
+        </t>
+        <t t-elif="state.mode === 'week' and state.weekData">
+          <CalendarWeekView
+            patients="state.weekData.patients"
+            weekDates="state.weekData.week_dates"
+            onSelectSession.bind="onSelectSession"
+          />
+        </t>
+        <t t-elif="state.mode === 'month' and state.monthData">
+          <CalendarMonthView
+            monthData="state.monthData"
+            currentDate="new Date(state.currentDate + 'T00:00:00')"
+            onSelectDay.bind="onSelectDay"
+          />
+        </t>
+      </div>
+      <t t-if="state.showPanel and state.panelData">
+        <DoctorPatientPanel panelData="state.panelData" onClose.bind="onClosePanel"/>
+      </t>
+    </div>
+  </t>
+</templates>
