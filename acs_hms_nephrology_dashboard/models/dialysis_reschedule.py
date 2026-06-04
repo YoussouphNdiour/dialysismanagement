@@ -1,6 +1,6 @@
 # acs_hms_nephrology_dashboard/models/dialysis_reschedule.py
 # -*- coding: utf-8 -*-
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -53,21 +53,21 @@ class DialysisSessionReschedule(models.TransientModel):
             # Récupère le planning lié à ce poste
             schedule = self.env['acs.nephrology.schedule'].search([
                 ('station_id', '=', rec.station_id.id),
-            ], limit=1)
+            ], order='id asc', limit=1)
             max_p = schedule.max_patients if schedule else 0
             if max_p == 0:
                 rec.slots_available = 999
                 continue
             day_start = fields.Datetime.to_string(
-                datetime.combine(rec.new_date, datetime.min.time())
+                datetime.combine(rec.new_date, time.min)
             )
-            day_end = fields.Datetime.to_string(
-                datetime.combine(rec.new_date, datetime.max.time().replace(microsecond=0))
+            next_day_start = fields.Datetime.to_string(
+                datetime.combine(rec.new_date + timedelta(days=1), time.min)
             )
             occupied = Procedure.search_count([
                 ('nephrology_schedule_ids.station_id', '=', rec.station_id.id),
                 ('date', '>=', day_start),
-                ('date', '<=', day_end),
+                ('date', '<', next_day_start),
                 ('state', 'in', ['scheduled', 'running']),
                 ('id', '!=', rec.procedure_id.id),
             ])
@@ -81,7 +81,7 @@ class DialysisSessionReschedule(models.TransientModel):
         if self.slots_available > 0:
             # Report effectif — décale date de début, date_stop = début + 4h
             original_date = proc.date
-            new_start = datetime.combine(self.new_date, datetime.min.time()).replace(hour=8)
+            new_start = datetime.combine(self.new_date, time(8, 0))
             new_stop = new_start + timedelta(hours=4)
             new_dt = fields.Datetime.to_string(new_start)
             new_dt_stop = fields.Datetime.to_string(new_stop)
@@ -110,10 +110,15 @@ class DialysisSessionReschedule(models.TransientModel):
         # Créer entrée liste d'attente
         schedule = self.env['acs.nephrology.schedule'].search([
             ('station_id', '=', self.station_id.id),
-        ], limit=1)
+        ], order='id asc', limit=1)
+        if not schedule:
+            raise UserError(_(
+                "Impossible de trouver un créneau planifié pour ce poste. "
+                "Veuillez configurer un planning avant d'utiliser la liste d'attente."
+            ))
         self.env['acs.dialysis.waitlist'].create({
             'patient_id': proc.patient_id.id,
-            'schedule_id': schedule.id if schedule else False,
+            'schedule_id': schedule.id,
             'request_date': fields.Date.today(),
         })
         return {
