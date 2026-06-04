@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.CalendarWeekView">
+    <div class="dc-week-wrap">
+      <table class="dc-week-table">
+        <thead>
+          <tr>
+            <th class="dc-week-patient-col">Patient</th>
+            <t t-foreach="props.weekDates" t-as="d" t-key="d">
+              <th t-esc="dayHeader(d)"/>
+            </t>
+          </tr>
+        </thead>
+        <tbody>
+          <t t-foreach="props.patients" t-as="patient" t-key="patient.patient_id">
+            <tr>
+              <td class="dc-week-patient-name" t-esc="patient.patient_name"/>
+              <t t-foreach="props.weekDates" t-as="d" t-key="d">
+                <td class="dc-week-cell">
+                  <t t-set="session" t-value="patient.sessions_by_day[d]"/>
+                  <t t-if="session">
+                    <span t-att-class="chipClass(session)"
+                          t-on-click="() => props.onSelectSession(session.id)"
+                          t-esc="chipLabel(session)"/>
+                  </t>
+                  <t t-else="">
+                    <span class="dc-week-empty">&#8212;</span>
+                  </t>
+                </td>
+              </t>
+            </tr>
+          </t>
+          <t t-if="props.patients.length === 0">
+            <tr>
+              <td t-att-colspan="props.weekDates.length + 1" class="dc-week-empty-msg">
+                Aucun patient cette semaine
+              </td>
+            </tr>
+          </t>
+        </tbody>
+      </table>
+    </div>
+  </t>
+</templates>
