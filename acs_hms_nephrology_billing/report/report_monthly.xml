@@ -1,2 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo/>
+<odoo>
+    <record id="action_report_nephro_monthly" model="ir.actions.report">
+        <field name="name">Rapport mensuel facturation dialyse</field>
+        <field name="model">acs.dialysis.monthly.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">acs_hms_nephrology_billing.report_nephro_monthly</field>
+        <field name="report_file">acs_hms_nephrology_billing/report/report_monthly</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="print_report_name">'Rapport_Mensuel_Dialyse_%s_%s' % (object.month, object.year)</field>
+    </record>
+
+    <template id="report_nephro_monthly">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="wizard">
+                <t t-set="data" t-value="wizard._get_report_data()"/>
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">
+                            Rapport Mensuel Facturation Dialyse —
+                            <t t-esc="data['month_name']"/> <t t-esc="data['year']"/>
+                        </h2>
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <table class="table table-sm table-bordered">
+                                    <thead>
+                                        <tr class="table-primary">
+                                            <th colspan="2">Synthèse financière</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Nombre de factures</td>
+                                            <td class="text-right"><t t-esc="data['invoice_count']"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total TTC</td>
+                                            <td class="text-right">
+                                                <t t-esc="'{:,.0f}'.format(data['total_ttc'])"/> FCFA
+                                            </td>
+                                        </tr>
+                                        <tr class="table-success">
+                                            <td>Total encaissé</td>
+                                            <td class="text-right">
+                                                <t t-esc="'{:,.0f}'.format(data['total_paid'])"/> FCFA
+                                            </td>
+                                        </tr>
+                                        <tr class="table-warning">
+                                            <td>Total en attente</td>
+                                            <td class="text-right">
+                                                <t t-esc="'{:,.0f}'.format(data['total_pending'])"/> FCFA
+                                            </td>
+                                        </tr>
+                                        <tr class="table-danger">
+                                            <td>Total en retard</td>
+                                            <td class="text-right">
+                                                <t t-esc="'{:,.0f}'.format(data['total_overdue'])"/> FCFA
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <t t-if="data['top_overdue']">
+                            <h4 class="mt-4">Top 20 patients avec impayés</h4>
+                            <table class="table table-sm table-striped table-bordered">
+                                <thead>
+                                    <tr class="table-danger">
+                                        <th>#</th>
+                                        <th>Patient</th>
+                                        <th class="text-right">Montant impayé (FCFA)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="data['top_overdue']" t-as="entry">
+                                        <tr>
+                                            <td><t t-esc="entry_index + 1"/></td>
+                                            <td><t t-esc="entry['partner'].name"/></td>
+                                            <td class="text-right">
+                                                <t t-esc="'{:,.0f}'.format(entry['amount'])"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,2 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo/>
+<odoo>
+    <record id="action_report_nephro_patient_summary" model="ir.actions.report">
+        <field name="name">Attestation de soins dialyse</field>
+        <field name="model">hms.patient</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">acs_hms_nephrology_billing.report_nephro_patient_summary</field>
+        <field name="report_file">acs_hms_nephrology_billing/report/report_patient</field>
+        <field name="binding_model_id" ref="acs_hms.model_hms_patient"/>
+        <field name="print_report_name">'Attestation_Soins_%s' % (object.name.replace(' ','_'),)</field>
+    </record>
+
+    <template id="report_nephro_patient_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="patient">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">Attestation de soins — Hémodialyse</h2>
+                        <h3 class="text-center text-muted">Clinique As-Shafi</h3>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <th>Patient</th>
+                                        <td><t t-esc="patient.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Date de naissance</th>
+                                        <td><t t-esc="patient.birthday"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm">
+                                    <tr>
+                                        <th>Solde impayé</th>
+                                        <td>
+                                            <t t-esc="'{:,.0f}'.format(patient.balance_due)"/> FCFA
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Statut paiement</th>
+                                        <td><t t-esc="patient.payment_status"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <h4 class="mt-4">Assureurs</h4>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr class="table-primary">
+                                    <th>Assureur</th>
+                                    <th>Priorité</th>
+                                    <th>Taux (%)</th>
+                                    <th>N° Police</th>
+                                    <th>Du</th>
+                                    <th>Au</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="patient.patient_insurer_ids" t-as="ins">
+                                    <tr>
+                                        <td><t t-esc="ins.insurer_id.name"/></td>
+                                        <td><t t-esc="ins.priority"/></td>
+                                        <td><t t-esc="ins.coverage_rate"/></td>
+                                        <td><t t-esc="ins.policy_number or '—'"/></td>
+                                        <td><t t-esc="ins.date_start"/></td>
+                                        <td><t t-esc="ins.date_end or 'En cours'"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <p class="mt-4 text-muted small">
+                            Document généré le <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/>
+                        </p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
