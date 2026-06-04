@@ -109,10 +109,9 @@ class AcsPatientProcedure(models.Model):
         # Build product line for invoice
         session_date = self.date or fields.Date.today()
         patient_partner = self.patient_id.partner_id
-        # Use acs_create_invoice mixin (signature: partner, patient=, product_data=, inv_data=)
-        if hasattr(self, 'acs_create_invoice') and (
-            hasattr(self, 'product_id') and self.product_id
-        ):
+        # acs.patient.procedure always inherits acs.hms.mixin (has acs_create_invoice + product_id).
+        # Use mixin when a product is set (handles tax mapping); fall back to direct create otherwise.
+        if self.product_id:
             invoice = self.acs_create_invoice(
                 partner=patient_partner,
                 patient=self.patient_id,
