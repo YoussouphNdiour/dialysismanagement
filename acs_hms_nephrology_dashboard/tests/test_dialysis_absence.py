@@ -3,6 +3,7 @@
 from odoo.tests import TransactionCase
 from odoo import fields
 from odoo.exceptions import ValidationError, UserError
+from psycopg2 import IntegrityError
 from datetime import date, timedelta
 
 
@@ -133,7 +134,7 @@ class TestDialysisAbsence(TransactionCase):
     def test_end_date_before_start_raises(self):
         """Contrainte SQL : end_date >= start_date."""
         today = date.today()
-        with self.assertRaises(Exception):
+        with self.assertRaises((ValidationError, IntegrityError)):
             self.env['acs.dialysis.absence'].create({
                 'patient_id': self.patient.id,
                 'start_date': today,
