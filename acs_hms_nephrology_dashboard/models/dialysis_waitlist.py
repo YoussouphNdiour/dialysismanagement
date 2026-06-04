@@ -10,6 +10,7 @@ _logger = logging.getLogger(__name__)
 class ACSDialysisWaitlist(models.Model):
     _name = 'acs.dialysis.waitlist'
     _description = 'Liste d\'attente — dialyse'
+    _inherit = ['mail.thread']
     _order = 'request_date asc'
 
     patient_id = fields.Many2one(

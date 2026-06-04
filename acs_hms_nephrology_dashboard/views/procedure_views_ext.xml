@@ -4,7 +4,7 @@
     <record id="view_patient_procedure_form_reporter" model="ir.ui.view">
         <field name="name">acs.patient.procedure.form.reporter</field>
         <field name="model">acs.patient.procedure</field>
-        <field name="inherit_id" ref="acs_hms.view_patient_procedure_form"/>
+        <field name="inherit_id" ref="acs_hms.view_acs_patient_procedure_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
                 <button name="action_open_reschedule_wizard"

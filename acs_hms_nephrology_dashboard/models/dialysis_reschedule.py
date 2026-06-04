@@ -79,10 +79,16 @@ class DialysisSessionReschedule(models.TransientModel):
         proc = self.procedure_id
 
         if self.slots_available > 0:
-            # Report effectif — décale date de début, date_stop = début + 4h
+            # Report effectif — préserve l'heure originale, décale seulement la date
             original_date = proc.date
-            new_start = datetime.combine(self.new_date, time(8, 0))
-            new_stop = new_start + timedelta(hours=4)
+            original_dt = fields.Datetime.from_string(original_date) if original_date else None
+            original_time = original_dt.time() if original_dt else time(8, 0)
+            new_start = datetime.combine(self.new_date, original_time)
+            duration = timedelta(hours=4)
+            if proc.date_stop and original_date:
+                stop_dt = fields.Datetime.from_string(proc.date_stop)
+                duration = stop_dt - fields.Datetime.from_string(original_date)
+            new_stop = new_start + duration
             new_dt = fields.Datetime.to_string(new_start)
             new_dt_stop = fields.Datetime.to_string(new_stop)
             proc.write({'date': new_dt, 'date_stop': new_dt_stop})
