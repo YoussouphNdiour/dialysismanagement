@@ -152,5 +152,58 @@ class ACSDialysisStationCalendar(models.Model):
 
     @api.model
     def get_calendar_month_data(self, year, month):
-        """Stub."""
-        return {'days': [], 'total_stations': 0, 'month_avg_occupation': 0}
+        """Vue synthétique mensuelle : occupation par jour + compteurs alertes."""
+        first_day = datetime(year, month, 1)
+        days_in_month = cal_mod.monthrange(year, month)[1]
+        last_day = datetime(year, month, days_in_month, 23, 59, 59)
+        now = fields.Datetime.now()
+
+        Procedure = self.env['acs.patient.procedure']
+        procs = Procedure.search([
+            ('date', '>=', fields.Datetime.to_string(first_day)),
+            ('date', '<=', fields.Datetime.to_string(last_day)),
+            ('department_id.department_type', '=', 'nephrology'),
+        ])
+
+        total_stations = self.search_count([('active', '=', True)])
+        # Base théorique : 2 vacations par poste par jour
+        max_per_day = max(total_stations * 2, 1)
+
+        daily = {}
+        for proc in procs:
+            if not proc.date:
+                continue
+            day_key = proc.date.date().isoformat()
+            if day_key not in daily:
+                daily[day_key] = {'session_count': 0, 'critical_count': 0, 'warning_count': 0}
+            daily[day_key]['session_count'] += 1
+            alert_level, _ = self._get_alert(proc, now)
+            if alert_level == 'critical':
+                daily[day_key]['critical_count'] += 1
+            elif alert_level == 'warning':
+                daily[day_key]['warning_count'] += 1
+
+        days_list = []
+        occupation_rates = []
+        for i in range(days_in_month):
+            day = (first_day + timedelta(days=i)).date()
+            day_key = day.isoformat()
+            stats = daily.get(day_key, {'session_count': 0, 'critical_count': 0, 'warning_count': 0})
+            rate = min(round(stats['session_count'] / max_per_day * 100), 100)
+            days_list.append({
+                'date': day_key,
+                'session_count': stats['session_count'],
+                'occupation_rate': rate,
+                'critical_count': stats['critical_count'],
+                'warning_count': stats['warning_count'],
+            })
+            if stats['session_count'] > 0:
+                occupation_rates.append(rate)
+
+        avg = round(sum(occupation_rates) / len(occupation_rates)) if occupation_rates else 0
+
+        return {
+            'days': days_list,
+            'total_stations': total_stations,
+            'month_avg_occupation': avg,
+        }
