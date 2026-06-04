@@ -100,26 +100,31 @@ class AcsDialysisBulkInvoiceWizard(models.TransientModel):
         }
 
     def _create_grouped_invoice(self, patient, procedures):
-        """Creates one invoice for a patient grouping all procedure lines."""
+        """Creates one invoice for a patient grouping all procedure lines.
+
+        All procedures are linked to the invoice (even those without a pricing rule).
+        Procedures without a rule are noted but do not block invoice creation.
+        """
         line_vals = []
+        procs_with_rule = []
         for proc in procedures:
             proc._resolve_pricing_rule()
             rule = proc.resolved_pricing_rule_id
-            if not rule:
-                continue
             session_date = proc.date.date() if proc.date else fields.Date.today()
-            # Section header per session
-            line_vals.append((0, 0, {
-                'display_type': 'line_section',
-                'name': 'Séance du %s' % session_date,
-            }))
-            # Invoice line
-            line_vals.append((0, 0, {
-                'name': 'Dialyse — %s' % session_date,
-                'price_unit': rule.price_unit,
-                'quantity': 1,
-                'tax_ids': [(6, 0, rule.tax_ids.ids)],
-            }))
+            if rule:
+                procs_with_rule.append(proc)
+                # Section header per session
+                line_vals.append((0, 0, {
+                    'display_type': 'line_section',
+                    'name': 'Séance du %s' % session_date,
+                }))
+                # Invoice line
+                line_vals.append((0, 0, {
+                    'name': 'Dialyse — %s' % session_date,
+                    'price_unit': rule.price_unit,
+                    'quantity': 1,
+                    'tax_ids': [(6, 0, rule.tax_ids.ids)],
+                }))
 
         if not line_vals:
             raise UserError(
@@ -133,8 +138,10 @@ class AcsDialysisBulkInvoiceWizard(models.TransientModel):
             'invoice_date': fields.Date.today(),
             'invoice_line_ids': line_vals,
         })
-        # Link procedures to invoice and apply insurance
+        # Link ALL procedures to invoice (including those without a rule)
         for proc in procedures:
             proc.invoice_id = invoice
+        # Apply insurance only on procedures that contributed lines
+        for proc in procs_with_rule:
             proc._apply_insurance_amounts(invoice)
         return invoice
