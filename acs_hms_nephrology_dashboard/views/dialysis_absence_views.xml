@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree view -->
+    <record id="view_dialysis_absence_tree" model="ir.ui.view">
+        <field name="name">acs.dialysis.absence.tree</field>
+        <field name="model">acs.dialysis.absence</field>
+        <field name="arch" type="xml">
+            <list string="Absences patients" decoration-danger="reason == 'deces'"
+                  decoration-warning="state == 'confirmed'">
+                <field name="patient_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="reason"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'confirmed'"
+                       decoration-success="state == 'closed'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="view_dialysis_absence_form" model="ir.ui.view">
+        <field name="name">acs.dialysis.absence.form</field>
+        <field name="model">acs.dialysis.absence</field>
+        <field name="arch" type="xml">
+            <form string="Absence patient">
+                <header>
+                    <button name="action_confirm" string="Confirmer" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_close_and_notify" string="Clôturer + Notifier reprise"
+                            type="object" class="btn-primary"
+                            invisible="state != 'confirmed'"
+                            confirm="Envoyer le WhatsApp de reprise et clôturer l'absence ?"/>
+                    <button name="action_cancel" string="Annuler" type="object"
+                            invisible="state not in ('draft', 'confirmed')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,closed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="reason"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Notes éventuelles…"/>
+                    <notebook>
+                        <page string="Séances concernées">
+                            <field name="procedure_ids" readonly="1">
+                                <list>
+                                    <field name="date"/>
+                                    <field name="nephrology_schedule_ids" widget="many2many_tags"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_dialysis_absence_search" model="ir.ui.view">
+        <field name="name">acs.dialysis.absence.search</field>
+        <field name="model">acs.dialysis.absence</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="patient_id"/>
+                <filter string="En cours" name="confirmed" domain="[('state','=','confirmed')]"/>
+                <filter string="Clôturées" name="closed" domain="[('state','=','closed')]"/>
+                <filter string="Décès" name="deces" domain="[('reason','=','deces')]"/>
+                <filter string="Ce mois" name="this_month"
+                        domain="[('start_date','&gt;=', (context_today()).strftime('%Y-%m-01'))]"/>
+                <group expand="0" string="Regrouper par">
+                    <filter string="Motif" name="group_reason" context="{'group_by': 'reason'}"/>
+                    <filter string="Patient" name="group_patient" context="{'group_by': 'patient_id'}"/>
+                    <filter string="Mois" name="group_month" context="{'group_by': 'start_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_dialysis_absence" model="ir.actions.act_window">
+        <field name="name">Absences patients</field>
+        <field name="res_model">acs.dialysis.absence</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_dialysis_absence_search"/>
+    </record>
+
+    <!-- Menu -->
+    <menuitem
+        id="menu_dialysis_absences"
+        name="Absences patients"
+        parent="acs_hms_nephrology.nephrology_menu_root"
+        action="action_dialysis_absence"
+        groups="acs_hms.group_hms_receptionist,acs_hms.group_hms_physician"
+        sequence="20"/>
+
+</odoo>

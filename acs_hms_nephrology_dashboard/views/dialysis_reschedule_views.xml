@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_dialysis_reschedule_form" model="ir.ui.view">
+        <field name="name">dialysis.session.reschedule.form</field>
+        <field name="model">dialysis.session.reschedule</field>
+        <field name="arch" type="xml">
+            <form string="Reporter la séance">
+                <group>
+                    <group string="Date">
+                        <field name="original_date" string="Date actuelle" readonly="1"/>
+                        <field name="new_date"/>
+                    </group>
+                    <group string="Poste">
+                        <field name="station_id"/>
+                        <field name="slots_available" string="Places disponibles" readonly="1"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="add_to_waitlist"
+                           invisible="slots_available &gt; 0"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Confirmer le report"
+                            type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dialysis_reschedule_wizard" model="ir.actions.act_window">
+        <field name="name">Reporter la séance</field>
+        <field name="res_model">dialysis.session.reschedule</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_procedure_id': active_id}</field>
+    </record>
+
+</odoo>
