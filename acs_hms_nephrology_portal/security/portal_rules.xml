@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ir.rule : chaque patient portal ne voit que ses propres données -->
+
+    <record id="rule_portal_procedure" model="ir.rule">
+        <field name="name">Portal: séances patient uniquement</field>
+        <field name="model_id" ref="acs_hms.model_acs_patient_procedure"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">
+            [('patient_id.partner_id', '=', user.partner_id.id)]
+        </field>
+    </record>
+
+    <record id="rule_portal_bilan" model="ir.rule">
+        <field name="name">Portal: bilans patient uniquement</field>
+        <field name="model_id" ref="acs_hms_nephrology_bilans.model_acs_nephro_bilan"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">
+            [('patient_id.partner_id', '=', user.partner_id.id)]
+        </field>
+    </record>
+
+    <record id="rule_portal_appointment" model="ir.rule">
+        <field name="name">Portal: RDV patient uniquement</field>
+        <field name="model_id" ref="acs_hms.model_hms_appointment"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">
+            [('patient_id.partner_id', '=', user.partner_id.id)]
+        </field>
+    </record>
+
+    <record id="rule_portal_prescription" model="ir.rule">
+        <field name="name">Portal: ordonnances patient uniquement</field>
+        <field name="model_id" ref="acs_hms.model_prescription_order"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">
+            [('patient_id.partner_id', '=', user.partner_id.id)]
+        </field>
+    </record>
+
+    <record id="rule_portal_invoice" model="ir.rule">
+        <field name="name">Portal: factures patient uniquement</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">
+            [('partner_id', '=', user.partner_id.id),
+             ('move_type', '=', 'out_invoice')]
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_portal_procedure,Portal séances,acs_hms.model_acs_patient_procedure,base.group_portal,1,0,0,0
+access_portal_bilan,Portal bilans,acs_hms_nephrology_bilans.model_acs_nephro_bilan,base.group_portal,1,0,0,0
+access_portal_appointment,Portal RDV,acs_hms.model_hms_appointment,base.group_portal,1,1,0,0
+access_portal_prescription,Portal ordonnances,acs_hms.model_prescription_order,base.group_portal,1,0,0,0
+access_portal_invoice,Portal factures,account.model_account_move,base.group_portal,1,0,0,0
+access_portal_prescription_line,Portal lignes ordonnances,acs_hms.model_prescription_line,base.group_portal,1,0,0,0
