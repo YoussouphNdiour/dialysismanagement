@@ -47,4 +47,13 @@
              ('move_type', '=', 'out_invoice')]
         </field>
     </record>
+
+    <record id="rule_portal_prescription_line" model="ir.rule">
+        <field name="name">Portal: lignes ordonnances patient uniquement</field>
+        <field name="model_id" ref="acs_hms.model_prescription_line"/>
+        <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+        <field name="domain_force">
+            [('prescription_id.patient_id.partner_id', '=', user.partner_id.id)]
+        </field>
+    </record>
 </odoo>
