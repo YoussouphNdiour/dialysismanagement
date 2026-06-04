@@ -7,9 +7,9 @@
         <field name="inherit_id" ref="acs_hms.view_patient_procedure_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="%(action_dialysis_reschedule_wizard)d"
+                <button name="action_open_reschedule_wizard"
                         string="Reporter"
-                        type="action"
+                        type="object"
                         invisible="state not in ('scheduled',)"
                         class="btn-secondary"/>
             </xpath>

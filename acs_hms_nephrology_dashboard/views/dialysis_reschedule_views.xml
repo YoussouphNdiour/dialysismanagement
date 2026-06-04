@@ -34,7 +34,7 @@
         <field name="res_model">dialysis.session.reschedule</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="context">{'default_procedure_id': active_id}</field>
+        <field name="context" eval="{'default_procedure_id': active_id}"/>
     </record>
 
 </odoo>

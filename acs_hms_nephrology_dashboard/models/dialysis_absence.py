@@ -191,6 +191,18 @@ class ACSPatientProcedureAbsence(models.Model):
         index=True,
     )
 
+    def action_open_reschedule_wizard(self):
+        """Ouvre le wizard de report pour cette séance."""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Reporter la séance'),
+            'res_model': 'dialysis.session.reschedule',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_procedure_id': self.id},
+        }
+
     def _check_waitlist_notification(self):
         """Pour chaque créneau libéré, notifie le premier patient en attente."""
         if 'acs.dialysis.waitlist' not in self.env:
