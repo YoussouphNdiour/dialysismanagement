@@ -108,22 +108,25 @@ class AcsPatientProcedure(models.Model):
             )
         # Build product line for invoice
         session_date = self.date or fields.Date.today()
-        # Use acs_create_invoice mixin if available, else create manually
-        if hasattr(self, 'acs_create_invoice'):
-            # Override price_unit from resolved rule
+        patient_partner = self.patient_id.partner_id
+        # Use acs_create_invoice mixin (signature: partner, patient=, product_data=, inv_data=)
+        if hasattr(self, 'acs_create_invoice') and (
+            hasattr(self, 'product_id') and self.product_id
+        ):
             invoice = self.acs_create_invoice(
+                partner=patient_partner,
                 patient=self.patient_id,
                 product_data=[{
-                    'product_id': self.product_id.id if hasattr(self, 'product_id') and self.product_id else False,
+                    'product_id': self.product_id,
                     'name': 'Séance de dialyse — %s' % (session_date,),
                     'price_unit': rule.price_unit,
-                    'tax_ids': rule.tax_ids.ids,
+                    'tax_ids': rule.tax_ids,
                     'quantity': 1,
                 }],
                 inv_data={'hospital_invoice_type': 'dialysis_session'},
             )
+            self.invoice_id = invoice
         else:
-            patient_partner = self.patient_id.partner_id
             invoice = self.env['account.move'].create({
                 'move_type': 'out_invoice',
                 'partner_id': patient_partner.id,
