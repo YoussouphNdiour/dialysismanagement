@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import date, timedelta
+from odoo import fields
 from odoo.tests import TransactionCase, tagged
 
 
@@ -92,3 +93,43 @@ class TestTariffHistory(TransactionCase):
                 'date_start': today,
                 'date_end': today - timedelta(days=1),  # end < start → violates constraint
             })
+
+
+@tagged('post_install', '-at_install')
+class TestInsurer(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.insurer = self.env['acs.dialysis.insurer'].create({
+            'name': 'IPRES Retraite',
+            'code': 'IPRES',
+        })
+        self.partner = self.env['res.partner'].create({'name': 'Patient Test Assureur'})
+        self.patient = self.env['hms.patient'].create({
+            'name': 'Patient Test Assureur',
+            'partner_id': self.partner.id,
+        })
+
+    def test_create_insurer(self):
+        self.assertEqual(self.insurer.name, 'IPRES Retraite')
+        self.assertTrue(self.insurer.active)
+
+    def test_patient_insurer_coverage_constraint(self):
+        from odoo.exceptions import ValidationError
+        with self.assertRaises((ValidationError, Exception)):
+            self.env['acs.dialysis.patient.insurer'].create({
+                'patient_id': self.patient.id,
+                'insurer_id': self.insurer.id,
+                'coverage_rate': 110.0,  # > 100 → invalid
+                'priority': 'primary',
+                'date_start': fields.Date.today(),
+            })
+
+    def test_insurer_claim_sequence(self):
+        claim = self.env['acs.dialysis.insurer.claim'].create({
+            'patient_id': self.patient.id,
+            'insurer_id': self.insurer.id,
+            'amount_claimed': 50000.0,
+        })
+        self.assertTrue(claim.name.startswith('CLAIM/'))
+        self.assertEqual(claim.state, 'draft')
