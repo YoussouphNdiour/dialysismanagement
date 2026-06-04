@@ -18,7 +18,7 @@ export class DialysisCalendar extends Component {
         this.orm = useService("orm");
         this.state = useState({
             mode: "day",
-            currentDate: new Date(),
+            currentDate: new Date().toISOString().slice(0, 10), // ISO string "YYYY-MM-DD"
             stations: [],       // Mode Jour : [{id, name, sessions:[...]}, ...]
             weekData: null,     // Mode Semaine : {week_dates, patients}
             monthData: null,    // Mode Mois : {days, total_stations, month_avg_occupation}
@@ -30,12 +30,17 @@ export class DialysisCalendar extends Component {
 
         useEffect(() => {
             this._fetchData();
-        }, () => [this.state.mode, this._dateStr()]);
+        }, () => [this.state.mode, this.state.currentDate]);
     }
 
     /** Date ISO "YYYY-MM-DD" du jour courant. */
     _dateStr() {
-        return this.state.currentDate.toISOString().slice(0, 10);
+        return this.state.currentDate;
+    }
+
+    /** Retourne un objet Date local depuis l'ISO string en état. */
+    _currentDateObj() {
+        return new Date(this.state.currentDate + "T00:00:00");
     }
 
     async _fetchData() {
@@ -55,7 +60,7 @@ export class DialysisCalendar extends Component {
                 this.state.weekData = data;
                 this.state.occupationRate = 0;
             } else {
-                const d = this.state.currentDate;
+                const d = this._currentDateObj();
                 const data = await this.orm.call(
                     "acs.dialysis.station", "get_calendar_month_data",
                     [d.getFullYear(), d.getMonth() + 1]
@@ -73,15 +78,15 @@ export class DialysisCalendar extends Component {
     }
 
     onNavigate(dir) {
-        const d = new Date(this.state.currentDate);
+        const d = this._currentDateObj();
         if (this.state.mode === "day") d.setDate(d.getDate() + dir);
         else if (this.state.mode === "week") d.setDate(d.getDate() + dir * 7);
         else d.setMonth(d.getMonth() + dir);
-        this.state.currentDate = d;
+        this.state.currentDate = d.toISOString().slice(0, 10);
     }
 
     onToday() {
-        this.state.currentDate = new Date();
+        this.state.currentDate = new Date().toISOString().slice(0, 10);
     }
 
     async onSelectSession(procedureId) {
@@ -98,7 +103,7 @@ export class DialysisCalendar extends Component {
     }
 
     onSelectDay(dateStr) {
-        this.state.currentDate = new Date(dateStr + "T00:00:00");
+        this.state.currentDate = dateStr;
         this.state.mode = "day";
     }
 }

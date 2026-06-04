@@ -4,7 +4,7 @@
     <div class="dc-wrap">
       <CalendarToolbar
         mode="state.mode"
-        currentDate="state.currentDate"
+        currentDate="new Date(state.currentDate + 'T00:00:00')"
         occupationRate="state.occupationRate"
         onModeChange.bind="onModeChange"
         onNavigate.bind="onNavigate"
@@ -30,7 +30,7 @@
         <t t-elif="state.mode === 'month' and state.monthData">
           <CalendarMonthView
             monthData="state.monthData"
-            currentDate="state.currentDate"
+            currentDate="new Date(state.currentDate + 'T00:00:00')"
             onSelectDay.bind="onSelectDay"
           />
         </t>
