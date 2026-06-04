@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.CalendarMonthView">
+    <div class="dc-month-wrap">
+      <div class="dc-month-header-row">
+        <div class="dc-month-day-name">Lun</div><div class="dc-month-day-name">Mar</div>
+        <div class="dc-month-day-name">Mer</div><div class="dc-month-day-name">Jeu</div>
+        <div class="dc-month-day-name">Ven</div><div class="dc-month-day-name">Sam</div>
+        <div class="dc-month-day-name">Dim</div>
+      </div>
+      <div class="dc-month-grid">
+        <t t-foreach="calendarGrid" t-as="cell" t-key="cell.date">
+          <t t-set="stats" t-value="dayStats(cell.date)"/>
+          <div t-att-class="'dc-month-cell ' + (cell.otherMonth ? 'dc-other-month' : '') + (isToday(cell.date) ? ' dc-today' : '')"
+               t-on-click="() => !cell.otherMonth and props.onSelectDay(cell.date)">
+            <div t-att-class="'dc-day-num ' + (isToday(cell.date) ? 'dc-day-today' : '')"
+                 t-esc="dayNum(cell.date)"/>
+            <t t-if="!cell.otherMonth and stats.session_count > 0">
+              <div class="dc-occ-bar-wrap">
+                <div t-att-class="'dc-occ-bar ' + barClass(stats.occupation_rate)"
+                     t-att-style="'width:' + stats.occupation_rate + '%'"/>
+              </div>
+              <div class="dc-occ-text">
+                <t t-esc="stats.session_count"/> s&#233;ances &#183; <t t-esc="stats.occupation_rate"/>%
+              </div>
+              <t t-if="stats.critical_count > 0">
+                <div class="dc-alert-row">&#128308; <t t-esc="stats.critical_count"/> critique(s)</div>
+              </t>
+            </t>
+          </div>
+        </t>
+      </div>
+      <div class="dc-month-legend">
+        <span>Taux occupation :</span>
+        <span class="dc-legend-item"><span class="dc-legend-dot dc-dot-green"/>&#8805; 80% Optimal</span>
+        <span class="dc-legend-item"><span class="dc-legend-dot dc-dot-orange"/>50&#8211;79% Correct</span>
+        <span class="dc-legend-item"><span class="dc-legend-dot dc-dot-red"/>&#60; 50% Faible</span>
+        <span class="dc-month-legend-tip">Clic sur un jour &#8594; Mode Jour</span>
+      </div>
+    </div>
+  </t>
+</templates>
