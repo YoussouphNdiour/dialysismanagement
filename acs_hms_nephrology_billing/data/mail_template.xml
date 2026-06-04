@@ -1,2 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo/>
+<odoo>
+    <record id="mail_template_nephro_overdue" model="mail.template">
+        <field name="name">Dialyse — Alerte impayé patient</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="subject">Facture impayée — Clinique As-Shafi Dialyse</field>
+        <field name="body_html" type="html">
+            <p>Bonjour <t t-out="object.partner_id.name"/>,</p>
+            <p>
+                Votre facture de dialyse <strong><t t-out="object.name"/></strong>
+                du <t t-out="object.invoice_date"/>
+                d'un montant de <strong><t t-out="object.amount_residual"/> FCFA</strong>
+                est en attente de règlement.
+            </p>
+            <p>
+                Merci de contacter la clinique As-Shafi pour régulariser votre situation.
+            </p>
+            <p>Cordialement,<br/>La clinique As-Shafi</p>
+        </field>
+        <field name="email_from">{{ (object.company_id.email or '') }}</field>
+        <field name="email_to">{{ (object.partner_id.email or '') }}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete">True</field>
+    </record>
+</odoo>
