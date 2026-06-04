@@ -3,13 +3,22 @@
     'name': 'Nephrology Dashboard',
     'version': '1.0.0',
     'category': 'Medical',
-    'summary': 'Interface infirmier tablette + dashboard médecin (OWL)',
-    'depends': ['acs_hms_nephrology', 'acs_hms_nephrology_complications'],
+    'summary': 'Interface infirmier tablette + dashboard médecin + gestion absences (OWL)',
+    'depends': [
+        'acs_hms_nephrology',
+        'acs_hms_nephrology_complications',
+        'acs_hms_whatsapp',
+    ],
     'data': [
         'security/ir.model.access.csv',
+        'data/cron_reprise_whatsapp.xml',
         'views/nurse_dashboard_action.xml',
         'views/doctor_dashboard_action.xml',
         'views/dialysis_calendar_action.xml',
+        'views/dialysis_absence_views.xml',
+        'views/dialysis_waitlist_views.xml',
+        'views/dialysis_reschedule_views.xml',
+        'views/procedure_views_ext.xml',
     ],
     'assets': {
         'web.assets_backend': [
