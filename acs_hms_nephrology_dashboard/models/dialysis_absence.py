@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from datetime import date, timedelta
+from datetime import datetime
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -50,14 +51,18 @@ class ACSDialysisAbsence(models.Model):
     def action_confirm(self):
         """Passe l'absence en Confirmée et marque les séances concernées en Absent."""
         self.ensure_one()
+        if self.state != 'draft':
+            raise UserError(_("Seule une absence en brouillon peut être confirmée."))
+        start_dt = fields.Datetime.to_string(
+            datetime.combine(self.start_date, datetime.min.time())
+        )
+        end_dt = fields.Datetime.to_string(
+            datetime.combine(self.end_date, datetime.max.time().replace(microsecond=0))
+        )
         procedures = self.env['acs.patient.procedure'].search([
             ('patient_id', '=', self.patient_id.id),
-            ('date', '>=', fields.Datetime.to_string(
-                fields.Datetime.from_string(f'{self.start_date} 00:00:00')
-            )),
-            ('date', '<=', fields.Datetime.to_string(
-                fields.Datetime.from_string(f'{self.end_date} 23:59:59')
-            )),
+            ('date', '>=', start_dt),
+            ('date', '<=', end_dt),
             ('state', '=', 'scheduled'),
         ])
         procedures.write({'state': 'absent', 'absence_id': self.id})
@@ -149,7 +154,7 @@ class ACSDialysisAbsence(models.Model):
         for absence in absences:
             try:
                 absence._send_whatsapp_reprise()
-                absence.whatsapp_reprise_sent = True
+                absence.write({'whatsapp_reprise_sent': True})
             except Exception as e:
                 _logger.error(
                     "Cron reprise WhatsApp — échec pour absence %s: %s",
