@@ -187,3 +187,142 @@ class NephrologyPortal(CustomerPortal):
             'show_raw': company.portal_show_raw_values,
             'page_name': 'seances',
         })
+
+    # ------------------------------------------------------------------ #
+    #  /my/bilans                                                          #
+    # ------------------------------------------------------------------ #
+
+    @http.route('/my/bilans', auth='user', website=True)
+    def portal_bilans(self, page=1, **kw):
+        patient = self._get_current_patient()
+        if not patient:
+            return request.redirect('/my/nephro')
+
+        Bilan = request.env['acs.nephro.bilan'].sudo()
+        domain = [('patient_id', '=', patient.id)]
+        total = Bilan.search_count(domain)
+        pager = portal_pager(
+            url='/my/bilans',
+            total=total,
+            page=int(page),
+            step=10,
+        )
+        bilans = Bilan.search(
+            domain, limit=10, offset=pager['offset'], order='exam_date desc'
+        )
+        # Données Chart.js — 6 derniers mois (sans pagination)
+        bilans_chart = Bilan.search(domain, order='exam_date asc', limit=6)
+        chart_data = self._build_chart_data(bilans_chart)
+
+        return request.render('acs_hms_nephrology_portal.portal_bilans', {
+            'patient': patient,
+            'bilans': bilans,
+            'pager': pager,
+            'chart_data': chart_data,
+            'page_name': 'bilans',
+        })
+
+    @http.route('/my/bilans/<int:bilan_id>', auth='user', website=True)
+    def portal_bilan_detail(self, bilan_id, **kw):
+        patient = self._get_current_patient()
+        if not patient:
+            return request.redirect('/my/nephro')
+
+        bilan = request.env['acs.nephro.bilan'].sudo().search([
+            ('id', '=', bilan_id),
+            ('patient_id', '=', patient.id),
+        ], limit=1)
+        if not bilan:
+            return request.redirect('/my/bilans')
+
+        return request.render('acs_hms_nephrology_portal.portal_bilan_detail', {
+            'patient': patient,
+            'bilan': bilan,
+            'page_name': 'bilans',
+        })
+
+    # ------------------------------------------------------------------ #
+    #  /my/rdv                                                             #
+    # ------------------------------------------------------------------ #
+
+    @http.route('/my/rdv', auth='user', website=True)
+    def portal_rdv(self, **kw):
+        patient = self._get_current_patient()
+        if not patient:
+            return request.redirect('/my/nephro')
+
+        appointments = request.env['hms.appointment'].sudo().search([
+            ('patient_id', '=', patient.id),
+            ('date', '>=', fields.Datetime.now()),
+            ('state', 'in', ['draft', 'confirm']),
+        ], order='date asc', limit=50)
+
+        cancelled_flash = kw.get('cancelled') == '1'
+        return request.render('acs_hms_nephrology_portal.portal_rdv', {
+            'patient': patient,
+            'appointments': appointments,
+            'cancelled_flash': cancelled_flash,
+            'page_name': 'rdv',
+        })
+
+    @http.route(
+        '/my/rdv/<int:appointment_id>/cancel',
+        auth='user',
+        website=True,
+        methods=['POST'],
+        csrf=True,
+    )
+    def portal_rdv_cancel(self, appointment_id, cancel_reason='', **kw):
+        patient = self._get_current_patient()
+        if not patient:
+            return request.redirect('/my/nephro')
+
+        appointment = request.env['hms.appointment'].sudo().search([
+            ('id', '=', appointment_id),
+            ('patient_id', '=', patient.id),
+            ('state', 'in', ['draft', 'confirm']),
+        ], limit=1)
+
+        if not appointment:
+            return request.redirect('/my/rdv')
+
+        appointment.write({
+            'patient_cancelled': True,
+            'cancel_reason': cancel_reason,
+            'cancel_date': fields.Datetime.now(),
+        })
+        appointment._notify_cancel_to_secretary()
+        return request.redirect('/my/rdv?cancelled=1')
+
+    # ------------------------------------------------------------------ #
+    #  /my/ordonnances                                                     #
+    # ------------------------------------------------------------------ #
+
+    @http.route('/my/ordonnances', auth='user', website=True)
+    def portal_ordonnances(self, show_all=False, **kw):
+        patient = self._get_current_patient()
+        if not patient:
+            return request.redirect('/my/nephro')
+
+        domain = [('patient_id', '=', patient.id)]
+        if not show_all:
+            domain.append(('state', 'not in', ['canceled']))
+
+        prescriptions = request.env['prescription.order'].sudo().search(
+            domain, order='prescription_date desc', limit=50
+        )
+        return request.render('acs_hms_nephrology_portal.portal_ordonnances', {
+            'patient': patient,
+            'prescriptions': prescriptions,
+            'show_all': show_all,
+            'page_name': 'ordonnances',
+        })
+
+    # ------------------------------------------------------------------ #
+    #  /my/factures — redirect vers portal account natif                  #
+    # ------------------------------------------------------------------ #
+
+    @http.route('/my/factures', auth='user', website=True)
+    def portal_factures(self, **kw):
+        """Redirige vers le portail natif Odoo account, filtré dialyse."""
+        return request.redirect('/my/invoices')
