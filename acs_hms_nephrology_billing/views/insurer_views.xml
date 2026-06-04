@@ -1,2 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo/>
+<odoo>
+    <!-- Insurer views -->
+    <record id="view_dialysis_insurer_list" model="ir.ui.view">
+        <field name="name">acs.dialysis.insurer.list</field>
+        <field name="model">acs.dialysis.insurer</field>
+        <field name="arch" type="xml">
+            <list string="Assureurs">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="active" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dialysis_insurer_form" model="ir.ui.view">
+        <field name="name">acs.dialysis.insurer.form</field>
+        <field name="model">acs.dialysis.insurer</field>
+        <field name="arch" type="xml">
+            <form string="Assureur">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </group>
+                    </group>
+                    <field name="address"/>
+                    <field name="notes"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dialysis_insurer" model="ir.actions.act_window">
+        <field name="name">Assureurs</field>
+        <field name="res_model">acs.dialysis.insurer</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Insurer claim views -->
+    <record id="view_dialysis_insurer_claim_list" model="ir.ui.view">
+        <field name="name">acs.dialysis.insurer.claim.list</field>
+        <field name="model">acs.dialysis.insurer.claim</field>
+        <field name="arch" type="xml">
+            <list string="Dossiers Remboursement" decoration-success="state=='reimbursed'" decoration-warning="state=='submitted'" decoration-danger="state=='rejected'">
+                <field name="name"/>
+                <field name="patient_id"/>
+                <field name="insurer_id"/>
+                <field name="amount_claimed"/>
+                <field name="amount_reimbursed" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state=='reimbursed'" decoration-warning="state=='submitted'" decoration-danger="state=='rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dialysis_insurer_claim_form" model="ir.ui.view">
+        <field name="name">acs.dialysis.insurer.claim.form</field>
+        <field name="model">acs.dialysis.insurer.claim</field>
+        <field name="arch" type="xml">
+            <form string="Dossier Remboursement">
+                <header>
+                    <button name="action_submit" type="object" string="Soumettre" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_reimburse" type="object" string="Rembourser" class="btn-success" invisible="state != 'submitted'"/>
+                    <button name="action_reject" type="object" string="Rejeter" class="btn-danger" invisible="state not in ('draft', 'submitted')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,reimbursed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="insurer_id"/>
+                        </group>
+                        <group>
+                            <field name="amount_claimed"/>
+                            <field name="amount_reimbursed"/>
+                        </group>
+                    </group>
+                    <field name="invoice_ids" widget="many2many_list">
+                        <list><field name="name"/><field name="invoice_date"/><field name="amount_total"/></list>
+                    </field>
+                    <field name="notes"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dialysis_insurer_claim" model="ir.actions.act_window">
+        <field name="name">Dossiers Remboursement</field>
+        <field name="res_model">acs.dialysis.insurer.claim</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
