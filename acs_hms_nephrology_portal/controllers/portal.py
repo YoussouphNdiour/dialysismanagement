@@ -132,3 +132,58 @@ class NephrologyPortal(CustomerPortal):
             'balance_due': balance_due,
             'payment_status': payment_status,
         })
+
+    # ------------------------------------------------------------------ #
+    #  /my/seances                                                         #
+    # ------------------------------------------------------------------ #
+
+    @http.route('/my/seances', auth='user', website=True)
+    def portal_seances(self, page=1, **kw):
+        patient = self._get_current_patient()
+        if not patient:
+            return request.redirect('/my/nephro')
+
+        Procedure = request.env['acs.patient.procedure'].sudo()
+        domain = [('patient_id', '=', patient.id)]
+        total = Procedure.search_count(domain)
+        pager = portal_pager(
+            url='/my/seances',
+            total=total,
+            page=int(page),
+            step=20,
+        )
+        procedures = Procedure.search(
+            domain, limit=20, offset=pager['offset'], order='date desc'
+        )
+        company = request.env.company
+        return request.render('acs_hms_nephrology_portal.portal_seances', {
+            'patient': patient,
+            'procedures': procedures,
+            'pager': pager,
+            'simplified': company.portal_simplified_language,
+            'show_raw': company.portal_show_raw_values,
+            'page_name': 'seances',
+        })
+
+    @http.route('/my/seances/<int:procedure_id>', auth='user', website=True)
+    def portal_seance_detail(self, procedure_id, **kw):
+        patient = self._get_current_patient()
+        if not patient:
+            return request.redirect('/my/nephro')
+
+        procedure = request.env['acs.patient.procedure'].sudo().search([
+            ('id', '=', procedure_id),
+            ('patient_id', '=', patient.id),
+        ], limit=1)
+        if not procedure:
+            return request.redirect('/my/seances')
+
+        company = request.env.company
+        simplified_label = self._get_simplified_label(procedure.ktv_status)
+        return request.render('acs_hms_nephrology_portal.portal_seance_detail', {
+            'patient': patient,
+            'procedure': procedure,
+            'simplified_label': simplified_label,
+            'show_raw': company.portal_show_raw_values,
+            'page_name': 'seances',
+        })
