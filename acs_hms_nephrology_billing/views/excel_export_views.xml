@@ -1,2 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo/>
+<odoo>
+    <record id="view_excel_export_wizard_form" model="ir.ui.view">
+        <field name="name">acs.dialysis.excel.export.wizard.form</field>
+        <field name="model">acs.dialysis.excel.export.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Excel — Séances dialyse">
+                <group>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="patient_ids" widget="many2many_tags"/>
+                </group>
+                <group invisible="not excel_file">
+                    <field name="excel_file" filename="excel_filename" widget="binary"/>
+                    <field name="excel_filename" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_generate_excel" type="object" string="Générer l'export" class="btn-primary"/>
+                    <button special="cancel" string="Fermer"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_excel_export_wizard" model="ir.actions.act_window">
+        <field name="name">Export Excel</field>
+        <field name="res_model">acs.dialysis.excel.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

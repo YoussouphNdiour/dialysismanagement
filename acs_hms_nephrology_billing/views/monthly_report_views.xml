@@ -1,2 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo/>
+<odoo>
+    <record id="view_monthly_report_wizard_form" model="ir.ui.view">
+        <field name="name">acs.dialysis.monthly.report.wizard.form</field>
+        <field name="model">acs.dialysis.monthly.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rapport mensuel facturation">
+                <group>
+                    <field name="month"/>
+                    <field name="year"/>
+                </group>
+                <footer>
+                    <button name="action_print_report" type="object" string="Générer le rapport" class="btn-primary"/>
+                    <button special="cancel" string="Annuler"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_monthly_report_wizard" model="ir.actions.act_window">
+        <field name="name">Rapport mensuel</field>
+        <field name="res_model">acs.dialysis.monthly.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

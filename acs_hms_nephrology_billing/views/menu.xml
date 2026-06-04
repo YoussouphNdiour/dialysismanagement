@@ -1,2 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo/>
+<odoo>
+    <menuitem id="menu_nephro_billing_root"
+              name="Facturation Dialyse"
+              sequence="50"
+              groups="acs_hms_nephrology_billing.group_nephrology_billing"/>
+
+    <menuitem id="menu_nephro_billing_pending"
+              name="Séances non facturées"
+              parent="menu_nephro_billing_root"
+              action="action_dialysis_invoices_pending"
+              sequence="10"/>
+
+    <menuitem id="menu_nephro_billing_all_invoices"
+              name="Toutes les factures"
+              parent="menu_nephro_billing_root"
+              action="action_dialysis_all_invoices"
+              sequence="20"/>
+
+    <menuitem id="menu_nephro_billing_claims"
+              name="Dossiers assureurs"
+              parent="menu_nephro_billing_root"
+              action="action_dialysis_insurer_claim"
+              sequence="30"/>
+
+    <menuitem id="menu_nephro_billing_balances"
+              name="Soldes patients"
+              parent="menu_nephro_billing_root"
+              action="action_dialysis_patient_balances"
+              sequence="40"/>
+
+    <menuitem id="menu_nephro_billing_bulk"
+              name="Facturation groupée"
+              parent="menu_nephro_billing_root"
+              action="action_bulk_invoice_wizard"
+              sequence="50"/>
+
+    <menuitem id="menu_nephro_billing_config"
+              name="Configuration"
+              parent="menu_nephro_billing_root"
+              sequence="90"/>
+
+    <menuitem id="menu_nephro_billing_pricing_rules"
+              name="Règles tarifaires"
+              parent="menu_nephro_billing_config"
+              action="action_dialysis_pricing_rule"
+              sequence="10"/>
+
+    <menuitem id="menu_nephro_billing_insurers"
+              name="Assureurs"
+              parent="menu_nephro_billing_config"
+              action="action_dialysis_insurer"
+              sequence="20"/>
+
+    <menuitem id="menu_nephro_billing_reports"
+              name="Rapports"
+              parent="menu_nephro_billing_root"
+              sequence="80"/>
+
+    <menuitem id="menu_nephro_billing_monthly_report"
+              name="Rapport mensuel PDF"
+              parent="menu_nephro_billing_reports"
+              action="action_monthly_report_wizard"
+              sequence="10"/>
+
+    <menuitem id="menu_nephro_billing_excel_export"
+              name="Export Excel"
+              parent="menu_nephro_billing_reports"
+              action="action_excel_export_wizard"
+              sequence="20"/>
+</odoo>

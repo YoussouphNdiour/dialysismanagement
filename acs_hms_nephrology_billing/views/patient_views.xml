@@ -1,2 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo/>
+<odoo>
+    <record id="view_hms_patient_billing_tab" model="ir.ui.view">
+        <field name="name">hms.patient.billing.tab</field>
+        <field name="model">hms.patient</field>
+        <field name="inherit_id" ref="acs_hms.view_patient_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Facturation" name="billing_tab"
+                      groups="acs_hms_nephrology_billing.group_nephrology_billing">
+                    <group>
+                        <group string="Solde actuel">
+                            <field name="balance_due"/>
+                            <field name="last_payment_date"/>
+                            <field name="overdue_days"/>
+                            <field name="payment_status" widget="badge"
+                                   decoration-success="payment_status=='ok'"
+                                   decoration-warning="payment_status=='warning'"
+                                   decoration-danger="payment_status=='overdue'"/>
+                        </group>
+                    </group>
+                    <separator string="Historique tarifaire"/>
+                    <field name="tariff_history_ids">
+                        <list editable="bottom">
+                            <field name="pricing_rule_id"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="notes"/>
+                        </list>
+                    </field>
+                    <separator string="Assureurs"/>
+                    <field name="patient_insurer_ids">
+                        <list editable="bottom">
+                            <field name="insurer_id"/>
+                            <field name="priority"/>
+                            <field name="coverage_rate"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="policy_number"/>
+                        </list>
+                    </field>
+                    <div class="o_row">
+                        <button name="%(acs_hms_nephrology_billing.action_report_nephro_patient_summary)d"
+                                string="Attestation annuelle PDF"
+                                type="action"
+                                class="btn btn-secondary"/>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,2 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo/>
+<odoo>
+    <record id="view_acs_patient_procedure_billing" model="ir.ui.view">
+        <field name="name">acs.patient.procedure.billing</field>
+        <field name="model">acs.patient.procedure</field>
+        <field name="inherit_id" ref="acs_hms.view_acs_patient_procedure_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_create_nephro_invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file-invoice"
+                        invisible="state != 'done' or billing_state != 'not_invoiced'"
+                        groups="acs_hms_nephrology_billing.group_nephrology_billing">
+                    <span class="o_stat_text">Facturer</span>
+                </button>
+                <button name="view_invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file-text-o"
+                        invisible="billing_state == 'not_invoiced'"
+                        groups="acs_hms_nephrology_billing.group_nephrology_billing">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Facture</span>
+                        <span class="o_stat_value">
+                            <field name="billing_state" widget="badge"
+                                   decoration-success="billing_state=='paid'"
+                                   decoration-info="billing_state=='invoiced'"/>
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath expr="//sheet//group[1]" position="after">
+                <group string="Facturation"
+                       invisible="state not in ('done', 'running')"
+                       groups="acs_hms_nephrology_billing.group_nephrology_billing">
+                    <field name="resolved_pricing_rule_id"
+                           readonly="billing_state != 'not_invoiced'"/>
+                    <field name="billing_state" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
