@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -35,15 +36,18 @@ class ACSDialysisWaitlist(models.Model):
         patient = self.patient_id
         phone = patient.phone or patient.mobile
         if not phone:
-            _logger.warning(
-                "Waitlist %s: patient %s sans téléphone.", self.id, patient.name
-            )
-            return
+            raise UserError(_(
+                "Le patient %s n'a pas de numéro de téléphone. "
+                "Veuillez le renseigner avant d'envoyer la notification."
+            ) % patient.name)
 
+        # local import to avoid circular dependency at module load time
         from .dialysis_absence import ACSDialysisAbsence
         formatted_phone = ACSDialysisAbsence._format_phone(phone)
         if not formatted_phone:
-            return
+            raise UserError(_(
+                "Le numéro '%s' n'est pas dans un format reconnu (attendu : 9 chiffres Sénégal ou E.164)."
+            ) % phone)
 
         schedule = self.schedule_id
         days = [
@@ -63,7 +67,7 @@ class ACSDialysisWaitlist(models.Model):
             "Contactez la clinique pour confirmer votre place.\n\n"
             "Clinique As-Shafi"
         ) % {
-            'name': patient.name.split()[0],
+            'name': (patient.name or '').split()[0] if patient.name else '',
             'schedule': schedule.name,
             'days': days_str,
         }
