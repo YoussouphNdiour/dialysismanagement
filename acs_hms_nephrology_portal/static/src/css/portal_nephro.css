@@ -1,0 +1,115 @@
+/* ============================================================
+   ACS Nephrology Portal — CSS mobile-first
+   Bootstrap 5 overrides (Odoo 19 natif)
+   ============================================================ */
+
+/* Cartes */
+.nephro-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Badges KDIGO */
+.badge-kdigo-normal { background-color: #28a745; color: #fff; }
+.badge-kdigo-cible  { background-color: #007bff; color: #fff; }
+.badge-kdigo-alert  { background-color: #fd7e14; color: #fff; }
+.badge-kdigo-crit   { background-color: #dc3545; color: #fff; }
+
+/* Navigation bottom fixe — mobile only */
+.nephro-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: #fff;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-around;
+    padding: 0.4rem 0 0.6rem;
+    z-index: 1030;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.nephro-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.7rem;
+    color: #6c757d;
+    text-decoration: none;
+    padding: 0.2rem 0.5rem;
+    min-width: 50px;
+}
+
+.nephro-nav-item i {
+    font-size: 1.2rem;
+    margin-bottom: 0.1rem;
+}
+
+.nephro-nav-item.active {
+    color: #007bff;
+}
+
+/* Espace bas de page pour la nav bottom */
+@media (max-width: 767.98px) {
+    .o_portal_wrap {
+        padding-bottom: 72px;
+    }
+}
+
+/* Tableaux responsive → cartes sur mobile */
+@media (max-width: 767.98px) {
+    .nephro-table-responsive thead {
+        display: none;
+    }
+
+    .nephro-table-responsive tr {
+        display: block;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .nephro-table-responsive td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.3rem 0;
+        border: none;
+        font-size: 0.875rem;
+    }
+
+    .nephro-table-responsive td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #495057;
+        margin-right: 0.5rem;
+        white-space: nowrap;
+    }
+}
+
+/* Desktop — masquer nav bottom */
+@media (min-width: 768px) {
+    .nephro-bottom-nav {
+        display: none !important;
+    }
+}
+
+/* Dialog annulation */
+.nephro-dialog {
+    border: none;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    max-width: 420px;
+    width: 90%;
+}
+
+.nephro-dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}

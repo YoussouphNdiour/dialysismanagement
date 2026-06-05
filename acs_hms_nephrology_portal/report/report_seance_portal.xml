@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action rapport -->
+    <record id="action_report_seance_portal" model="ir.actions.report">
+        <field name="name">Compte-rendu séance (patient)</field>
+        <field name="model">acs.patient.procedure</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">acs_hms_nephrology_portal.report_seance_portal_document</field>
+        <field name="report_file">acs_hms_nephrology_portal.report_seance_portal_document</field>
+        <field name="print_report_name">'CR_Seance_%s' % (object.name or object.id)</field>
+        <field name="binding_model_id" ref="acs_hms.model_acs_patient_procedure"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Template document -->
+    <template id="report_seance_portal_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Compte-rendu de séance de dialyse</h2>
+                        <hr/>
+
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <strong>Patient :</strong>
+                                <t t-esc="o.patient_id.name"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Date :</strong>
+                                <t t-esc="o.date and o.date.strftime('%d/%m/%Y %H:%M')"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered mt-4">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Paramètre</th>
+                                    <th>Valeur</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Durée effective</td>
+                                    <td>
+                                        <t t-esc="'%.1f h' % (o.actual_duration or 0)"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>UF retirée</td>
+                                    <td>
+                                        <t t-esc="'%.0f ml' % (o.actual_uf or 0)"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Efficacité de la séance</td>
+                                    <td>
+                                        <t t-if="o.ktv_status == 'adequate'">✓ Séance efficace</t>
+                                        <t t-elif="o.ktv_status == 'insufficient'">⚠ Séance insuffisante</t>
+                                        <t t-else="">—</t>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Tolérance</td>
+                                    <td>
+                                        <t t-if="o.global_tolerance == 'good'">Bonne</t>
+                                        <t t-elif="o.global_tolerance == 'average'">Moyenne</t>
+                                        <t t-elif="o.global_tolerance == 'poor'">Mauvaise</t>
+                                        <t t-else="">—</t>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <p class="mt-4 text-muted" style="font-size: 11px;">
+                            Document généré le
+                            <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y à %H:%M')"/>.
+                            Ce document est à usage informatif uniquement.
+                        </p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

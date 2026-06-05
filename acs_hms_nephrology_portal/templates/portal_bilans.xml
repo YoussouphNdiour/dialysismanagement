@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Liste des bilans -->
+    <template id="portal_bilans" name="Portail — Mes bilans">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'bilans'"/>
+            <div class="o_portal_wrap">
+                <div class="container py-4">
+                    <h2 class="mb-3">Mes bilans biologiques</h2>
+
+                    <!-- Graphiques évolution 6 mois -->
+                    <t t-if="bilans">
+                        <div class="nephro-card mb-4">
+                            <h5 class="mb-3">Évolution — 6 derniers mois</h5>
+                            <div class="row g-3">
+                                <div class="col-12 col-md-4">
+                                    <canvas id="chartHemoglobin" height="120"/>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <canvas id="chartPotassium" height="120"/>
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <canvas id="chartPhosphorus" height="120"/>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            (function() {
+                                var data = <t t-out="chart_data"/>;
+                                function makeChart(id, label, key, color) {
+                                    var ctx = document.getElementById(id);
+                                    if (!ctx) return;
+                                    new Chart(ctx, {
+                                        type: 'line',
+                                        data: {
+                                            labels: data.labels,
+                                            datasets: [{
+                                                label: label,
+                                                data: data[key],
+                                                borderColor: color,
+                                                backgroundColor: color + '22',
+                                                tension: 0.3,
+                                                fill: true,
+                                                pointRadius: 4,
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            plugins: { legend: { display: true } },
+                                            scales: { y: { beginAtZero: false } }
+                                        }
+                                    });
+                                }
+                                makeChart('chartHemoglobin', 'Hémoglobine (g/dL)', 'hemoglobin', '#e74c3c');
+                                makeChart('chartPotassium',  'Potassium (mmol/L)',  'potassium',  '#3498db');
+                                makeChart('chartPhosphorus', 'Phosphore (mmol/L)',  'phosphorus', '#2ecc71');
+                            })();
+                        </script>
+                    </t>
+
+                    <!-- Tableau bilans -->
+                    <t t-if="not bilans">
+                        <p class="text-muted">Aucun bilan enregistré.</p>
+                    </t>
+                    <t t-if="bilans">
+                        <div class="table-responsive">
+                            <table class="table nephro-table-responsive">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Hb (g/dL)</th>
+                                        <th>K (mmol/L)</th>
+                                        <th>P (mmol/L)</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="bilans" t-as="b">
+                                        <tr>
+                                            <td data-label="Date">
+                                                <t t-esc="b.exam_date and b.exam_date.strftime('%d/%m/%Y')"/>
+                                            </td>
+                                            <td data-label="Type">
+                                                <t t-esc="b.bilan_type or '—'"/>
+                                            </td>
+                                            <td data-label="Hb">
+                                                <t t-esc="'%.1f' % (b.hemoglobin or 0)"/>
+                                            </td>
+                                            <td data-label="K">
+                                                <t t-esc="'%.2f' % (b.potassium or 0)"/>
+                                            </td>
+                                            <td data-label="P">
+                                                <t t-esc="'%.2f' % (b.phosphorus or 0)"/>
+                                            </td>
+                                            <td>
+                                                <a t-attf-href="/my/bilans/#{b.id}"
+                                                   class="btn btn-sm btn-outline-secondary">
+                                                    Détail
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <t t-call="portal.pager" t-if="pager"/>
+                    </t>
+                </div>
+            </div>
+            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
+        </t>
+    </template>
+
+    <!-- Détail bilan -->
+    <template id="portal_bilan_detail" name="Portail — Détail bilan">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'bilans'"/>
+            <div class="o_portal_wrap">
+                <div class="container py-4">
+                    <a href="/my/bilans" class="btn btn-sm btn-outline-secondary mb-3">
+                        ← Retour aux bilans
+                    </a>
+                    <h2 class="mb-1">
+                        Bilan du <t t-esc="bilan.exam_date and bilan.exam_date.strftime('%d/%m/%Y')"/>
+                    </h2>
+
+                    <div class="nephro-card mt-3">
+                        <h5>Hématologie</h5>
+                        <dl class="row">
+                            <dt class="col-7">Hémoglobine</dt>
+                            <dd class="col-5"><t t-esc="'%.1f g/dL' % (bilan.hemoglobin or 0)"/></dd>
+                            <dt class="col-7">Ferritine</dt>
+                            <dd class="col-5"><t t-esc="'%.1f µg/L' % (bilan.ferritin or 0)"/></dd>
+                        </dl>
+                    </div>
+
+                    <div class="nephro-card mt-3">
+                        <h5>Biochimie</h5>
+                        <dl class="row">
+                            <dt class="col-7">Potassium</dt>
+                            <dd class="col-5"><t t-esc="'%.2f mmol/L' % (bilan.potassium or 0)"/></dd>
+                            <dt class="col-7">Phosphore</dt>
+                            <dd class="col-5"><t t-esc="'%.2f mmol/L' % (bilan.phosphorus or 0)"/></dd>
+                            <dt class="col-7">Calcium</dt>
+                            <dd class="col-5"><t t-esc="'%.2f mmol/L' % (bilan.calcium or 0)"/></dd>
+                        </dl>
+                    </div>
+
+                    <t t-if="bilan.notes">
+                        <div class="nephro-card mt-3">
+                            <h5>Notes</h5>
+                            <p><t t-esc="bilan.notes"/></p>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
+        </t>
+    </template>
+</odoo>

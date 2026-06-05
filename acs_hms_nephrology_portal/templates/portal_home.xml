@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_home" name="Portail patient — Accueil">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'home'"/>
+            <div class="o_portal_wrap">
+                <div class="container py-4">
+                    <h2 class="mb-4">
+                        Bonjour, <t t-esc="patient.name"/>
+                    </h2>
+
+                    <div class="row g-3">
+                        <!-- Prochain RDV -->
+                        <div class="col-6 col-md-3">
+                            <a href="/my/rdv" class="text-decoration-none">
+                                <div class="nephro-card">
+                                    <div class="text-muted small mb-1">Prochain RDV</div>
+                                    <t t-if="next_rdv">
+                                        <strong t-esc="next_rdv.date and next_rdv.date.strftime('%d/%m %H:%M')"/>
+                                        <div class="text-muted small" t-if="next_rdv.physician_id">
+                                            Dr <t t-esc="next_rdv.physician_id.name"/>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-muted">Aucun prévu</span>
+                                    </t>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Dernier bilan -->
+                        <div class="col-6 col-md-3">
+                            <a href="/my/bilans" class="text-decoration-none">
+                                <div class="nephro-card">
+                                    <div class="text-muted small mb-1">Dernier bilan</div>
+                                    <t t-if="last_bilan">
+                                        <strong>
+                                            Hb: <t t-esc="'%.1f' % (last_bilan.hemoglobin or 0)"/> g/dL
+                                        </strong>
+                                        <div class="text-muted small">
+                                            <t t-esc="last_bilan.exam_date and last_bilan.exam_date.strftime('%d/%m/%Y')"/>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-muted">Aucun bilan</span>
+                                    </t>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Solde -->
+                        <div class="col-6 col-md-3">
+                            <a href="/my/factures" class="text-decoration-none">
+                                <div class="nephro-card">
+                                    <div class="text-muted small mb-1">Solde</div>
+                                    <strong>
+                                        <t t-esc="'%.0f' % (balance_due or 0)"/> MAD
+                                    </strong>
+                                    <div class="mt-1">
+                                        <t t-if="payment_status == 'ok'">
+                                            <span class="badge bg-success">À jour</span>
+                                        </t>
+                                        <t t-elif="payment_status == 'warning'">
+                                            <span class="badge bg-warning text-dark">En attente</span>
+                                        </t>
+                                        <t t-elif="payment_status == 'overdue'">
+                                            <span class="badge bg-danger">En retard</span>
+                                        </t>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Ordonnances actives -->
+                        <div class="col-6 col-md-3">
+                            <a href="/my/ordonnances" class="text-decoration-none">
+                                <div class="nephro-card">
+                                    <div class="text-muted small mb-1">Ordonnances</div>
+                                    <strong>
+                                        <t t-esc="len(active_rx)"/> active(s)
+                                    </strong>
+                                    <div class="text-muted small text-truncate" t-if="active_rx">
+                                        <t t-foreach="active_rx[:2]" t-as="rx">
+                                            <t t-esc="rx.name"/><br/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Navigation secondaire (desktop) -->
+                    <div class="d-none d-md-flex gap-2 mt-4">
+                        <a href="/my/seances" class="btn btn-outline-primary">Mes séances</a>
+                        <a href="/my/bilans" class="btn btn-outline-primary">Mes bilans</a>
+                        <a href="/my/rdv" class="btn btn-outline-primary">Mes RDV</a>
+                        <a href="/my/ordonnances" class="btn btn-outline-primary">Mes ordonnances</a>
+                        <a href="/my/factures" class="btn btn-outline-primary">Mes factures</a>
+                    </div>
+                </div>
+            </div>
+            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
+        </t>
+    </template>
+</odoo>

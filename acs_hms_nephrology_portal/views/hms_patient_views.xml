@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Bouton "Inviter au portail" sur la fiche hms.patient -->
+    <record id="view_hms_patient_portal_invite" model="ir.ui.view">
+        <field name="name">hms.patient.portal.invite</field>
+        <field name="model">hms.patient</field>
+        <field name="inherit_id" ref="acs_hms_base.view_patient_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_invite_portal"
+                        type="object"
+                        string="Inviter au portail"
+                        icon="fa-share-alt"
+                        groups="acs_hms_base.group_hms_manager,acs_hms.group_hms_receptionist"
+                        class="oe_stat_button"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

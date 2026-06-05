@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_config_settings_nephro_portal" model="ir.ui.view">
+        <field name="name">res.config.settings.nephro.portal</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.action_general_configuration"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='hospital_settings']" position="after">
+                <div class="app_settings_block">
+                    <h2>Portail patient</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="portal_simplified_language"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="portal_simplified_language"/>
+                                <div class="text-muted">
+                                    Affiche "Séance efficace / insuffisante" au lieu de la valeur KT/V brute
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                             attrs="{'invisible': [('portal_simplified_language', '=', False)]}">
+                            <div class="o_setting_left_pane">
+                                <field name="portal_show_raw_values"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="portal_show_raw_values"/>
+                                <div class="text-muted">
+                                    Montre aussi le chiffre KT/V en plus du texte simplifié
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

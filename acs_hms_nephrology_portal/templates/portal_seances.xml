@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Liste des séances -->
+    <template id="portal_seances" name="Portail — Mes séances">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'seances'"/>
+            <div class="o_portal_wrap">
+                <div class="container py-4">
+                    <h2 class="mb-3">Mes séances</h2>
+
+                    <t t-if="not procedures">
+                        <p class="text-muted">Aucune séance enregistrée.</p>
+                    </t>
+
+                    <t t-if="procedures">
+                        <div class="table-responsive">
+                            <table class="table nephro-table-responsive">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Durée</th>
+                                        <th>Efficacité</th>
+                                        <th>UF retirée</th>
+                                        <th>Tolérance</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="procedures" t-as="p">
+                                        <tr>
+                                            <td data-label="Date">
+                                                <t t-esc="p.date and p.date.strftime('%d/%m/%Y %H:%M')"/>
+                                            </td>
+                                            <td data-label="Durée">
+                                                <t t-esc="'%.1fh' % (p.actual_duration or 0)"/>
+                                            </td>
+                                            <td data-label="Efficacité">
+                                                <t t-if="simplified and p.ktv_status == 'adequate'">
+                                                    <span class="badge bg-success">✓ Efficace</span>
+                                                    <t t-if="show_raw">
+                                                        <small class="text-muted ms-1">
+                                                            KT/V: <t t-esc="'%.2f' % (p.ktv_calculated or 0)"/>
+                                                        </small>
+                                                    </t>
+                                                </t>
+                                                <t t-elif="simplified and p.ktv_status == 'insufficient'">
+                                                    <span class="badge bg-warning text-dark">⚠ Insuffisant</span>
+                                                    <t t-if="show_raw">
+                                                        <small class="text-muted ms-1">
+                                                            KT/V: <t t-esc="'%.2f' % (p.ktv_calculated or 0)"/>
+                                                        </small>
+                                                    </t>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="'%.2f' % (p.ktv_calculated or 0)"/>
+                                                </t>
+                                            </td>
+                                            <td data-label="UF retirée">
+                                                <t t-esc="'%.0f ml' % (p.actual_uf or 0)"/>
+                                            </td>
+                                            <td data-label="Tolérance">
+                                                <t t-if="p.global_tolerance == 'good'">
+                                                    <span class="badge bg-success">Bonne</span>
+                                                </t>
+                                                <t t-elif="p.global_tolerance == 'average'">
+                                                    <span class="badge bg-warning text-dark">Moyenne</span>
+                                                </t>
+                                                <t t-elif="p.global_tolerance == 'poor'">
+                                                    <span class="badge bg-danger">Mauvaise</span>
+                                                </t>
+                                                <t t-else="">—</t>
+                                            </td>
+                                            <td>
+                                                <a t-attf-href="/my/seances/#{p.id}"
+                                                   class="btn btn-sm btn-outline-secondary">
+                                                    Détail
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <t t-call="portal.pager" t-if="pager"/>
+                    </t>
+                </div>
+            </div>
+            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
+        </t>
+    </template>
+
+    <!-- Détail d'une séance -->
+    <template id="portal_seance_detail" name="Portail — Détail séance">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'seances'"/>
+            <div class="o_portal_wrap">
+                <div class="container py-4">
+                    <a href="/my/seances" class="btn btn-sm btn-outline-secondary mb-3">
+                        ← Retour aux séances
+                    </a>
+                    <h2 class="mb-1">
+                        Séance du <t t-esc="procedure.date and procedure.date.strftime('%d/%m/%Y')"/>
+                    </h2>
+                    <p class="text-muted">
+                        Durée : <t t-esc="'%.1fh' % (procedure.actual_duration or 0)"/>
+                    </p>
+
+                    <div class="row g-3 mt-2">
+                        <div class="col-12 col-md-6">
+                            <div class="nephro-card">
+                                <h5>Résumé</h5>
+                                <dl class="row mb-0">
+                                    <dt class="col-6">Efficacité</dt>
+                                    <dd class="col-6">
+                                        <t t-if="simplified_label">
+                                            <span t-attf-class="badge bg-#{simplified_label[0]}">
+                                                <t t-esc="simplified_label[1]"/>
+                                            </span>
+                                            <t t-if="show_raw">
+                                                <small class="text-muted ms-1">
+                                                    KT/V: <t t-esc="'%.2f' % (procedure.ktv_calculated or 0)"/>
+                                                </small>
+                                            </t>
+                                        </t>
+                                        <t t-else="">
+                                            <t t-esc="'%.2f' % (procedure.ktv_calculated or 0)"/>
+                                        </t>
+                                    </dd>
+                                    <dt class="col-6">UF retirée</dt>
+                                    <dd class="col-6">
+                                        <t t-esc="'%.0f ml' % (procedure.actual_uf or 0)"/>
+                                    </dd>
+                                    <dt class="col-6">Tolérance</dt>
+                                    <dd class="col-6">
+                                        <t t-if="procedure.global_tolerance == 'good'">
+                                            <span class="badge bg-success">Bonne</span>
+                                        </t>
+                                        <t t-elif="procedure.global_tolerance == 'average'">
+                                            <span class="badge bg-warning text-dark">Moyenne</span>
+                                        </t>
+                                        <t t-elif="procedure.global_tolerance == 'poor'">
+                                            <span class="badge bg-danger">Mauvaise</span>
+                                        </t>
+                                        <t t-else="">—</t>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Téléchargement CR PDF -->
+                    <div class="mt-4">
+                        <a t-attf-href="/report/pdf/acs_hms_nephrology_portal.action_report_seance_portal/#{procedure.id}"
+                           class="btn btn-primary" target="_blank">
+                            <i class="fa fa-download me-1"/>
+                            Télécharger le compte-rendu (PDF)
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
+        </t>
+    </template>
+</odoo>

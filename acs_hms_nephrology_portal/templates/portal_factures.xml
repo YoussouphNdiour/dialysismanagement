@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        /my/factures redirige vers /my/invoices (portal account natif Odoo).
+        Ce template est un placeholder de sécurité au cas où la redirection
+        échoue (ne devrait jamais s'afficher).
+    -->
+    <template id="portal_factures" name="Portail — Mes factures">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'factures'"/>
+            <div class="container py-4 text-center">
+                <p>Redirection en cours...</p>
+                <a href="/my/invoices" class="btn btn-primary">Voir mes factures</a>
+            </div>
+        </t>
+    </template>
+</odoo>

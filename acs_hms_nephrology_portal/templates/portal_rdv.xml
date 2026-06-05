@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_rdv" name="Portail — Mes RDV">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'rdv'"/>
+            <div class="o_portal_wrap">
+                <div class="container py-4">
+                    <h2 class="mb-3">Mes prochains RDV</h2>
+
+                    <!-- Flash annulation confirmée -->
+                    <t t-if="cancelled_flash">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            Votre annulation a bien été transmise à la clinique.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"/>
+                        </div>
+                    </t>
+
+                    <t t-if="not appointments">
+                        <p class="text-muted">Aucun RDV à venir.</p>
+                    </t>
+
+                    <t t-foreach="appointments" t-as="appt">
+                        <div class="nephro-card mb-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong>
+                                        <t t-esc="appt.date and appt.date.strftime('%A %d %B %Y — %H:%M')"/>
+                                    </strong>
+                                    <div class="text-muted small" t-if="appt.physician_id">
+                                        Dr <t t-esc="appt.physician_id.name"/>
+                                    </div>
+                                </div>
+                                <t t-if="not appt.patient_cancelled">
+                                    <button class="btn btn-sm btn-outline-danger"
+                                            onclick="document.getElementById('cancelDialog-' + this.dataset.id).showModal()"
+                                            t-att-data-id="appt.id">
+                                        Je ne pourrai pas venir
+                                    </button>
+                                </t>
+                                <t t-else="">
+                                    <span class="badge bg-secondary">Annulé</span>
+                                </t>
+                            </div>
+
+                            <!-- Dialog annulation (HTML natif, pas de JS framework) -->
+                            <t t-if="not appt.patient_cancelled">
+                                <dialog t-attf-id="cancelDialog-#{appt.id}" class="nephro-dialog">
+                                    <form t-attf-action="/my/rdv/#{appt.id}/cancel" method="post">
+                                        <input type="hidden" name="csrf_token"
+                                               t-att-value="request.csrf_token()"/>
+                                        <h5 class="mb-3">Confirmer l'annulation</h5>
+                                        <p class="text-muted small">
+                                            Séance du
+                                            <strong>
+                                                <t t-esc="appt.date and appt.date.strftime('%d/%m/%Y à %H:%M')"/>
+                                            </strong>
+                                        </p>
+                                        <div class="mb-3">
+                                            <label class="form-label">Motif (optionnel)</label>
+                                            <textarea name="cancel_reason" class="form-control"
+                                                      rows="3" maxlength="500"
+                                                      placeholder="Ex : indisposé, déplacement..."/>
+                                        </div>
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-danger">
+                                                Confirmer l'annulation
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary"
+                                                    onclick="this.closest('dialog').close()">
+                                                Annuler
+                                            </button>
+                                        </div>
+                                    </form>
+                                </dialog>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
+        </t>
+    </template>
+</odoo>

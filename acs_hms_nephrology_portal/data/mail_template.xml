@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_rdv_cancel" model="mail.template">
+        <field name="name">Annulation RDV patient (portail)</field>
+        <field name="model_id" ref="acs_hms.model_hms_appointment"/>
+        <field name="subject">Annulation séance — {{ object.patient_id.name }}</field>
+        <field name="body_html"><![CDATA[
+            <p>Bonjour,</p>
+            <p>Le patient <strong>{{ object.patient_id.name }}</strong>
+            a annulé sa séance prévue le
+            <strong>{{ object.date.strftime('%d/%m/%Y à %H:%M') if object.date else '—' }}</strong>.
+            </p>
+            <p>Motif : {{ object.cancel_reason or '(non précisé)' }}</p>
+            <p>Merci de mettre à jour le planning.</p>
+        ]]></field>
+        <field name="email_to">{{ (object.user_id.email or '') }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_ordonnances" name="Portail — Mes ordonnances">
+        <t t-call="portal.portal_layout">
+            <t t-set="page_name" t-value="'ordonnances'"/>
+            <div class="o_portal_wrap">
+                <div class="container py-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="mb-0">Mes ordonnances</h2>
+                        <div class="btn-group btn-group-sm">
+                            <a t-attf-href="/my/ordonnances"
+                               t-attf-class="btn btn-outline-secondary #{'active' if not show_all else ''}">
+                                En cours
+                            </a>
+                            <a t-attf-href="/my/ordonnances?show_all=1"
+                               t-attf-class="btn btn-outline-secondary #{'active' if show_all else ''}">
+                                Toutes
+                            </a>
+                        </div>
+                    </div>
+
+                    <t t-if="not prescriptions">
+                        <p class="text-muted">Aucune ordonnance.</p>
+                    </t>
+
+                    <t t-foreach="prescriptions" t-as="rx">
+                        <div class="nephro-card mb-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <strong><t t-esc="rx.name"/></strong>
+                                    <div class="text-muted small">
+                                        <t t-esc="rx.prescription_date and rx.prescription_date.strftime('%d/%m/%Y')"/>
+                                        <t t-if="rx.physician_id">
+                                            — Dr <t t-esc="rx.physician_id.name"/>
+                                        </t>
+                                    </div>
+                                    <t t-if="rx.prescription_line_ids">
+                                        <ul class="mb-0 mt-1 small">
+                                            <t t-foreach="rx.prescription_line_ids[:4]" t-as="line">
+                                                <li>
+                                                    <t t-esc="line.product_id.name if line.product_id else ''"/>
+                                                    <t t-if="line.dosage_id">
+                                                        — <t t-esc="line.dosage_id.name"/>
+                                                    </t>
+                                                </li>
+                                            </t>
+                                        </ul>
+                                    </t>
+                                </div>
+                                <a t-attf-href="/report/pdf/acs_hms.action_prescription_report/#{rx.id}"
+                                   class="btn btn-sm btn-outline-primary ms-2" target="_blank">
+                                    <i class="fa fa-download"/>
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
+        </t>
+    </template>
+</odoo>
