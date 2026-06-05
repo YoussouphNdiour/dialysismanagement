@@ -25,3 +25,41 @@ class TestNephroPrescription(TransactionCase):
         })
         self.assertFalse(prescription.is_nephro_prescription)
         self.assertFalse(prescription.nephro_context)
+
+    def test_procedure_nephro_prescription_count(self):
+        """acs.patient.procedure doit exposer nephro_prescription_count"""
+        product = self.env['product.product'].create({
+            'name': 'Hémodialyse',
+            'hospital_product_type': 'procedure',
+        })
+        procedure = self.env['acs.patient.procedure'].create({
+            'patient_id': self.patient.id,
+            'product_id': product.id,
+        })
+        self.assertEqual(procedure.nephro_prescription_count, 0)
+
+        self.env['prescription.order'].create({
+            'patient_id': self.patient.id,
+            'procedure_id': procedure.id,
+            'is_nephro_prescription': True,
+        })
+        procedure.invalidate_recordset()
+        self.assertEqual(procedure.nephro_prescription_count, 1)
+
+    def test_non_nephro_prescription_not_counted(self):
+        """Une ordonnance standard ne doit pas augmenter nephro_prescription_count"""
+        product = self.env['product.product'].create({
+            'name': 'Hémodialyse 2',
+            'hospital_product_type': 'procedure',
+        })
+        procedure = self.env['acs.patient.procedure'].create({
+            'patient_id': self.patient.id,
+            'product_id': product.id,
+        })
+        self.env['prescription.order'].create({
+            'patient_id': self.patient.id,
+            'procedure_id': procedure.id,
+            'is_nephro_prescription': False,
+        })
+        procedure.invalidate_recordset()
+        self.assertEqual(procedure.nephro_prescription_count, 0)
