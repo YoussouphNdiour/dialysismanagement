@@ -4,8 +4,7 @@
     <template id="portal_bilans" name="Portail — Mes bilans">
         <t t-call="portal.portal_layout">
             <t t-set="page_name" t-value="'bilans'"/>
-            <div class="o_portal_wrap">
-                <div class="container py-4">
+            <div class="container py-4">
                     <h2 class="mb-3">Mes bilans biologiques</h2>
 
                     <!-- Graphiques évolution 6 mois -->
@@ -24,9 +23,10 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="nephroChartData" t-att-data-chart="chart_data" style="display:none"/>
                         <script type="text/javascript">
                             (function() {
-                                var data = <t t-out="chart_data"/>;
+                                var data = JSON.parse(document.getElementById('nephroChartData').dataset.chart);
                                 function makeChart(id, label, key, color) {
                                     var ctx = document.getElementById(id);
                                     if (!ctx) return;
@@ -107,8 +107,6 @@
                         <t t-call="portal.pager" t-if="pager"/>
                     </t>
                 </div>
-            </div>
-            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
         </t>
     </template>
 
@@ -116,8 +114,7 @@
     <template id="portal_bilan_detail" name="Portail — Détail bilan">
         <t t-call="portal.portal_layout">
             <t t-set="page_name" t-value="'bilans'"/>
-            <div class="o_portal_wrap">
-                <div class="container py-4">
+            <div class="container py-4">
                     <a href="/my/bilans" class="btn btn-sm btn-outline-secondary mb-3">
                         ← Retour aux bilans
                     </a>
@@ -154,8 +151,6 @@
                         </div>
                     </t>
                 </div>
-            </div>
-            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
         </t>
     </template>
 </odoo>

@@ -3,8 +3,7 @@
     <template id="portal_home" name="Portail patient — Accueil">
         <t t-call="portal.portal_layout">
             <t t-set="page_name" t-value="'home'"/>
-            <div class="o_portal_wrap">
-                <div class="container py-4">
+            <div class="container py-4">
                     <h2 class="mb-4">
                         Bonjour, <t t-esc="patient.name"/>
                     </h2>
@@ -98,8 +97,6 @@
                         <a href="/my/factures" class="btn btn-outline-primary">Mes factures</a>
                     </div>
                 </div>
-            </div>
-            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
         </t>
     </template>
 </odoo>

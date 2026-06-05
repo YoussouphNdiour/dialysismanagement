@@ -3,8 +3,7 @@
     <template id="portal_rdv" name="Portail — Mes RDV">
         <t t-call="portal.portal_layout">
             <t t-set="page_name" t-value="'rdv'"/>
-            <div class="o_portal_wrap">
-                <div class="container py-4">
+            <div class="container py-4">
                     <h2 class="mb-3">Mes prochains RDV</h2>
 
                     <!-- Flash annulation confirmée -->
@@ -76,8 +75,6 @@
                         </div>
                     </t>
                 </div>
-            </div>
-            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
         </t>
     </template>
 </odoo>

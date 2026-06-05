@@ -4,8 +4,7 @@
     <template id="portal_seances" name="Portail — Mes séances">
         <t t-call="portal.portal_layout">
             <t t-set="page_name" t-value="'seances'"/>
-            <div class="o_portal_wrap">
-                <div class="container py-4">
+            <div class="container py-4">
                     <h2 class="mb-3">Mes séances</h2>
 
                     <t t-if="not procedures">
@@ -84,8 +83,6 @@
                         <t t-call="portal.pager" t-if="pager"/>
                     </t>
                 </div>
-            </div>
-            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
         </t>
     </template>
 
@@ -93,8 +90,7 @@
     <template id="portal_seance_detail" name="Portail — Détail séance">
         <t t-call="portal.portal_layout">
             <t t-set="page_name" t-value="'seances'"/>
-            <div class="o_portal_wrap">
-                <div class="container py-4">
+            <div class="container py-4">
                     <a href="/my/seances" class="btn btn-sm btn-outline-secondary mb-3">
                         ← Retour aux séances
                     </a>
@@ -150,15 +146,13 @@
 
                     <!-- Téléchargement CR PDF -->
                     <div class="mt-4">
-                        <a t-attf-href="/report/pdf/acs_hms_nephrology_portal.action_report_seance_portal/#{procedure.id}"
+                        <a t-attf-href="/report/pdf/acs_hms_nephrology_portal.report_seance_portal_document/#{procedure.id}"
                            class="btn btn-primary" target="_blank">
                             <i class="fa fa-download me-1"/>
                             Télécharger le compte-rendu (PDF)
                         </a>
                     </div>
                 </div>
-            </div>
-            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
         </t>
     </template>
 </odoo>

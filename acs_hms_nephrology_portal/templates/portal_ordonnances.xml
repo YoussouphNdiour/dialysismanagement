@@ -3,8 +3,7 @@
     <template id="portal_ordonnances" name="Portail — Mes ordonnances">
         <t t-call="portal.portal_layout">
             <t t-set="page_name" t-value="'ordonnances'"/>
-            <div class="o_portal_wrap">
-                <div class="container py-4">
+            <div class="container py-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h2 class="mb-0">Mes ordonnances</h2>
                         <div class="btn-group btn-group-sm">
@@ -55,8 +54,6 @@
                         </div>
                     </t>
                 </div>
-            </div>
-            <t t-call="acs_hms_nephrology_portal.portal_nephro_bottom_nav"/>
         </t>
     </template>
 </odoo>
