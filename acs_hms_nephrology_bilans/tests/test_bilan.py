@@ -79,6 +79,29 @@ class TestBilanBiologique(TransactionCase):
         })
         self.assertTrue(bilan.name.startswith('BIO/'))
 
+    def test_bilan_can_link_prescriptions(self):
+        """acs.nephro.bilan doit pouvoir lier des ordonnances néphro via prescription_ids"""
+        bilan = self.env['acs.nephro.bilan'].create({
+            'patient_id': self.patient.id,
+            'bilan_type': 'monthly',
+        })
+        prescription = self.env['prescription.order'].create({
+            'patient_id': self.patient.id,
+            'is_nephro_prescription': True,
+            'nephro_context': 'background',
+        })
+        bilan.prescription_ids = [(4, prescription.id)]
+        bilan.invalidate_recordset()
+        self.assertIn(prescription, bilan.prescription_ids)
+
+    def test_bilan_prescription_ids_empty_by_default(self):
+        """prescription_ids vaut [] par défaut sur un bilan"""
+        bilan = self.env['acs.nephro.bilan'].create({
+            'patient_id': self.patient.id,
+            'bilan_type': 'monthly',
+        })
+        self.assertFalse(bilan.prescription_ids)
+
 
 class TestBilanOverdueAlert(TransactionCase):
 
