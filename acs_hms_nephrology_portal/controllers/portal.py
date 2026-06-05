@@ -299,11 +299,12 @@ class NephrologyPortal(CustomerPortal):
     # ------------------------------------------------------------------ #
 
     @http.route('/my/ordonnances', auth='user', website=True)
-    def portal_ordonnances(self, show_all=False, **kw):
+    def portal_ordonnances(self, show_all='', **kw):
         patient = self._get_current_patient()
         if not patient:
             return request.redirect('/my/nephro')
 
+        show_all = show_all == '1'
         domain = [('patient_id', '=', patient.id)]
         if not show_all:
             domain.append(('state', 'not in', ['canceled']))
