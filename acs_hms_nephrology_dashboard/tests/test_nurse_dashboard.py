@@ -12,7 +12,7 @@ class TestNurseDashboardACL(TransactionCase):
         self.nurse_user = self.env['res.users'].create({
             'name': 'Infirmier Test',
             'login': 'nurse_test_dashboard@test.com',
-            'groups_id': [(6, 0, [nurse_group.id])],
+            'group_ids': [(6, 0, [nurse_group.id])],
         })
         # Patient + produit + procédure de test
         self.patient = self.env['hms.patient'].create({'name': 'Patient ACL Test'})

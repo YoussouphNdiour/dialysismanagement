@@ -3,48 +3,23 @@
     <record id="res_config_settings_view_nephro_billing" model="ir.ui.view">
         <field name="name">res.config.settings.nephro.billing</field>
         <field name="model">res.config.settings</field>
-        <field name="inherit_id" ref="base_setup.action_general_configuration"/>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
-                <div class="app_settings_block">
-                    <h2>Facturation Dialyse</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="nephro_auto_invoice"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="nephro_auto_invoice"/>
-                                <div class="text-muted">
-                                    Crée automatiquement une facture brouillon à la fin de chaque séance.
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_right_pane">
-                                <label for="nephro_overdue_days"/>
-                                <field name="nephro_overdue_days" class="o_light_label"/>
-                                <div class="text-muted">jours avant alerte impayé</div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="nephro_alert_email"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="nephro_alert_email"/>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-6 o_setting_box">
-                            <div class="o_setting_left_pane">
-                                <field name="nephro_alert_whatsapp"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="nephro_alert_whatsapp"/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <xpath expr="//div[last()]" position="after">
+                <app string="Facturation Dialyse" name="acs_hms_nephrology_billing" groups="acs_hms_nephrology_billing.group_nephrology_billing">
+                    <setting string="Facturation automatique" help="Crée automatiquement une facture brouillon à la fin de chaque séance.">
+                        <field name="nephro_auto_invoice"/>
+                    </setting>
+                    <setting string="Délai impayé (jours)" help="Nombre de jours avant qu'une facture soit considérée comme impayée.">
+                        <field name="nephro_overdue_days"/>
+                    </setting>
+                    <setting string="Alerte email impayé">
+                        <field name="nephro_alert_email"/>
+                    </setting>
+                    <setting string="Alerte WhatsApp impayé">
+                        <field name="nephro_alert_whatsapp"/>
+                    </setting>
+                </app>
             </xpath>
         </field>
     </record>

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class AcsDialysisTariffHistory(models.Model):
@@ -24,6 +25,14 @@ class AcsDialysisTariffHistory(models.Model):
             'La date de fin doit être postérieure ou égale à la date de début.',
         )
     ]
+
+    @api.constrains('date_start', 'date_end')
+    def _check_dates(self):
+        for rec in self:
+            if rec.date_start and rec.date_end and rec.date_end < rec.date_start:
+                raise ValidationError(
+                    _("La date de fin doit être postérieure ou égale à la date de début.")
+                )
 
     @api.model
     def get_active_rule(self, patient_id, rule_date):

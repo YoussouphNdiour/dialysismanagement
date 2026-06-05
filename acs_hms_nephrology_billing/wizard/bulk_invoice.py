@@ -118,9 +118,10 @@ class AcsDialysisBulkInvoiceWizard(models.TransientModel):
                     'display_type': 'line_section',
                     'name': 'Séance du %s' % session_date,
                 }))
-                # Invoice line
+                # Invoice line (product_id triggers account_id computation)
                 line_vals.append((0, 0, {
                     'name': 'Dialyse — %s' % session_date,
+                    'product_id': proc.product_id.id if proc.product_id else False,
                     'price_unit': rule.price_unit,
                     'quantity': 1,
                     'tax_ids': [(6, 0, rule.tax_ids.ids)],

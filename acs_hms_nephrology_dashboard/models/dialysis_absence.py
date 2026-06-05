@@ -4,7 +4,7 @@ import logging
 from datetime import date, timedelta
 from datetime import datetime
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -47,6 +47,14 @@ class ACSDialysisAbsence(models.Model):
         ('date_order_check', 'CHECK(end_date >= start_date)',
          'La date de fin doit être postérieure ou égale à la date de début.'),
     ]
+
+    @api.constrains('start_date', 'end_date')
+    def _check_dates(self):
+        for rec in self:
+            if rec.start_date and rec.end_date and rec.end_date < rec.start_date:
+                raise ValidationError(
+                    _("La date de fin doit être postérieure ou égale à la date de début.")
+                )
 
     def action_confirm(self):
         """Passe l'absence en Confirmée et marque les séances concernées en Absent."""

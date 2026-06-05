@@ -8,8 +8,8 @@
     <menuitem
         id="menu_dialysis_calendar"
         name="Planning Dialyse"
-        parent="acs_hms_nephrology.nephrology_menu_root"
+        parent="acs_hms_nephrology.menu_acs_main_nephrology"
         action="action_dialysis_calendar"
-        groups="acs_hms.group_hms_physician,acs_hms.group_hms_receptionist"
+        groups="acs_hms.group_hms_doctor,acs_hms.group_hms_receptionist"
         sequence="15"/>
 </odoo>

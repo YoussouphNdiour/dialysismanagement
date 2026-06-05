@@ -86,7 +86,7 @@ class TestTariffHistory(TransactionCase):
     def test_sql_constraint_date_check(self):
         today = date.today()
         from odoo.exceptions import ValidationError
-        with self.assertRaises((ValidationError, Exception)):
+        with self.assertRaises(ValidationError):
             self.env['acs.dialysis.tariff.history'].create({
                 'patient_id': self.patient.id,
                 'pricing_rule_id': self.rule_ipres.id,
@@ -116,7 +116,7 @@ class TestInsurer(TransactionCase):
 
     def test_patient_insurer_coverage_constraint(self):
         from odoo.exceptions import ValidationError
-        with self.assertRaises((ValidationError, Exception)):
+        with self.assertRaises(ValidationError):
             self.env['acs.dialysis.patient.insurer'].create({
                 'patient_id': self.patient.id,
                 'insurer_id': self.insurer.id,

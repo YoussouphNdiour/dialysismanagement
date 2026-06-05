@@ -83,7 +83,8 @@
                 <filter string="Décès" name="deces" domain="[('reason','=','deces')]"/>
                 <filter string="Ce mois" name="this_month"
                         domain="[('start_date','&gt;=', (context_today()).strftime('%Y-%m-01'))]"/>
-                <group expand="0" string="Regrouper par">
+                <separator/>
+                <group name="group_by">
                     <filter string="Motif" name="group_reason" context="{'group_by': 'reason'}"/>
                     <filter string="Patient" name="group_patient" context="{'group_by': 'patient_id'}"/>
                     <filter string="Mois" name="group_month" context="{'group_by': 'start_date:month'}"/>
@@ -104,9 +105,9 @@
     <menuitem
         id="menu_dialysis_absences"
         name="Absences patients"
-        parent="acs_hms_nephrology.nephrology_menu_root"
+        parent="acs_hms_nephrology.menu_acs_main_nephrology"
         action="action_dialysis_absence"
-        groups="acs_hms.group_hms_receptionist,acs_hms.group_hms_physician"
+        groups="acs_hms.group_hms_receptionist,acs_hms.group_hms_doctor"
         sequence="20"/>
 
 </odoo>

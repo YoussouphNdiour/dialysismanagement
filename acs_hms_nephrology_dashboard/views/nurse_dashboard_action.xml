@@ -9,7 +9,7 @@
         id="menu_nurse_dashboard"
         name="Interface Infirmier"
         action="action_nurse_dashboard"
-        parent="acs_hms_nephrology.menu_nephrology"
+        parent="acs_hms_nephrology.menu_acs_main_nephrology"
         groups="acs_hms.group_hms_nurse,acs_hms_base.group_hms_manager,acs_hms_nephrology.group_hms_nephrology_user"
         sequence="5"/>
 </odoo>

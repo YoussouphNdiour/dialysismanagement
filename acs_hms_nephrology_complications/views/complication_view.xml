@@ -61,7 +61,7 @@
             <xpath expr="//notebook" position="inside">
                 <page string="Complications" name="complications">
                     <field name="complication_ids"
-                           context="{'default_procedure_id': active_id}">
+                           context="{'default_procedure_id': id}">
                         <list>
                             <field name="occurrence_time"/>
                             <field name="complication_type"/>

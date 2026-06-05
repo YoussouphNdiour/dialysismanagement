@@ -51,6 +51,9 @@ class AcsPatientProcedure(models.Model):
         self.ensure_one()
         if session_date is None:
             session_date = self.date or fields.Date.today()
+        # Normalize to date for comparison with Date fields
+        if hasattr(session_date, 'date'):
+            session_date = session_date.date()
         patient = self.patient_id
         insurers = patient.patient_insurer_ids.filtered(
             lambda i: (
@@ -106,8 +109,9 @@ class AcsPatientProcedure(models.Model):
                 "Aucune règle tarifaire résolue pour cette séance. "
                 "Vérifiez l'historique tarifaire du patient."
             )
-        # Build product line for invoice
-        session_date = self.date or fields.Date.today()
+        # Build product line for invoice (always a date, not datetime)
+        raw_date = self.date or fields.Date.today()
+        session_date = raw_date.date() if hasattr(raw_date, 'date') else raw_date
         patient_partner = self.patient_id.partner_id
         # acs.patient.procedure always inherits acs.hms.mixin (has acs_create_invoice + product_id).
         # Use mixin when a product is set (handles tax mapping); fall back to direct create otherwise.

@@ -134,7 +134,7 @@ class TestDialysisAbsence(TransactionCase):
     def test_end_date_before_start_raises(self):
         """Contrainte SQL : end_date >= start_date."""
         today = date.today()
-        with self.assertRaises((ValidationError, IntegrityError)):
+        with self.assertRaises(ValidationError):
             self.env['acs.dialysis.absence'].create({
                 'patient_id': self.patient.id,
                 'start_date': today,

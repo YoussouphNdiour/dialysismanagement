@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class AcsDialysisInsurer(models.Model):
@@ -51,6 +52,14 @@ class AcsDialysisPatientInsurer(models.Model):
             'Le taux de prise en charge doit être compris entre 0 et 100.',
         )
     ]
+
+    @api.constrains('coverage_rate')
+    def _check_coverage_rate(self):
+        for rec in self:
+            if rec.coverage_rate < 0 or rec.coverage_rate > 100:
+                raise ValidationError(
+                    _("Le taux de prise en charge doit être compris entre 0 et 100.")
+                )
 
 
 class AcsDialysisInsurerClaim(models.Model):

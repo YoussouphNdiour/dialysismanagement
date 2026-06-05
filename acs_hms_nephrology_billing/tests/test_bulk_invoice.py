@@ -10,7 +10,29 @@ class TestBulkInvoice(TransactionCase):
 
     def setUp(self):
         super().setUp()
+        # Ensure a sales journal exists (test DB may not have one)
+        if not self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1):
+            self.env['account.journal'].create({
+                'name': 'Customer Invoices Test',
+                'code': 'TINV',
+                'type': 'sale',
+                'company_id': self.env.company.id,
+            })
+        # Ensure a receivable account exists (for payment_term lines on invoice)
+        account_recv = self.env['account.account'].search([
+            ('account_type', '=', 'asset_receivable'),
+            ('company_ids', 'in', [self.env.company.id]),
+        ], limit=1)
+        if not account_recv:
+            account_recv = self.env['account.account'].create({
+                'name': 'Accounts Receivable Test',
+                'code': '110001',
+                'account_type': 'asset_receivable',
+                'reconcile': True,
+                'company_ids': [(4, self.env.company.id)],
+            })
         self.partner = self.env['res.partner'].create({'name': 'Patient Bulk Test'})
+        self.partner.property_account_receivable_id = account_recv
         self.patient = self.env['hms.patient'].create({
             'name': 'Patient Bulk Test',
             'partner_id': self.partner.id,
@@ -25,6 +47,18 @@ class TestBulkInvoice(TransactionCase):
             'pricing_rule_id': self.rule.id,
             'date_start': today - timedelta(days=365),
         })
+        # Ensure an income account exists for invoice lines
+        account_income = self.env['account.account'].search([
+            ('account_type', '=', 'income'),
+            ('company_ids', 'in', [self.env.company.id]),
+        ], limit=1)
+        if not account_income:
+            account_income = self.env['account.account'].create({
+                'name': 'Sales Income Test',
+                'code': '700001',
+                'account_type': 'income',
+                'company_ids': [(4, self.env.company.id)],
+            })
         # Product
         self.product = self.env['product.product'].search(
             [('type', '=', 'service')], limit=1
@@ -34,6 +68,9 @@ class TestBulkInvoice(TransactionCase):
                 'name': 'Dialyse Bulk Test', 'type': 'service',
             })
             self.product = tmpl.product_variant_id
+        # Ensure the product has an income account
+        if not self.product.property_account_income_id:
+            self.product.property_account_income_id = account_income
         # Two procedures (state=done, billing_state=not_invoiced)
         self.proc1 = self.env['acs.patient.procedure'].create({
             'patient_id': self.patient.id,

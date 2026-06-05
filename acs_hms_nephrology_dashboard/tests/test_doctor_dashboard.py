@@ -269,17 +269,19 @@ class TestDoctorDashboard(TransactionCase):
 
     def test_kpis_calculation(self):
         """2 running + 1 done → kpis calculés correctement."""
-        proc1 = self._make_procedure(state='running')
-        proc2 = self._make_procedure(state='running')
+        # proc3 created earlier (hours_ago=4) so it is the first in date order for the station
         proc3 = self._make_procedure(
             state='done',
+            hours_ago=4,
             urea_pre=50.0, urea_post=15.0,
             arrival_weight=70.0, departure_weight=68.0,
         )
+        proc1 = self._make_procedure(state='running')
+        proc2 = self._make_procedure(state='running')
         result = self.env['acs.dialysis.station'].get_dashboard_data()
         # Check only the test station's contribution to isolate from other data
         station_entry = next(s for s in result['stations'] if s['id'] == self.station.id)
-        # The station should have a procedure (last created wins in proc_by_station logic — proc3)
+        # proc3 is earliest (hours_ago=4) so it is the one mapped per station
         self.assertIsNotNone(station_entry['procedure'])
         # Global KPI: running_sessions must include proc1 and proc2
         # (proc3 is done, proc1 and proc2 are running — but all share the same station,
