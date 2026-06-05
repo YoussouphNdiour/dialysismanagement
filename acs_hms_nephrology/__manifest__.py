@@ -27,7 +27,7 @@
     'support': 'info@almightycs.com',
     'website': 'www.almightycs.com',
     'license': 'OPL-1',
-    'depends': ['acs_hms'],
+    'depends': ['acs_hms', 'acs_hms_nephrology_bilans'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
