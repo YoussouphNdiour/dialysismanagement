@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<odoo noupdate="1">
+<odoo>
+<data noupdate="1">
 
     <!-- ================================================================ -->
     <!-- Produits médicaments néphro (squelettes — à compléter par la     -->
@@ -10,63 +11,54 @@
         <field name="name">Érythropoïétine alfa (EPO)</field>
         <field name="default_code">NEPHRO-EPO-ALFA</field>
         <field name="hospital_product_type">medicament</field>
-        <field name="type">consu</field>
     </record>
 
     <record id="nephro_product_darbepoetin" model="product.product">
         <field name="name">Darbépoétine alfa (Aranesp)</field>
         <field name="default_code">NEPHRO-ARANESP</field>
         <field name="hospital_product_type">medicament</field>
-        <field name="type">consu</field>
     </record>
 
     <record id="nephro_product_fer_saccharose" model="product.product">
         <field name="name">Fer saccharose IV (Venofer)</field>
         <field name="default_code">NEPHRO-FER-IV</field>
         <field name="hospital_product_type">medicament</field>
-        <field name="type">consu</field>
     </record>
 
     <record id="nephro_product_calcitriol" model="product.product">
         <field name="name">Calcitriol (Vit D active oral)</field>
         <field name="default_code">NEPHRO-CALCITRIOL</field>
         <field name="hospital_product_type">medicament</field>
-        <field name="type">consu</field>
     </record>
 
     <record id="nephro_product_paricalcitol" model="product.product">
         <field name="name">Paricalcitol IV (Zemplar)</field>
         <field name="default_code">NEPHRO-PARICALCITOL</field>
         <field name="hospital_product_type">medicament</field>
-        <field name="type">consu</field>
     </record>
 
     <record id="nephro_product_carbonate_calcium" model="product.product">
         <field name="name">Carbonate de calcium (chélateur phosphore)</field>
         <field name="default_code">NEPHRO-CACO3</field>
         <field name="hospital_product_type">medicament</field>
-        <field name="type">consu</field>
     </record>
 
     <record id="nephro_product_sevelamer" model="product.product">
         <field name="name">Sevelamer (Renagel)</field>
         <field name="default_code">NEPHRO-SEVELAMER</field>
         <field name="hospital_product_type">medicament</field>
-        <field name="type">consu</field>
     </record>
 
     <record id="nephro_product_amlodipine" model="product.product">
         <field name="name">Amlodipine (antihypertenseur)</field>
         <field name="default_code">NEPHRO-AMLODIPINE</field>
         <field name="hospital_product_type">medicament</field>
-        <field name="type">consu</field>
     </record>
 
     <record id="nephro_product_furosemide" model="product.product">
         <field name="name">Furosémide (diurétique)</field>
         <field name="default_code">NEPHRO-FUROSEMIDE</field>
         <field name="hospital_product_type">medicament</field>
-        <field name="type">consu</field>
     </record>
 
     <!-- ================================================================ -->
@@ -112,4 +104,5 @@
         ]"/>
     </record>
 
+</data>
 </odoo>
