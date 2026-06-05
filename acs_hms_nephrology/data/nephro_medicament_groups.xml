@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <!-- ================================================================ -->
+    <!-- Produits médicaments néphro (squelettes — à compléter par la     -->
+    <!-- pharmacie en production). noupdate="1" : pas d'écrasement.       -->
+    <!-- ================================================================ -->
+
+    <record id="nephro_product_epo_alfa" model="product.product">
+        <field name="name">Érythropoïétine alfa (EPO)</field>
+        <field name="default_code">NEPHRO-EPO-ALFA</field>
+        <field name="hospital_product_type">medicament</field>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="nephro_product_darbepoetin" model="product.product">
+        <field name="name">Darbépoétine alfa (Aranesp)</field>
+        <field name="default_code">NEPHRO-ARANESP</field>
+        <field name="hospital_product_type">medicament</field>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="nephro_product_fer_saccharose" model="product.product">
+        <field name="name">Fer saccharose IV (Venofer)</field>
+        <field name="default_code">NEPHRO-FER-IV</field>
+        <field name="hospital_product_type">medicament</field>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="nephro_product_calcitriol" model="product.product">
+        <field name="name">Calcitriol (Vit D active oral)</field>
+        <field name="default_code">NEPHRO-CALCITRIOL</field>
+        <field name="hospital_product_type">medicament</field>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="nephro_product_paricalcitol" model="product.product">
+        <field name="name">Paricalcitol IV (Zemplar)</field>
+        <field name="default_code">NEPHRO-PARICALCITOL</field>
+        <field name="hospital_product_type">medicament</field>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="nephro_product_carbonate_calcium" model="product.product">
+        <field name="name">Carbonate de calcium (chélateur phosphore)</field>
+        <field name="default_code">NEPHRO-CACO3</field>
+        <field name="hospital_product_type">medicament</field>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="nephro_product_sevelamer" model="product.product">
+        <field name="name">Sevelamer (Renagel)</field>
+        <field name="default_code">NEPHRO-SEVELAMER</field>
+        <field name="hospital_product_type">medicament</field>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="nephro_product_amlodipine" model="product.product">
+        <field name="name">Amlodipine (antihypertenseur)</field>
+        <field name="default_code">NEPHRO-AMLODIPINE</field>
+        <field name="hospital_product_type">medicament</field>
+        <field name="type">consu</field>
+    </record>
+
+    <record id="nephro_product_furosemide" model="product.product">
+        <field name="name">Furosémide (diurétique)</field>
+        <field name="default_code">NEPHRO-FUROSEMIDE</field>
+        <field name="hospital_product_type">medicament</field>
+        <field name="type">consu</field>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Groupes médicaments néphro                                        -->
+    <!-- ================================================================ -->
+
+    <record id="nephro_group_epo" model="medicament.group">
+        <field name="name">Protocole EPO / Aranesp</field>
+        <field name="medicament_group_line_ids" eval="[
+            (0, 0, {'product_id': ref('nephro_product_epo_alfa'),    'dose': 4000.0, 'qty_per_day': 1.0, 'days': 7.0,  'short_comment': 'Voie SC — adapter selon Hb'}),
+            (0, 0, {'product_id': ref('nephro_product_darbepoetin'), 'dose': 30.0,   'qty_per_day': 1.0, 'days': 14.0, 'short_comment': 'Voie SC — adapter selon Hb'}),
+        ]"/>
+    </record>
+
+    <record id="nephro_group_fer_iv" model="medicament.group">
+        <field name="name">Fer IV (Venofer)</field>
+        <field name="medicament_group_line_ids" eval="[
+            (0, 0, {'product_id': ref('nephro_product_fer_saccharose'), 'dose': 100.0, 'qty_per_day': 1.0, 'days': 1.0, 'short_comment': 'IV lent en fin de séance — max 200 mg/séance'}),
+        ]"/>
+    </record>
+
+    <record id="nephro_group_vit_d" model="medicament.group">
+        <field name="name">Vitamine D active</field>
+        <field name="medicament_group_line_ids" eval="[
+            (0, 0, {'product_id': ref('nephro_product_calcitriol'),   'dose': 0.25, 'qty_per_day': 1.0, 'days': 30.0, 'short_comment': 'Oral — adapter selon PTH'}),
+            (0, 0, {'product_id': ref('nephro_product_paricalcitol'), 'dose': 5.0,  'qty_per_day': 1.0, 'days': 7.0,  'short_comment': 'IV en fin de séance — selon PTH'}),
+        ]"/>
+    </record>
+
+    <record id="nephro_group_chelateurs" model="medicament.group">
+        <field name="name">Chélateurs de phosphore</field>
+        <field name="medicament_group_line_ids" eval="[
+            (0, 0, {'product_id': ref('nephro_product_carbonate_calcium'), 'dose': 500.0, 'qty_per_day': 3.0, 'days': 30.0, 'short_comment': 'Oral — pendant les repas'}),
+            (0, 0, {'product_id': ref('nephro_product_sevelamer'),         'dose': 800.0, 'qty_per_day': 3.0, 'days': 30.0, 'short_comment': 'Oral — pendant les repas'}),
+        ]"/>
+    </record>
+
+    <record id="nephro_group_antihyp" model="medicament.group">
+        <field name="name">Antihypertenseurs / Diurétiques</field>
+        <field name="medicament_group_line_ids" eval="[
+            (0, 0, {'product_id': ref('nephro_product_amlodipine'), 'dose': 5.0,  'qty_per_day': 1.0, 'days': 30.0, 'short_comment': 'Oral matin'}),
+            (0, 0, {'product_id': ref('nephro_product_furosemide'), 'dose': 40.0, 'qty_per_day': 1.0, 'days': 30.0, 'short_comment': 'Oral matin — hors jours de dialyse'}),
+        ]"/>
+    </record>
+
+</odoo>

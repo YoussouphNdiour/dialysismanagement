@@ -33,6 +33,7 @@
         'security/ir.model.access.csv',
         'data/data.xml',
         'data/nephrology_holidays.xml',
+        'data/nephro_medicament_groups.xml',
         'reports/nephrology_report.xml',
         'reports/patient_procedure_report.xml',
         'views/nephrology_base_view.xml',
