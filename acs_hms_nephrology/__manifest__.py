@@ -44,6 +44,7 @@
         'views/patient_customization_view.xml',
         'views/patient_tabs_order.xml',
         'views/nephro_prescription_view.xml',
+        'views/nephro_procedure_view.xml',
         'views/menu_item.xml',
     ],
     'demo': [],

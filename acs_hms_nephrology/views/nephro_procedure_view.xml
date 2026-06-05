@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Bouton stat "Ordonnances Néphro" sur la fiche séance -->
+    <record id="view_acs_patient_procedure_nephro_rx_btn" model="ir.ui.view">
+        <field name="name">acs.patient.procedure.nephro.rx.btn</field>
+        <field name="model">acs.patient.procedure</field>
+        <field name="inherit_id" ref="acs_hms.view_acs_patient_procedure_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_prescription']" position="after">
+                <button name="action_nephro_prescription"
+                        groups="acs_hms.group_hms_jr_doctor"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-medkit">
+                    <field string="Ordo. Néphro"
+                           name="nephro_prescription_count"
+                           widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
