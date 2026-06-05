@@ -5,7 +5,7 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="base_setup.action_general_configuration"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='hospital_settings']" position="after">
+            <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
                 <div class="app_settings_block">
                     <h2>Portail patient</h2>
                     <div class="row mt16 o_settings_container">
@@ -21,7 +21,7 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-6 o_setting_box"
-                             attrs="{'invisible': [('portal_simplified_language', '=', False)]}">
+                             invisible="not portal_simplified_language">
                             <div class="o_setting_left_pane">
                                 <field name="portal_show_raw_values"/>
                             </div>
