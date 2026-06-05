@@ -164,7 +164,7 @@
                     </group>
 
                     <!-- Section Poids - Ordre demandé -->
-                    <group string="Poids" invisible="department_type!='nephrology'">
+                    <group name="group_poids" string="Poids" invisible="department_type!='nephrology'">
                         <group>
                             <field name="dry_weight"/>
                             <field name="arrival_weight"/>
@@ -284,7 +284,7 @@
         <field name="inherit_id" ref="acs_hms_nephrology.view_acs_patient_procedure_form"/>
         <field name="arch" type="xml">
             <!-- Bannière HYPOTENSION — avant le groupe Poids, pleine largeur -->
-            <group string="Poids" position="before">
+            <group name="group_poids" position="before">
                 <field name="has_active_hypotension" invisible="1"/>
                 <div class="alert alert-danger d-flex align-items-center gap-2 mb-2"
                      invisible="department_type != 'nephrology' or not has_active_hypotension"
@@ -300,7 +300,7 @@
             <field name="arrival_weight" position="before">
                 <group string="Statut à l'arrivée">
                     <field name="arrival_status"/>
-                    <field name="pre_dialysis_bp"/>
+                    <field name="pre_dialysis_bp" required="True"/>
                     <field name="pre_dialysis_temp"/>
                     <field name="parameter_change_reason"/>
                 </group>

@@ -215,7 +215,7 @@ class AcsPatientProcedure(models.Model):
         ('fever', 'Fièvre'),
         ('other', 'Autre'),
     ], string="Statut à l'arrivée")
-    pre_dialysis_bp = fields.Char(string='TA pré-dialyse', required=True, help='Ex: 140/90')
+    pre_dialysis_bp = fields.Char(string='TA pré-dialyse', help='Ex: 140/90')
     pre_dialysis_temp = fields.Float(string='Température pré-dialyse (°C)', digits=(4, 1))
     parameter_change_reason = fields.Text(
         string='Motif de changement de paramètres',
