@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Section prescriptions sur le formulaire acs.nephro.bilan -->
+    <record id="view_nephro_bilan_prescriptions_inherit" model="ir.ui.view">
+        <field name="name">acs.nephro.bilan.form.prescriptions</field>
+        <field name="model">acs.nephro.bilan</field>
+        <field name="inherit_id" ref="acs_hms_nephrology_bilans.view_acs_nephro_bilan_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='notes']" position="before">
+                <page name="nephro_prescriptions_bilan" string="Ordonnances liées">
+                    <group string="Ordonnances actives au moment du bilan">
+                        <field name="prescription_ids"
+                               widget="many2many_tags"
+                               domain="[('patient_id', '=', patient_id),
+                                        ('is_nephro_prescription', '=', True),
+                                        ('state', '=', 'prescription')]"
+                               nolabel="1"
+                               options="{'no_create': True}"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

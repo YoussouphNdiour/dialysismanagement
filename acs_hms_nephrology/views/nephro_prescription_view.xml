@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- 1. Champs néphro dans l'en-tête du formulaire d'ordonnance   -->
+    <!-- ============================================================ -->
+    <record id="view_prescription_order_nephro_inherit" model="ir.ui.view">
+        <field name="name">prescription.order.form.nephro</field>
+        <field name="model">prescription.order</field>
+        <field name="inherit_id" ref="acs_hms.view_hms_prescription_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='physician_id']" position="after">
+                <field name="is_nephro_prescription" readonly="state!='draft'"/>
+                <field name="nephro_context"
+                       invisible="not is_nephro_prescription"
+                       required="is_nephro_prescription and state!='canceled'"
+                       readonly="state!='draft'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 2. Onglet "Ordonnances Néphro" sur la fiche patient          -->
+    <!-- ============================================================ -->
+    <record id="view_patient_form_nephro_prescriptions" model="ir.ui.view">
+        <field name="name">hms.patient.form.nephro.prescriptions</field>
+        <field name="model">hms.patient</field>
+        <field name="inherit_id" ref="acs_hms_nephrology.view_patient_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='nephrology_history']" position="after">
+                <page name="nephro_prescriptions" string="Ordonnances Néphro">
+                    <div class="mb-2">
+                        <button name="action_prescription"
+                                type="object"
+                                string="Nouvelle ordonnance néphro"
+                                class="btn btn-primary"
+                                context="{'default_patient_id': active_id,
+                                          'default_is_nephro_prescription': True,
+                                          'default_nephro_context': 'inter_session'}"/>
+                    </div>
+                    <field name="nephro_prescription_ids"
+                           nolabel="1"
+                           mode="list">
+                        <list decoration-muted="state == 'canceled'"
+                              decoration-success="state == 'prescription'"
+                              default_order="prescription_date desc">
+                            <field name="prescription_date" string="Date"/>
+                            <field name="nephro_context" string="Contexte"/>
+                            <field name="state"
+                                   widget="badge"
+                                   decoration-success="state == 'prescription'"
+                                   decoration-warning="state == 'draft'"
+                                   decoration-danger="state == 'canceled'"/>
+                            <field name="physician_id" string="Médecin"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

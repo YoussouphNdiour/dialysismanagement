@@ -19,6 +19,7 @@
         'views/bilan_threshold_view.xml',
         'views/bilan_view.xml',
         'views/patient_bilan_tab.xml',
+        'views/nephro_bilan_prescription_view.xml',
         'views/menu_item.xml',
     ],
     'assets': {
