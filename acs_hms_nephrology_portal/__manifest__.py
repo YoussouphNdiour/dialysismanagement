@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'ACS Nephrology — Portail Patient',
-    'version': '1.0.0',
+    'version': '1.0.1',
     'category': 'Healthcare',
     'summary': 'Portail web responsive pour les patients en hémodialyse',
     'author': 'As-Shafi Custom',

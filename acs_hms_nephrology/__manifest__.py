@@ -22,7 +22,7 @@
     'description': """
         Manage your Nephrology related in your Hospital By Almighty Consulting Solutions Pvt. Ltd.
     """,
-    'version': '1.0.3',
+    'version': '1.0.4',
     'author': 'Almighty Consulting Solutions Pvt. Ltd.',
     'support': 'info@almightycs.com',
     'website': 'www.almightycs.com',

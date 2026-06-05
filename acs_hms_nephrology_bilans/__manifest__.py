@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Bilans Biologiques Dialyse',
-    'version': '1.0.0',
+    'version': '1.0.1',
     'category': 'Medical',
     'summary': 'Bilans biologiques complets pour les patients en hémodialyse',
     'description': 'Suivi des bilans biologiques (NFS, biochimie, électrolytes, '
