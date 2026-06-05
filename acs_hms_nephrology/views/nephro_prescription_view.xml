@@ -30,13 +30,10 @@
             <xpath expr="//page[@name='nephrology_history']" position="after">
                 <page name="nephro_prescriptions" string="Ordonnances Néphro">
                     <div class="mb-2">
-                        <button name="action_prescription"
+                        <button name="action_nephro_prescription"
                                 type="object"
                                 string="Nouvelle ordonnance néphro"
-                                class="btn btn-primary"
-                                context="{'default_patient_id': active_id,
-                                          'default_is_nephro_prescription': True,
-                                          'default_nephro_context': 'inter_session'}"/>
+                                class="btn btn-primary"/>
                     </div>
                     <field name="nephro_prescription_ids"
                            nolabel="1"
