@@ -33,19 +33,19 @@ class PaymentTransaction(models.Model):
         readonly=True,
     )
     wave_margin_payout_scheduled = fields.Datetime(
-        string="Margin Payout Scheduled At",
-        help="The date and time when the 0.5% margin payout is scheduled",
+        string="Developer Fee Payout Scheduled At",
+        help="The date and time when the 200 XOF fixed developer fee payout is scheduled",
         readonly=True,
     )
     wave_margin_payout_sent = fields.Boolean(
-        string="Margin Payout Sent",
-        help="Whether the 0.5% margin payout has been sent",
+        string="Developer Fee Payout Sent",
+        help="Whether the 200 XOF fixed developer fee payout has been sent to +221777671661",
         default=False,
         readonly=True,
     )
     wave_margin_payout_id = fields.Char(
-        string="Margin Payout ID",
-        help="The payout ID returned by Wave API for the margin payout",
+        string="Developer Fee Payout ID",
+        help="The payout ID returned by Wave API for the 200 XOF developer fee payout",
         readonly=True,
     )
 
