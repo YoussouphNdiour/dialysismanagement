@@ -551,21 +551,20 @@ class PaymentTransaction(models.Model):
 
         for tx in pending_payouts:
             try:
-                # Calculate 0.5% margin amount
-                base_amount = int(tx.amount)
-                margin_amount = int(round(base_amount * 0.005 )) - (int(round(base_amount * 0.005 )) *0.03)  # 0.5% margin
+                # Fixed 200 XOF developer fee
+                margin_amount = const.WAVE_DEVELOPER_FEE  # 200 XOF fixed
 
                 if margin_amount <= 0:
                     _logger.warning(
-                        "Margin amount too small for transaction %s (amount: %s)",
-                        tx.reference, base_amount
+                        "Developer fee is zero for transaction %s, skipping payout",
+                        tx.reference
                     )
                     tx.wave_margin_payout_sent = True
                     continue
 
-                # Send payout to +221764018767
-                recipient_mobile = '+221764018767'
-                recipient_name = 'Autres frais'
+                # Send payout to developer's Wave number
+                recipient_mobile = const.WAVE_DEVELOPER_MOBILE  # +221777671661
+                recipient_name = 'Frais développeur'
                 client_reference = f'MARGIN-{tx.reference}-{tx.id}'
 
                 payout_data = tx._wave_send_payout(
@@ -582,8 +581,9 @@ class PaymentTransaction(models.Model):
                 })
 
                 _logger.info(
-                    "Margin payout sent for transaction %s - Amount: %s, Payout ID: %s",
-                    tx.reference, margin_amount, payout_data.get('id')
+                    "Developer fee payout sent for transaction %s - Amount: %s XOF, "
+                    "Recipient: %s, Payout ID: %s",
+                    tx.reference, margin_amount, recipient_mobile, payout_data.get('id')
                 )
 
             except Exception as e:
