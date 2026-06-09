@@ -532,7 +532,7 @@ class PaymentTransaction(models.Model):
         """Cron job to process pending Wave margin payouts.
 
         This method is called periodically to check for transactions that have
-        a scheduled margin payout time in the past and sends the 0.5% payout.
+        a scheduled margin payout time in the past and sends the 200 XOF fixed developer fee payout.
         """
         # Find transactions with pending margin payouts
         now = fields.Datetime.now()
