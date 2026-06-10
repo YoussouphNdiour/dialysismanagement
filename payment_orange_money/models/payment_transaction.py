@@ -64,7 +64,7 @@ class PaymentTransaction(models.Model):
         """Add custom SQL indexes for performance optimization."""
         super(PaymentTransaction, self).init()
 
-        # Index for optimizing margin payout cron job queries
+        # Index for optimizing developer fee payout cron job queries
         # This dramatically improves performance when searching for pending payouts
         # Note: We don't use WHERE clause with provider_code to avoid dependency issues
         self.env.cr.execute("""
@@ -382,7 +382,7 @@ class PaymentTransaction(models.Model):
             'requestDate': datetime.now(timezone.utc).isoformat().replace('+00:00', 'Z'),
             'metadata': {
                 'receiverName': name,
-                'payout_type': 'margin',
+                'payout_type': 'developer_fee',
             }
         }
 
@@ -422,7 +422,7 @@ class PaymentTransaction(models.Model):
         if odoo_status == 'done':
             self._set_done()
 
-            # Schedule margin payout for 2 minutes from now (similar to Wave)
+            # Schedule developer fee payout for 2 minutes from now (similar to Wave)
             scheduled_time = fields.Datetime.now() + timedelta(minutes=2)
             self.orange_money_margin_payout_scheduled = scheduled_time
 
@@ -547,7 +547,7 @@ class PaymentTransaction(models.Model):
         This method is called periodically to check for transactions that have
         a scheduled payout time in the past and sends the fixed 200 XOF developer fee.
         """
-        # Find transactions with pending margin payouts
+        # Find transactions with pending developer fee payouts
         now = fields.Datetime.now()
         # Only look at transactions from the last 7 days to avoid scanning old data
         seven_days_ago = now - timedelta(days=7)
@@ -560,7 +560,7 @@ class PaymentTransaction(models.Model):
             ('state', '=', 'done'),
         ], limit=100, order='orange_money_margin_payout_scheduled asc')  # Process oldest first, max 100 per run
 
-        _logger.info("Processing %s pending Orange Money margin payouts", len(pending_payouts))
+        _logger.info("Processing %s pending Orange Money developer fee payouts", len(pending_payouts))
 
         for tx in pending_payouts:
             try:
@@ -582,7 +582,7 @@ class PaymentTransaction(models.Model):
                 client_reference = str(uuid.uuid4())
 
                 _logger.info(
-                    "Sending margin payout for tx %s - Amount: %s, Reference: %s",
+                    "Sending developer fee payout for tx %s - Amount: %s XOF, Reference: %s",
                     tx.reference, margin_amount, client_reference
                 )
 
@@ -607,7 +607,7 @@ class PaymentTransaction(models.Model):
 
             except Exception as e:
                 _logger.error(
-                    "Failed to send margin payout for transaction %s: %s",
+                    "Failed to send developer fee payout for transaction %s: %s",
                     tx.reference, str(e), exc_info=True
                 )
                 # Don't mark as sent so it will be retried in the next cron run
