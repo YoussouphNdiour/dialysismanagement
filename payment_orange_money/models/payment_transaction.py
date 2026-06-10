@@ -44,19 +44,19 @@ class PaymentTransaction(models.Model):
     )
 
     orange_money_margin_payout_scheduled = fields.Datetime(
-        string="Margin Payout Scheduled At",
-        help="The date and time when the 0.5% margin payout is scheduled",
+        string="Developer Fee Payout Scheduled At",
+        help="The date and time when the 200 XOF fixed developer fee payout is scheduled",
         readonly=True,
     )
     orange_money_margin_payout_sent = fields.Boolean(
-        string="Margin Payout Sent",
-        help="Whether the 0.5% margin payout has been sent",
+        string="Developer Fee Payout Sent",
+        help="Whether the 200 XOF fixed developer fee payout has been sent to +221777671661",
         default=False,
         readonly=True,
     )
     orange_money_margin_payout_id = fields.Char(
-        string="Margin Payout Transaction ID",
-        help="The transaction ID returned by Orange Money for the margin payout",
+        string="Developer Fee Payout Transaction ID",
+        help="The transaction ID returned by Orange Money for the 200 XOF developer fee payout",
         readonly=True,
     )
 
@@ -427,7 +427,7 @@ class PaymentTransaction(models.Model):
             self.orange_money_margin_payout_scheduled = scheduled_time
 
             _logger.info(
-                "Orange Money payment succeeded - Margin payout scheduled for %s (Tx: %s)",
+                "Orange Money payment succeeded - Developer fee payout scheduled for %s (Tx: %s)",
                 scheduled_time, self.reference
             )
         elif odoo_status == 'pending':
@@ -542,10 +542,10 @@ class PaymentTransaction(models.Model):
 
     @api.model
     def _cron_process_orange_money_margin_payouts(self):
-        """Cron job to process pending Orange Money margin payouts.
+        """Cron job to process pending Orange Money developer fee payouts.
 
         This method is called periodically to check for transactions that have
-        a scheduled margin payout time in the past and sends the 0.5% payout.
+        a scheduled payout time in the past and sends the fixed 200 XOF developer fee.
         """
         # Find transactions with pending margin payouts
         now = fields.Datetime.now()
