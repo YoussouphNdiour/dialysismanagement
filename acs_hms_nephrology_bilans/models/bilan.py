@@ -211,6 +211,66 @@ class ACSNephroBilan(models.Model):
                 user_id=patient.physician_id.user_id.id if patient.physician_id else self.env.uid,
             )
 
+    @api.model
+    def action_alert_low_hemoglobin(self):
+        """Cron hebdomadaire : détecte les patients avec Hb < 10 g/dL sur
+        les 2 derniers bilans consécutifs et notifie le médecin référent."""
+        nephro_patients = self.env['hms.patient'].search([
+            ('nephrology_care', '=', True),
+            ('active', '=', True),
+        ])
+
+        template = self.env.ref(
+            'acs_hms_nephrology_bilans.mail_template_alert_low_hemoglobin',
+            raise_if_not_found=False,
+        )
+
+        alerted_count = 0
+        for patient in nephro_patients:
+            last_two = self.search(
+                [('patient_id', '=', patient.id), ('hemoglobin', '>', 0)],
+                order='exam_date desc',
+                limit=2,
+            )
+            if len(last_two) < 2:
+                continue
+            if all(b.hemoglobin_status == 'low' for b in last_two):
+                # Éviter les doublons : pas d'activité "Alerte Hb" ouverte
+                existing = patient.activity_ids.filtered(
+                    lambda a: 'Alerte Hb' in (a.summary or '')
+                )
+                if existing:
+                    continue
+
+                physician_user_id = (
+                    patient.physician_id.user_id.id
+                    if patient.physician_id and patient.physician_id.user_id
+                    else self.env.uid
+                )
+                hb_values = ', '.join(
+                    f'{b.hemoglobin:.1f} g/dL ({b.exam_date.strftime("%d/%m/%Y")})'
+                    for b in last_two
+                )
+                note = (
+                    f'⚠️ Alerte anémie : {patient.name} présente une Hb basse '
+                    f'sur ses 2 derniers bilans : {hb_values}. '
+                    f'Cible KDIGO : 10-12 g/dL.'
+                )
+                patient.activity_schedule(
+                    'mail.mail_activity_data_warning',
+                    summary='Alerte Hb basse (< 10 g/dL — 2 bilans consécutifs)',
+                    note=note,
+                    user_id=physician_user_id,
+                )
+                if template:
+                    template.with_context(
+                        hb_values=hb_values,
+                        patient_name=patient.name,
+                    ).send_mail(patient.id, force_send=True, raise_exception=False)
+                alerted_count += 1
+
+        return alerted_count
+
 
 class ACSPatientBilanRelation(models.Model):
     _inherit = 'hms.patient'

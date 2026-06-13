@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
+
+        <!-- ── Cron 1 : Bilans en retard (quotidien) ─────────────────────────── -->
         <record id="cron_check_overdue_bilans" model="ir.cron">
             <field name="name">Dialyse : Vérifier bilans biologiques en retard</field>
             <field name="model_id" ref="acs_hms_nephrology_bilans.model_acs_nephro_bilan"/>
@@ -12,5 +14,44 @@
             <field name="interval_type">days</field>
             <field name="active" eval="True"/>
         </record>
+
+        <!-- ── Template mail : alerte Hb basse ──────────────────────────────── -->
+        <record id="mail_template_alert_low_hemoglobin" model="mail.template">
+            <field name="name">Alerte Hémoglobine basse — 2 bilans consécutifs</field>
+            <field name="model_id" ref="acs_hms_base.model_hms_patient"/>
+            <field name="subject">⚠️ Alerte Hb basse — {{object.name}}</field>
+            <field name="body_html"><![CDATA[
+<p>Bonjour,</p>
+<p>
+    Le patient <strong>{{object.name}}</strong> présente une hémoglobine inférieure
+    au seuil cible (10 g/dL) sur ses <strong>2 derniers bilans consécutifs</strong>.
+</p>
+<p>
+    Valeurs : <strong>{{ctx.get('hb_values', 'N/A')}}</strong>
+</p>
+<p>
+    Cible KDIGO pour les patients dialysés : <strong>10 – 12 g/dL</strong>.
+    Une adaptation du traitement par EPO / fer IV est peut-être nécessaire.
+</p>
+<p>Veuillez consulter le dossier du patient dès que possible.</p>
+<p>Cordialement,<br/>Système As-Shafi HMS</p>
+            ]]></field>
+            <field name="email_to">{{object.physician_id.user_id.email or ''}}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- ── Cron 2 : Alerte Hb basse (hebdomadaire, lundi 07h00) ─────────── -->
+        <record id="cron_alert_low_hemoglobin" model="ir.cron">
+            <field name="name">Dialyse : Alerte Hb basse (2 bilans consécutifs)</field>
+            <field name="model_id" ref="acs_hms_nephrology_bilans.model_acs_nephro_bilan"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="state">code</field>
+            <field name="code">model.action_alert_low_hemoglobin()</field>
+            <field name="nextcall">2026-06-16 07:00:00</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="active" eval="True"/>
+        </record>
+
     </data>
 </odoo>
