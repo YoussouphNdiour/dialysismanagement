@@ -6,3 +6,12 @@ __pycache__/
 .idea/
 .vscode/
 .superpowers/
+
+# Playwright
+.playwright-mcp/
+playwright-report/
+test-results/
+
+# Screenshots temporaires (root level)
+*.png
+!tests/screenshots/*.png
