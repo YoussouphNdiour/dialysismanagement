@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide Complications — HMS Néphro | As-Shafi Medical</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, Arial, sans-serif; background: #f0f4f8; color: #2d3748; line-height: 1.6; }
+
+  /* ─── HEADER ─── */
+  header { background: linear-gradient(135deg, #1a202c 0%, #2d3748 60%, #3d4e63 100%); color: white; padding: 0; }
+  .header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 2rem; background: rgba(0,0,0,0.2);
+    font-size: 0.83rem; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .header-top a { color: rgba(255,255,255,0.75); text-decoration: none; }
+  .header-top a:hover { color: #90cdf4; }
+  .header-content { padding: 2rem 3rem 2.5rem; }
+  .role-pill {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px; padding: 0.2rem 0.9rem; font-size: 0.8rem;
+    margin-bottom: 0.8rem; letter-spacing: 0.03em; text-transform: uppercase;
+  }
+  header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.3px; }
+  header h1 span { color: #90cdf4; }
+  header .sub { margin-top: 0.4rem; opacity: 0.82; font-size: 0.97rem; }
+
+  /* ─── MAIN ─── */
+  main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+  /* ─── INTRO BOX ─── */
+  .intro-box {
+    background: #ebf8ff; border: 1px solid #bee3f8;
+    border-left: 5px solid #3182ce; border-radius: 10px;
+    padding: 1.3rem 1.5rem; margin-bottom: 2rem;
+  }
+  .intro-box .intro-role { font-weight: 700; color: #2b6cb0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+  .intro-box p { font-size: 0.95rem; color: #2c5282; line-height: 1.7; }
+
+  /* ─── TOC ─── */
+  .toc {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 1rem 1.4rem; margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .toc-label { font-size: 0.8rem; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
+  .toc-items { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .toc-item {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: #edf2f7; border-radius: 20px; padding: 0.25rem 0.75rem;
+    font-size: 0.82rem; color: #4a5568; text-decoration: none; transition: background 0.15s;
+  }
+  .toc-item:hover { background: #bee3f8; color: #2b6cb0; }
+  .toc-item .num {
+    background: #4299e1; color: white; width: 18px; height: 18px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+  }
+
+  /* ─── STEP ─── */
+  .step {
+    background: white; border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem; overflow: hidden;
+  }
+  .step-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.2rem 1.6rem;
+    background: linear-gradient(to right, #ebf8ff, #fff);
+    border-bottom: 1px solid #edf2f7;
+  }
+  .step-num {
+    background: #4299e1; color: white; width: 38px; height: 38px;
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1rem; flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(66,153,225,0.4);
+  }
+  .step-header h2 { font-size: 1.12rem; font-weight: 700; color: #1a202c; }
+  .step-header .step-desc { font-size: 0.82rem; color: #718096; margin-top: 0.15rem; }
+
+  .step-body { padding: 1.5rem 1.6rem; }
+  .step-body p { line-height: 1.75; color: #4a5568; margin-bottom: 0.9rem; font-size: 0.95rem; }
+  .step-body p:last-child { margin-bottom: 0; }
+
+  /* ─── INSTRUCTIONS ─── */
+  .instructions { list-style: none; margin: 0.5rem 0 1rem; }
+  .instructions li {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    padding: 0.45rem 0; font-size: 0.93rem; color: #4a5568;
+    border-bottom: 1px solid #f7fafc;
+  }
+  .instructions li:last-child { border-bottom: none; }
+  .instructions .step-dot {
+    background: #ebf8ff; color: #3182ce; border-radius: 50%;
+    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; flex-shrink: 0; margin-top: 0.1rem;
+  }
+
+  /* ─── TABLE ─── */
+  .data-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  .data-table th {
+    background: #2d3748; color: white; text-align: left;
+    padding: 0.7rem 1rem; font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .data-table th:first-child { border-radius: 8px 0 0 0; }
+  .data-table th:last-child { border-radius: 0 8px 0 0; }
+  .data-table td { padding: 0.65rem 1rem; border-bottom: 1px solid #edf2f7; vertical-align: top; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:nth-child(even) td { background: #f7fafc; }
+
+  /* ─── COMPLICATION TYPES ─── */
+  .complication-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; margin: 1rem 0; }
+  .complication-card {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 0.85rem 1rem; display: flex; align-items: flex-start; gap: 0.65rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .complication-card .cc-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .complication-card .cc-name { font-size: 0.88rem; font-weight: 700; color: #2d3748; }
+  .complication-card .cc-desc { font-size: 0.77rem; color: #718096; margin-top: 0.1rem; line-height: 1.4; }
+  .complication-card.frequent { border-left: 4px solid #e53e3e; }
+  .complication-card.moderate { border-left: 4px solid #d69e2e; }
+  .complication-card.other { border-left: 4px solid #a0aec0; }
+
+  /* ─── RESOLUTION STATES ─── */
+  .resolution-states { display: flex; gap: 0.75rem; flex-wrap: wrap; margin: 1rem 0; }
+  .res-badge {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    border-radius: 20px; padding: 0.35rem 0.9rem; font-size: 0.83rem; font-weight: 600;
+  }
+  .res-badge.resolved { background: #f0fff4; border: 1px solid #9ae6b4; color: #276749; }
+  .res-badge.partial { background: #fffbeb; border: 1px solid #f6e05e; color: #744210; }
+  .res-badge.unresolved { background: #fff5f5; border: 1px solid #feb2b2; color: #c53030; }
+
+  /* ─── SCREENSHOT ─── */
+  .screenshot-wrap { margin-top: 1.2rem; }
+  .screenshot {
+    width: 100%; border: 1px solid #e2e8f0; border-radius: 10px;
+    display: block; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .caption { text-align: center; font-size: 0.8rem; color: #a0aec0; margin-top: 0.5rem; font-style: italic; }
+
+  /* ─── CALLOUTS ─── */
+  .tip, .warn, .alert, .info {
+    border-radius: 8px; padding: 0.85rem 1rem 0.85rem 1.1rem; margin-top: 1rem;
+    font-size: 0.9rem; line-height: 1.65; display: flex; gap: 0.6rem; align-items: flex-start;
+  }
+  .info { background: #ebf8ff; border-left: 4px solid #3182ce; color: #2b6cb0; }
+  .warn { background: #fffbeb; border-left: 4px solid #d69e2e; color: #744210; }
+  .alert { background: #fff5f5; border-left: 4px solid #e53e3e; color: #c53030; }
+  .tip { background: #f0fff4; border-left: 4px solid #38a169; color: #276749; }
+  .callout-icon { flex-shrink: 0; font-size: 1rem; margin-top: 0.05rem; }
+
+  kbd {
+    display: inline-block; background: #2d3748; color: white; border-radius: 5px;
+    padding: 0.1rem 0.5rem; font-size: 0.82em; font-family: inherit;
+    font-weight: 600; white-space: nowrap;
+  }
+  code {
+    background: #edf2f7; color: #2d3748; border-radius: 4px;
+    padding: 0.05rem 0.4rem; font-family: 'Courier New', monospace; font-size: 0.87em;
+  }
+  .path { color: #2b6cb0; font-weight: 600; }
+  .mono { font-family: 'Courier New', monospace; background: #f0f4f8; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85em; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center; padding: 2rem; color: #a0aec0;
+    font-size: 0.83rem; border-top: 1px solid #e2e8f0; margin-top: 2rem;
+  }
+  footer a { color: #4299e1; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <span>HMS Néphro — As-Shafi Medical</span>
+    <a href="index.html">← Retour aux guides</a>
+  </div>
+  <div class="header-content">
+    <div class="role-pill">⚠️ Module Complications</div>
+    <h1>Gestion des <span>Complications</span></h1>
+    <p class="sub">Traçabilité des incidents de dialyse — Saisie, consultation et rapports</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro-box">
+    <div class="intro-role">Contexte fonctionnel</div>
+    <p>
+      Les complications de dialyse sont des événements cliniques survenant <strong>pendant les séances</strong>.
+      Elles sont saisies par les <strong>infirmières</strong> via un popup dédié dans l'interface de conduite de séance,
+      puis consultables par le <strong>médecin</strong> (tableau de bord) et la <strong>facturation</strong>
+      (accès direct via <span class="mono">/odoo/action-586</span>).
+      Chaque complication est liée à une séance précise et contribue au score de tolérance visible dans le portail patient.
+    </p>
+  </div>
+
+  <div class="toc">
+    <span class="toc-label">Sections</span>
+    <div class="toc-items">
+      <a href="#liste" class="toc-item"><span class="num">1</span> Liste des complications</a>
+      <a href="#detail" class="toc-item"><span class="num">2</span> Détail d'une complication</a>
+      <a href="#types" class="toc-item"><span class="num">3</span> Types supportés</a>
+      <a href="#tracabilite" class="toc-item"><span class="num">4</span> Traçabilité &amp; rapports</a>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 1 : LISTE ─── -->
+  <div class="step" id="liste">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <h2>Liste des complications</h2>
+        <div class="step-desc">Vue tabulaire de tous les incidents enregistrés</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>
+        Accédez à la liste via l'URL directe <span class="mono">/odoo/action-586</span>.
+        Ce menu n'est pas affiché dans la navigation principale pour les rôles standards — utilisez le lien direct
+        ou passez par le tableau de bord du médecin.
+      </p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/complications_liste.png" alt="Liste des complications de dialyse" class="screenshot">
+        <p class="caption">Liste des complications — 13 enregistrements d'hypotension (7 juin et 10 juin)</p>
+      </div>
+
+      <p style="margin-top: 1.2rem;">La liste affiche les colonnes suivantes :</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Colonne</th>
+            <th>Description</th>
+            <th>Exemple</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Heure de survenue</strong></td>
+            <td>Date et heure exactes de l'incident</td>
+            <td>Jun 7, 10:20 AM</td>
+          </tr>
+          <tr>
+            <td><strong>Type de complication</strong></td>
+            <td>Catégorie clinique de l'incident</td>
+            <td>Hypotension</td>
+          </tr>
+          <tr>
+            <td><strong>TA au moment de la complication</strong></td>
+            <td>Tension artérielle mesurée lors de l'incident</td>
+            <td>85/50 mmHg</td>
+          </tr>
+          <tr>
+            <td><strong>Action prise</strong></td>
+            <td>Intervention infirmière appliquée</td>
+            <td>Administration NaCl 0.9%</td>
+          </tr>
+          <tr>
+            <td><strong>Résolution</strong></td>
+            <td>Statut de résolution de l'incident</td>
+            <td>Partiellement résolue</td>
+          </tr>
+          <tr>
+            <td><strong>Durée</strong></td>
+            <td>Durée de l'épisode en minutes</td>
+            <td>15 min</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="info">
+        <span class="callout-icon">ℹ️</span>
+        <span>Les 13 enregistrements actuels correspondent tous à des épisodes d'<strong>hypotension</strong> survenus les 7 et 10 juin,
+        traités par <strong>Administration NaCl 0.9%</strong> avec résolution partielle dans tous les cas.
+        Le bouton <kbd>New</kbd> permet de créer manuellement une complication hors séance active.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 2 : DÉTAIL ─── -->
+  <div class="step" id="detail">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div>
+        <h2>Détail d'une complication</h2>
+        <div class="step-desc">Fiche complète d'un incident clinique</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>
+        Cliquez sur une ligne de la liste pour ouvrir le formulaire de détail.
+        Le formulaire présente toutes les informations cliniques de l'incident ainsi que
+        les champs de résolution et de notes.
+      </p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/complications_detail.png" alt="Détail d'une complication — séance DP033" class="screenshot">
+        <p class="caption">Fiche de complication — Séance DP033, Hypotension, 7 juin 10:20 AM</p>
+      </div>
+
+      <p style="margin-top: 1.2rem;">Champs du formulaire de complication :</p>
+      <ul class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span><strong>Séance d'hémodialyse</strong> — lien vers la séance parente (ex : <span class="mono">DP033</span>).
+          Ce champ est rempli automatiquement quand la complication est saisie depuis l'interface infirmière.</span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span><strong>Type de complication</strong> — sélection dans la liste des types supportés (voir section 3).</span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span><strong>Heure de survenue</strong> — date et heure de l'incident, saisies ou générées automatiquement.</span>
+        </li>
+        <li>
+          <span class="step-dot">4</span>
+          <span><strong>TA au moment de la complication</strong> — tension artérielle mesurée lors de l'épisode.</span>
+        </li>
+        <li>
+          <span class="step-dot">5</span>
+          <span><strong>Action prise</strong> — description de l'intervention infirmière appliquée.</span>
+        </li>
+        <li>
+          <span class="step-dot">6</span>
+          <span><strong>Résolution</strong> — radio buttons avec trois états possibles.</span>
+        </li>
+        <li>
+          <span class="step-dot">7</span>
+          <span><strong>Notes complémentaires</strong> — champ texte libre pour tout commentaire clinique additionnel.</span>
+        </li>
+      </ul>
+
+      <p style="margin-top: 1rem;">Les trois états de résolution :</p>
+      <div class="resolution-states">
+        <span class="res-badge resolved">✓ Résolue</span>
+        <span class="res-badge partial">◉ Partiellement résolue</span>
+        <span class="res-badge unresolved">✗ Non résolue</span>
+      </div>
+
+      <div class="warn">
+        <span class="callout-icon">⚠️</span>
+        <span>Une complication marquée <strong>Non résolue</strong> à la clôture de séance apparaît
+        en alerte dans le tableau de bord du médecin. Assurez-vous de renseigner le statut final
+        avant de clôturer la séance.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 3 : TYPES ─── -->
+  <div class="step" id="types">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div>
+        <h2>Types de complications supportés</h2>
+        <div class="step-desc">Catalogue des incidents cliniques reconnus par le système</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>
+        Le système prend en charge les types de complications suivants.
+        Lors de la saisie depuis le popup infirmière, seuls ces types sont proposés en sélection rapide.
+      </p>
+
+      <div class="complication-grid">
+        <div class="complication-card frequent">
+          <span class="cc-icon">📉</span>
+          <div>
+            <div class="cc-name">Hypotension</div>
+            <div class="cc-desc">La plus fréquente en dialyse. Chute de TA systolique &gt; 20 mmHg ou TA &lt; 90 mmHg.</div>
+          </div>
+        </div>
+        <div class="complication-card moderate">
+          <span class="cc-icon">⚡</span>
+          <div>
+            <div class="cc-name">Crampes musculaires</div>
+            <div class="cc-desc">Contractures douloureuses, souvent en fin de séance lors de l'ultrafiltration.</div>
+          </div>
+        </div>
+        <div class="complication-card moderate">
+          <span class="cc-icon">🤢</span>
+          <div>
+            <div class="cc-name">Nausées / vomissements</div>
+            <div class="cc-desc">Souvent associées à l'hypotension ou à la vitesse d'ultrafiltration.</div>
+          </div>
+        </div>
+        <div class="complication-card moderate">
+          <span class="cc-icon">🌡️</span>
+          <div>
+            <div class="cc-name">Fièvre / frissons</div>
+            <div class="cc-desc">Peut indiquer une infection de l'accès vasculaire ou une réaction pyrogène.</div>
+          </div>
+        </div>
+        <div class="complication-card moderate">
+          <span class="cc-icon">🔴</span>
+          <div>
+            <div class="cc-name">Prurit</div>
+            <div class="cc-desc">Démangeaisons cutanées, fréquentes en cas d'hyperphosphatémie.</div>
+          </div>
+        </div>
+        <div class="complication-card frequent">
+          <span class="cc-icon">⛔</span>
+          <div>
+            <div class="cc-name">Arrêt prématuré</div>
+            <div class="cc-desc">Fin anticipée de la séance pour raison médicale ou refus du patient.</div>
+          </div>
+        </div>
+        <div class="complication-card other">
+          <span class="cc-icon">📝</span>
+          <div>
+            <div class="cc-name">Autre</div>
+            <div class="cc-desc">Tout incident non listé ci-dessus. Préciser dans le champ notes.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info">
+        <span class="callout-icon">ℹ️</span>
+        <span>La légende de couleur des bordures gauches : <strong style="color:#e53e3e;">rouge</strong> = incidents fréquents
+        nécessitant attention immédiate, <strong style="color:#d69e2e;">jaune</strong> = incidents modérés,
+        <strong style="color:#a0aec0;">gris</strong> = catégorie ouverte.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 4 : TRAÇABILITÉ ─── -->
+  <div class="step" id="tracabilite">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div>
+        <h2>Traçabilité et rapports</h2>
+        <div class="step-desc">Comment les complications circulent dans le système</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>
+        Les complications sont au carrefour de plusieurs fonctionnalités du module HMS Néphro.
+        Elles alimentent automatiquement les tableaux de bord et le portail patient.
+      </p>
+
+      <ul class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span>
+            <strong>Lien séance</strong> — chaque complication est attachée à une séance d'hémodialyse via le champ
+            <em>Séance d'hémodialyse</em>. Ce lien garantit la traçabilité complète : patient → séance → complication.
+          </span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>
+            <strong>Dashboard médecin</strong> — le compteur <em>Complications</em> en haut du tableau de bord
+            médecin affiche le nombre total d'incidents sur la période sélectionnée. Il se met à jour en temps réel
+            dès la validation d'une nouvelle complication par l'infirmière.
+          </span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>
+            <strong>Score de tolérance patient</strong> — le portail patient calcule un indicateur de tolérance
+            à la dialyse qui intègre la fréquence et le type des complications. Un score dégradé s'affiche
+            en orange dans le portail du patient concerné.
+          </span>
+        </li>
+        <li>
+          <span class="step-dot">4</span>
+          <span>
+            <strong>Popup infirmière</strong> — lors d'une séance active, l'infirmière peut déclencher
+            le popup de saisie de complication via le bouton dédié dans l'interface de conduite de séance.
+            La complication est pré-liée à la séance en cours.
+          </span>
+        </li>
+        <li>
+          <span class="step-dot">5</span>
+          <span>
+            <strong>Accès facturation</strong> — le personnel de facturation peut consulter la liste des complications
+            via <span class="mono">/odoo/action-586</span> pour vérifier les incidents avant l'établissement des factures.
+            La facturation n'a pas le droit de créer ou modifier des complications.
+          </span>
+        </li>
+      </ul>
+
+      <div class="tip">
+        <span class="callout-icon">✓</span>
+        <span>
+          <strong>Bonne pratique :</strong> L'infirmière doit saisir la complication <em>immédiatement</em> lors de sa survenue
+          pour que l'horodatage soit précis. Une saisie a posteriori reste possible mais l'heure doit être corrigée manuellement.
+        </span>
+      </div>
+
+      <div class="warn">
+        <span class="callout-icon">⚠️</span>
+        <span>
+          La suppression d'une complication est réservée à l'administrateur système. En cas de saisie erronée,
+          contactez le médecin référent pour correction — ne pas tenter de contourner via l'interface développeur.
+        </span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>
+    <strong>As-Shafi Medical</strong> &nbsp;|&nbsp; Documentation HMS Néphro &nbsp;|&nbsp; Odoo 19 &nbsp;|&nbsp;
+    Base : <span class="mono" style="background: #edf2f7; color: #4a5568;">asshafi</span> &nbsp;|&nbsp;
+    <a href="index.html">Retour aux guides</a> &nbsp;|&nbsp; Version 2026-06-11
+  </p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide Médecin Néphrologue — HMS Néphro | As-Shafi Medical</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, Arial, sans-serif; background: #f0f4f8; color: #2d3748; line-height: 1.6; }
+
+  /* ─── HEADER ─── */
+  header {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 60%, #3d4e63 100%);
+    color: white;
+    padding: 0;
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 2rem;
+    background: rgba(0,0,0,0.22);
+    font-size: 0.83rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .header-top a { color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.15s; }
+  .header-top a:hover { color: #90cdf4; }
+  .header-content { padding: 2rem 3rem 2.5rem; }
+  .role-pill {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 0.2rem 0.9rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.3px; }
+  header h1 span { color: #90cdf4; }
+  header .sub { margin-top: 0.4rem; opacity: 0.82; font-size: 0.97rem; }
+
+  /* ─── MAIN ─── */
+  main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+  /* ─── INTRO BOX ─── */
+  .intro-box {
+    background: #f0fff4;
+    border: 1px solid #c6f6d5;
+    border-left: 5px solid #276749;
+    border-radius: 10px;
+    padding: 1.3rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .intro-box .intro-role { font-weight: 700; color: #276749; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+  .intro-box p { font-size: 0.95rem; color: #22543d; line-height: 1.7; }
+  .login-block {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #1c4532;
+    color: #9ae6b4;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.88rem;
+    margin-top: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .login-block .sep { color: rgba(255,255,255,0.3); }
+
+  /* ─── TOC ─── */
+  .toc {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 1rem 1.4rem;
+    margin-bottom: 2rem;
+  }
+  .toc-label { font-size: 0.8rem; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem; }
+  .toc-items { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .toc-item {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: #edf2f7;
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.82rem;
+    color: #4a5568;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+  }
+  .toc-item:hover { background: #c6f6d5; color: #276749; }
+  .toc-item .num {
+    background: #276749;
+    color: white;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ─── STEP ─── */
+  .step {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.07);
+    margin-bottom: 2rem;
+    overflow: hidden;
+  }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 1.6rem;
+    background: linear-gradient(to right, #f7fafc, #fff);
+    border-bottom: 1px solid #edf2f7;
+  }
+  .step-num {
+    background: #276749;
+    color: white;
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(39,103,73,0.35);
+  }
+  .step-header h2 { font-size: 1.12rem; font-weight: 700; color: #1a202c; }
+  .step-header .step-desc { font-size: 0.82rem; color: #718096; margin-top: 0.15rem; }
+
+  .step-body { padding: 1.5rem 1.6rem; }
+  .step-body p { line-height: 1.75; color: #4a5568; margin-bottom: 0.9rem; font-size: 0.95rem; }
+  .step-body p:last-child { margin-bottom: 0; }
+
+  /* ─── INSTRUCTIONS LIST ─── */
+  .instructions { list-style: none; margin: 0.5rem 0 1rem; }
+  .instructions li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.45rem 0;
+    font-size: 0.93rem;
+    color: #4a5568;
+    border-bottom: 1px solid #f7fafc;
+  }
+  .instructions li:last-child { border-bottom: none; }
+  .instructions .step-dot {
+    background: #f0fff4;
+    color: #276749;
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  kbd {
+    display: inline-block;
+    background: #276749;
+    color: white;
+    border-radius: 5px;
+    padding: 0.1rem 0.5rem;
+    font-size: 0.82em;
+    font-family: inherit;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  code {
+    background: #edf2f7;
+    color: #2d3748;
+    border-radius: 4px;
+    padding: 0.05rem 0.4rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.87em;
+  }
+  .path { color: #276749; font-weight: 600; }
+
+  /* ─── FIELD TABLE ─── */
+  .field-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.88rem;
+  }
+  .field-table th {
+    background: #f0fff4;
+    color: #276749;
+    font-weight: 700;
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 2px solid #c6f6d5;
+  }
+  .field-table td {
+    padding: 0.45rem 0.75rem;
+    border-bottom: 1px solid #f0f4f8;
+    color: #4a5568;
+    vertical-align: middle;
+  }
+  .field-table tr:last-child td { border-bottom: none; }
+  .field-table td:first-child { font-weight: 600; color: #2d3748; }
+
+  /* ─── BADGES ─── */
+  .badge {
+    display: inline-block;
+    border-radius: 12px;
+    padding: 0.1rem 0.55rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+  .badge-red    { background: #fff5f5; color: #c53030; border: 1px solid #fed7d7; }
+  .badge-green  { background: #f0fff4; color: #276749; border: 1px solid #c6f6d5; }
+  .badge-yellow { background: #fffbeb; color: #744210; border: 1px solid #fefcbf; }
+  .badge-blue   { background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; }
+
+  /* ─── SCREENSHOT ─── */
+  .screenshot-wrap { margin-top: 1.2rem; }
+  .screenshot {
+    max-width: 100%;
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    display: block;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+  }
+  .caption {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #a0aec0;
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.2rem; }
+  @media (max-width: 680px) {
+    .two-col { grid-template-columns: 1fr; }
+    .header-content { padding: 1.5rem 1.2rem 2rem; }
+  }
+
+  /* ─── CALLOUTS ─── */
+  .tip, .warn, .alert, .info {
+    border-radius: 8px;
+    padding: 0.85rem 1rem 0.85rem 1.1rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+  }
+  .tip   { background: #f0fff4; border-left: 3px solid #38a169; color: #276749; }
+  .warn  { background: #fffbeb; border-left: 3px solid #d69e2e; color: #744210; }
+  .alert { background: #fff5f5; border-left: 3px solid #e53e3e; color: #c53030; }
+  .info  { background: #ebf8ff; border-left: 3px solid #3182ce; color: #2b6cb0; }
+  .callout-icon { flex-shrink: 0; font-size: 1rem; margin-top: 0.05rem; }
+
+  /* ─── SUB-SECTION TITLE ─── */
+  .sub-section-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #276749;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 1.4rem 0 0.5rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid #c6f6d5;
+  }
+
+  /* ─── STATUS LEGEND ─── */
+  .legend-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0.6rem 0 1rem;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: #a0aec0;
+    font-size: 0.83rem;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 2rem;
+  }
+  footer a { color: #4299e1; text-decoration: none; }
+  footer a:hover { color: #2b6cb0; text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <a href="index.html">← Retour au portail des guides</a>
+    <span>As-Shafi Medical — HMS Néphro</span>
+  </div>
+  <div class="header-content">
+    <div class="role-pill">Médecin Néphrologue</div>
+    <h1>Guide Utilisateur — <span>Médecin Néphrologue</span></h1>
+    <p class="sub">Prescriptions · Générateur de séances · Bilans biologiques · Dashboard · Complications</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro-box">
+    <div class="intro-role">Votre rôle</div>
+    <p>En tant que médecin néphrologue, vous prenez en charge le suivi clinique complet des patients hémodialysés.
+       Vous prescrivez les séances d'hémodialyse, gérez les ordonnances médicamenteuses, interprétez les bilans
+       biologiques pré- et post-dialyse, et pilotez l'activité du service via votre tableau de bord dédié.</p>
+    <div class="login-block">
+      <span>medecin@nephro.test</span>
+      <span class="sep">|</span>
+      <span>Nephro2024!</span>
+      <span class="sep">|</span>
+      <span>http://localhost:8069/odoo</span>
+    </div>
+  </div>
+
+  <nav class="toc">
+    <div class="toc-label">Sommaire</div>
+    <div class="toc-items">
+      <a class="toc-item" href="#etape1"><span class="num">1</span> Accès et navigation</a>
+      <a class="toc-item" href="#etape2"><span class="num">2</span> Prescription hémodialyse</a>
+      <a class="toc-item" href="#etape3"><span class="num">3</span> Générateur de séances</a>
+      <a class="toc-item" href="#etape4"><span class="num">4</span> Bilans biologiques</a>
+      <a class="toc-item" href="#etape5"><span class="num">5</span> Prescription médicamenteuse</a>
+      <a class="toc-item" href="#etape6"><span class="num">6</span> Dashboard médecin</a>
+      <a class="toc-item" href="#etape7"><span class="num">7</span> Complications</a>
+    </div>
+  </nav>
+
+
+  <!-- ═══════════════════════════════════════════
+       ÉTAPE 1 — ACCÈS ET NAVIGATION
+  ════════════════════════════════════════════════ -->
+  <div class="step" id="etape1">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <h2>Accès et navigation</h2>
+        <div class="step-desc">Connexion médecin · Menu <span class="path">Patient → Patient</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Connectez-vous avec votre compte médecin depuis la page d'accueil Odoo. L'ensemble des fonctionnalités
+         HMS Néphro est accessible depuis la barre de navigation principale.</p>
+
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span>Ouvrez votre navigateur et accédez à <code>http://localhost:8069/odoo</code></span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>Saisissez vos identifiants : <code>medecin@nephro.test</code> et <code>Nephro2024!</code>, puis cliquez sur <kbd>Se connecter</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>Dans la barre de navigation supérieure, cliquez sur le menu <kbd>Patient</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">4</span>
+          <span>Dans le sous-menu déroulant, sélectionnez <kbd>Patient</kbd> — la liste complète des patients s'affiche</span>
+        </li>
+        <li>
+          <span class="step-dot">5</span>
+          <span>Utilisez la barre de recherche pour filtrer par nom, ID HMS ou statut, puis cliquez sur un patient pour ouvrir son dossier</span>
+        </li>
+      </ol>
+
+      <div class="tip">
+        <span class="callout-icon">💡</span>
+        <span>Votre session médecin vous donne accès à l'intégralité des dossiers patients du service.
+              Utilisez le filtre rapide <strong>En hémodialyse</strong> pour n'afficher que les patients actifs.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       ÉTAPE 2 — PRESCRIPTION HÉMODIALYSE
+  ════════════════════════════════════════════════ -->
+  <div class="step" id="etape2">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div>
+        <h2>Dossier patient — Prescription hémodialyse</h2>
+        <div class="step-desc">Dossier <span class="path">Seynabou Diouf (HMS009)</span> → Smart button Procédures → Nouvelle procédure DP051</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>La prescription d'hémodialyse est le document médical central qui définit les paramètres techniques
+         de chaque séance pour le patient. Elle est créée depuis le dossier patient via le smart button
+         <strong>Procédures</strong> en haut du formulaire.</p>
+
+      <div class="sub-section-title">Accès à la prescription</div>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span>Depuis la liste patients, ouvrez le dossier de <strong>Seynabou Diouf</strong> (ID : <code>HMS009</code>)</span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>En haut du dossier, repérez et cliquez sur le smart button <kbd>Procédures</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>Dans la liste des procédures, cliquez sur <kbd>Nouveau</kbd> — un formulaire vierge s'ouvre</span>
+        </li>
+      </ol>
+
+      <div class="sub-section-title">Informations générales</div>
+      <table class="field-table">
+        <thead>
+          <tr><th>Champ</th><th>Valeur à saisir</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Référence</td><td><code>DP051</code> (générée automatiquement)</td></tr>
+          <tr><td>Patient</td><td><code>Seynabou Diouf</code></td></tr>
+          <tr><td>Produit / Service</td><td><code>Dialyse</code></td></tr>
+          <tr><td>Date</td><td><code>11/06/2026 07:00</code></td></tr>
+          <tr><td>Durée</td><td><code>04:00</code> (4 heures)</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sub-section-title">Onglet Néphrologie — Paramètres techniques</div>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">4</span>
+          <span>Cliquez sur l'onglet <kbd>Néphrologie</kbd> pour accéder aux champs spécifiques à l'hémodialyse</span>
+        </li>
+      </ol>
+      <table class="field-table">
+        <thead>
+          <tr><th>Champ</th><th>Valeur</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>TA pré-dialyse</td><td><code>130/80</code> mmHg</td></tr>
+          <tr><td>Planning</td><td><code>LMV Matin</code> (Lundi / Mercredi / Vendredi)</td></tr>
+          <tr><td>Accès vasculaire</td><td><code>FAV</code> (Fistule artério-veineuse)</td></tr>
+          <tr><td>Dialyseur</td><td><code>Fresenius FX80</code></td></tr>
+          <tr><td>Dialysat</td><td><code>Bicarbonate Standard</code></td></tr>
+        </tbody>
+      </table>
+
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">5</span>
+          <span>Dans le champ <strong>Notes</strong>, saisissez : <code>Fréquence: 3 séances/semaine</code></span>
+        </li>
+        <li>
+          <span class="step-dot">6</span>
+          <span>Cliquez sur le bouton <kbd>Enregistrer</kbd> pour sauvegarder la prescription</span>
+        </li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/hemodialyse_prescription.png"
+             alt="Formulaire prescription hémodialyse — Seynabou Diouf DP051"
+             class="screenshot">
+        <div class="caption">Prescription hémodialyse DP051 — Seynabou Diouf · Onglet Néphrologie renseigné</div>
+      </div>
+
+      <div class="info">
+        <span class="callout-icon">ℹ️</span>
+        <span>L'accès vasculaire <strong>FAV</strong> (Fistule artério-veineuse) est l'abord privilégié en
+              hémodialyse chronique. Si le patient est porteur d'un cathéter central tunnélisé, sélectionnez
+              <code>KT tunnélisé</code> à la place.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       ÉTAPE 3 — GÉNÉRATEUR DE SÉANCES
+  ════════════════════════════════════════════════ -->
+  <div class="step" id="etape3">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div>
+        <h2>Générateur de séances</h2>
+        <div class="step-desc">Menu : <span class="path">Néphrologie → Générateur de séances</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Le générateur de séances crée automatiquement les fiches de séance pour une période donnée,
+         en respectant le planning du patient (LMV / MMV) et en excluant optionnellement les jours fériés.
+         Cet outil évite la saisie manuelle de chaque séance individuelle.</p>
+
+      <div class="sub-section-title">Étape 1 — Paramétrage</div>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span>Accédez à <span class="path">Néphrologie → Générateur de séances</span> depuis le menu principal</span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>Dans le champ <strong>Patient</strong>, sélectionnez <code>Seynabou Diouf</code></span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>Renseignez la <strong>Période</strong> : date de début <code>12/06/2026</code> — date de fin <code>30/06/2026</code></span>
+        </li>
+        <li>
+          <span class="step-dot">4</span>
+          <span>Cochez la case <strong>Exclure les jours fériés</strong> afin que le générateur ignore automatiquement les jours fériés nationaux</span>
+        </li>
+        <li>
+          <span class="step-dot">5</span>
+          <span>Cliquez sur <kbd>Valider</kbd> — le système calcule et affiche l'aperçu des séances</span>
+        </li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/generer_seances.png"
+             alt="Générateur de séances — paramétrage"
+             class="screenshot">
+        <div class="caption">Générateur de séances — Sélection patient et période 12/06 → 30/06/2026</div>
+      </div>
+
+      <div class="sub-section-title">Étape 2 — Aperçu et confirmation</div>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">6</span>
+          <span>L'aperçu liste les <strong>8 séances prévues</strong> avec pour chacune : date, heure, planning LMV Matin et poste prévisionnel</span>
+        </li>
+        <li>
+          <span class="step-dot">7</span>
+          <span>Vérifiez les dates — corrigez manuellement si une séance doit être décalée (ex. indisponibilité ponctuelle)</span>
+        </li>
+        <li>
+          <span class="step-dot">8</span>
+          <span>Cliquez sur <kbd>Confirmer</kbd> — les <strong>8 séances DP052 à DP059</strong> sont créées dans le système</span>
+        </li>
+      </ol>
+
+      <div class="warn">
+        <span class="callout-icon">⚠️</span>
+        <span>Une fois confirmée, la génération <strong>ne peut pas être annulée en bloc</strong>. En cas d'erreur,
+              il faudra annuler chaque séance individuellement depuis la liste des procédures.
+              Prenez soin de vérifier l'aperçu avant de confirmer.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       ÉTAPE 4 — BILANS BIOLOGIQUES
+  ════════════════════════════════════════════════ -->
+  <div class="step" id="etape4">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div>
+        <h2>Bilans biologiques</h2>
+        <div class="step-desc">Menu : <span class="path">Patient → Bilans Biologiques (action-573)</span> → Nouveau</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Les bilans biologiques pré- et post-dialyse permettent de suivre l'efficacité de l'épuration rénale
+         et d'ajuster la prescription en conséquence. Le système colorie automatiquement les valeurs hors normes
+         en rouge (élevé) ou en bleu (bas) pour faciliter l'interprétation clinique rapide.</p>
+
+      <div class="sub-section-title">Bilan pré-dialyse — BIO/00018</div>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span>Dans le menu <kbd>Patient</kbd>, cliquez sur <kbd>Bilans Biologiques</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>Cliquez sur <kbd>Nouveau</kbd> et sélectionnez le type <code>Pré-dialyse</code></span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>Associez le bilan à la séance de <strong>Seynabou Diouf</strong> et saisissez les valeurs ci-dessous</span>
+        </li>
+      </ol>
+      <table class="field-table">
+        <thead>
+          <tr><th>Paramètre</th><th>Valeur saisie</th><th>Statut automatique</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Hémoglobine (Hb)</td><td><code>9.80 g/dL</code></td><td><span class="badge badge-red">Bas</span></td></tr>
+          <tr><td>Hématocrite</td><td><code>29.5 %</code></td><td><span class="badge badge-yellow">Surveillance</span></td></tr>
+          <tr><td>Ferritine</td><td><code>180 ng/mL</code></td><td><span class="badge badge-green">Normal</span></td></tr>
+          <tr><td>Saturation Transferrine (Sat.Tf)</td><td><code>22 %</code></td><td><span class="badge badge-yellow">Limite basse</span></td></tr>
+          <tr><td>Créatinine</td><td><code>850 µmol/L</code></td><td><span class="badge badge-red">Élevé</span></td></tr>
+          <tr><td>Urée pré-dialyse</td><td><code>28.50 mmol/L</code></td><td><span class="badge badge-red">Élevé</span></td></tr>
+          <tr><td>Potassium (K)</td><td><code>5.80 mEq/L</code></td><td><span class="badge badge-red">Élevé</span></td></tr>
+          <tr><td>Phosphore (P)</td><td><code>1.90 mmol/L</code></td><td><span class="badge badge-red">Élevé</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/bilan_pre.png"
+             alt="Bilan biologique pré-dialyse BIO/00018"
+             class="screenshot">
+        <div class="caption">Bilan pré-dialyse BIO/00018 — colorisation automatique rouge/vert selon seuils</div>
+      </div>
+
+      <div class="sub-section-title">Bilan post-dialyse — BIO/00019</div>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">4</span>
+          <span>Créez un second bilan de type <code>Post-dialyse</code> pour la même séance, et saisissez les valeurs suivantes</span>
+        </li>
+      </ol>
+      <table class="field-table">
+        <thead>
+          <tr><th>Paramètre</th><th>Valeur post-dialyse</th><th>Évolution</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Hémoglobine (Hb)</td><td><code>10.5 g/dL</code></td><td><span class="badge badge-green">Amélioré</span></td></tr>
+          <tr><td>Urée post-dialyse</td><td><code>10.20 mmol/L</code></td><td><span class="badge badge-green">Épuré</span></td></tr>
+          <tr><td>URR (Urea Reduction Ratio)</td><td><code>64.2 %</code></td><td><span class="badge badge-yellow">Limite (&gt;65 % recommandé)</span></td></tr>
+          <tr><td>Potassium (K)</td><td><code>4.2 mEq/L</code></td><td><span class="badge badge-green">Normalisé</span></td></tr>
+          <tr><td>Phosphore (P)</td><td><code>1.4 mmol/L</code></td><td><span class="badge badge-green">Amélioré</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/bilan_post.png"
+             alt="Bilan biologique post-dialyse BIO/00019"
+             class="screenshot">
+        <div class="caption">Bilan post-dialyse BIO/00019 — amélioration des paramètres biologiques après épuration</div>
+      </div>
+
+      <div class="alert">
+        <span class="callout-icon">⚠️</span>
+        <span>Un <strong>URR inférieur à 65 %</strong> indique une dialyse insuffisante. Si ce résultat
+              est récurrent sur plusieurs séances, réévaluez la durée, le type de dialyseur
+              ou l'efficacité de l'accès vasculaire.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       ÉTAPE 5 — PRESCRIPTION MÉDICAMENTEUSE
+  ════════════════════════════════════════════════ -->
+  <div class="step" id="etape5">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      <div>
+        <h2>Prescription médicamenteuse</h2>
+        <div class="step-desc">Dossier patient → Smart button <span class="path">Prescriptions → Nouveau</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Les ordonnances médicamenteuses sont créées depuis le dossier patient via le smart button
+         <strong>Prescriptions</strong>. Une ordonnance néphro peut contenir plusieurs médicaments
+         constituant le traitement de fond de l'insuffisance rénale chronique en dialyse.</p>
+
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span>Depuis le dossier de <strong>Seynabou Diouf</strong>, cliquez sur le smart button <kbd>Prescriptions</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>Cliquez sur <kbd>Nouveau</kbd> — le formulaire d'ordonnance s'ouvre</span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>La référence <code>PRO001</code> est générée automatiquement — cochez la case <strong>Ordonnance Néphro</strong></span>
+        </li>
+        <li>
+          <span class="step-dot">4</span>
+          <span>Sélectionnez le <strong>Contexte</strong> : <code>Traitement de fond</code></span>
+        </li>
+        <li>
+          <span class="step-dot">5</span>
+          <span>Ajoutez les 3 médicaments via le bouton <kbd>Ajouter un médicament</kbd> :</span>
+        </li>
+      </ol>
+
+      <table class="field-table">
+        <thead>
+          <tr><th>Médicament</th><th>Dose</th><th>Voie</th><th>Fréquence / Condition</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>EPO alfa (Érythropoïétine)</td>
+            <td><code>4 000 UI</code></td>
+            <td>SC (sous-cutanée)</td>
+            <td>3 fois / semaine</td>
+          </tr>
+          <tr>
+            <td>Carbonate de calcium</td>
+            <td><code>500 mg — 3 cp/j</code></td>
+            <td>Per os</td>
+            <td>Aux repas</td>
+          </tr>
+          <tr>
+            <td>Fer saccharose IV</td>
+            <td><code>200 mg</code></td>
+            <td>IV (intraveineux)</td>
+            <td>Post-dialyse si fer bas</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">6</span>
+          <span>Relisez l'ensemble des lignes de prescription, puis cliquez sur <kbd>Confirm</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">7</span>
+          <span>Le statut de l'ordonnance passe de <span class="badge badge-yellow">Draft</span> à <span class="badge badge-green">Prescribed</span></span>
+        </li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/ordonnance.png"
+             alt="Ordonnance PRO001 — Seynabou Diouf"
+             class="screenshot">
+        <div class="caption">Ordonnance PRO001 confirmée — 3 médicaments prescrits, statut Prescribed</div>
+      </div>
+
+      <div class="tip">
+        <span class="callout-icon">💡</span>
+        <span>La case <strong>Ordonnance Néphro</strong> active des champs spécifiques à l'hémodialyse
+              (planning, notes dialyse, accès vasculaire). Elle doit rester cochée pour tous les patients
+              sous hémodialyse chronique.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       ÉTAPE 6 — DASHBOARD MÉDECIN
+  ════════════════════════════════════════════════ -->
+  <div class="step" id="etape6">
+    <div class="step-header">
+      <div class="step-num">6</div>
+      <div>
+        <h2>Dashboard médecin</h2>
+        <div class="step-desc">Menu : <span class="path">Néphrologie → Dashboard Médecin (action-589)</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Le tableau de bord médecin offre une vision en temps réel de l'activité du service d'hémodialyse.
+         Il est accessible depuis <span class="path">Néphrologie → Dashboard Médecin</span> et se présente
+         en trois vues complémentaires.</p>
+
+      <div class="sub-section-title">Vue Grille — Postes en temps réel</div>
+      <p>La vue Grille affiche chaque poste de dialyse sous forme de carte colorée reflétant son statut actuel.
+         La sidebar droite agrège les KPIs de la session en cours.</p>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span>Accédez à <span class="path">Néphrologie → Dashboard Médecin</span> depuis le menu principal</span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>La vue Grille s'affiche par défaut — chaque poste est représenté par une carte avec le nom du patient, la durée écoulée et le statut coloré</span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>Lisez les couleurs de statut :</span>
+        </li>
+      </ol>
+      <div class="legend-row">
+        <span class="badge badge-green" style="padding:0.3rem 0.8rem;font-size:0.85rem;">Terminé</span>
+        <span class="badge badge-blue" style="padding:0.3rem 0.8rem;font-size:0.85rem;">Libre</span>
+        <span class="badge badge-red" style="padding:0.3rem 0.8rem;font-size:0.85rem;">ATTENTION</span>
+        <span class="badge badge-yellow" style="padding:0.3rem 0.8rem;font-size:0.85rem;">En cours</span>
+      </div>
+      <p style="margin-top:0.8rem;">KPIs affichés dans la <strong>sidebar droite</strong> :</p>
+      <table class="field-table">
+        <thead>
+          <tr><th>KPI</th><th>Valeur exemple</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Séances en cours</td><td><code>1 / 2</code></td></tr>
+          <tr><td>Taux d'occupation</td><td><code>25 %</code></td></tr>
+          <tr><td>KT/V moyen</td><td><code>1.35</code></td></tr>
+          <tr><td>Complications signalées</td><td><code>0</code></td></tr>
+        </tbody>
+      </table>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/dashboard_grille.png"
+             alt="Dashboard médecin — vue Grille"
+             class="screenshot">
+        <div class="caption">Dashboard Médecin — Vue Grille · Postes en temps réel et KPIs sidebar</div>
+      </div>
+
+      <div class="sub-section-title">Vue Liste — Tableau synthétique</div>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">4</span>
+          <span>Cliquez sur le bouton ou l'onglet <kbd>Liste</kbd> pour basculer en mode tableau</span>
+        </li>
+        <li>
+          <span class="step-dot">5</span>
+          <span>Le tableau présente : poste, patient, statut, alertes actives, heure de début et durée écoulée</span>
+        </li>
+        <li>
+          <span class="step-dot">6</span>
+          <span>Cliquez sur n'importe quelle ligne pour accéder directement au détail de la séance</span>
+        </li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/dashboard_liste.png"
+             alt="Dashboard médecin — vue Liste"
+             class="screenshot">
+        <div class="caption">Dashboard Médecin — Vue Liste · Tableau postes / patients / statuts / alertes</div>
+      </div>
+
+      <div class="sub-section-title">Vue Stats — Métriques 30 jours</div>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">7</span>
+          <span>Basculez sur l'onglet <kbd>Stats</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">8</span>
+          <span>Le graphique d'évolution du <strong>KT/V</strong> s'affiche sur les 30 derniers jours pour l'ensemble des patients</span>
+        </li>
+        <li>
+          <span class="step-dot">9</span>
+          <span>Lisez le pourcentage de <strong>séances adéquates (KT/V ≥ 1.2)</strong> dans les métriques agrégées</span>
+        </li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/dashboard_stats.png"
+             alt="Dashboard médecin — vue Stats"
+             class="screenshot">
+        <div class="caption">Dashboard Médecin — Vue Stats · Évolution KT/V 30 jours et métriques globales</div>
+      </div>
+
+      <div class="info">
+        <span class="callout-icon">ℹ️</span>
+        <span>Le seuil <strong>KT/V ≥ 1.2</strong> est la norme internationale de dialyse adéquate (recommandations
+              KDOQI). Tout patient présentant un KT/V récurramment inférieur doit faire l'objet d'une réévaluation
+              de sa prescription dialytique.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       ÉTAPE 7 — COMPLICATIONS
+  ════════════════════════════════════════════════ -->
+  <div class="step" id="etape7">
+    <div class="step-header">
+      <div class="step-num">7</div>
+      <div>
+        <h2>Complications</h2>
+        <div class="step-desc">Menu : <span class="path">Complications (action-586)</span> — liste et détail</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Le module Complications centralise toutes les complications signalées par les infirmières en cours de séance.
+         En tant que médecin, vous pouvez les consulter, y ajouter vos observations cliniques et suivre leur résolution.</p>
+
+      <div class="sub-section-title">Liste des complications</div>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span>Depuis le menu principal, accédez à <span class="path">Complications</span> (action-586)</span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>La liste affiche les <strong>13 complications</strong> enregistrées, triées par date décroissante</span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>Utilisez les filtres pour afficher uniquement les statuts <code>Non résolue</code> ou filtrer par type de complication</span>
+        </li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/complications_liste.png"
+             alt="Liste des complications"
+             class="screenshot">
+        <div class="caption">Liste des complications — 13 entrées, filtrables par type et statut de résolution</div>
+      </div>
+
+      <div class="sub-section-title">Détail d'une complication</div>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">4</span>
+          <span>Cliquez sur une ligne pour ouvrir le formulaire de détail</span>
+        </li>
+        <li>
+          <span class="step-dot">5</span>
+          <span>Exemple : Séance <code>DP033</code> — Type <code>Hypotension</code> — survenue le <code>7 Juin à 10:20</code></span>
+        </li>
+        <li>
+          <span class="step-dot">6</span>
+          <span>Action infirmière consignée : <code>Administration NaCl 0.9 %</code></span>
+        </li>
+        <li>
+          <span class="step-dot">7</span>
+          <span>Statut de résolution : <span class="badge badge-yellow">Partiellement résolue</span></span>
+        </li>
+        <li>
+          <span class="step-dot">8</span>
+          <span>Ajoutez votre note médicale dans le champ prévu, puis <kbd>Enregistrer</kbd></span>
+        </li>
+      </ol>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/complications_detail.png"
+             alt="Détail complication — Hypotension DP033"
+             class="screenshot">
+        <div class="caption">Fiche complication DP033 — Hypotension · Action : NaCl 0.9 % · Résolution partielle</div>
+      </div>
+
+      <div class="warn">
+        <span class="callout-icon">⚠️</span>
+        <span>Une complication <strong>Non résolue</strong> reste signalée en rouge dans le dashboard jusqu'à
+              mise à jour par l'équipe médicale. Elle doit être traitée avant la prochaine séance du patient
+              concerné pour assurer sa sécurité.</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>
+    <a href="index.html">← Retour au portail des guides</a>
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    Guide Médecin Néphrologue — Module HMS Néphro &nbsp;|&nbsp; <strong>As-Shafi Medical</strong> &nbsp;|&nbsp; 2026
+  </p>
+</footer>
+
+</body>
+</html>

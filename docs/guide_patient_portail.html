@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide Patient — Portail HMS Néphro | As-Shafi Medical</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, Arial, sans-serif; background: #f0f4f8; color: #2d3748; line-height: 1.6; }
+
+  /* ─── HEADER ─── */
+  header { background: linear-gradient(135deg, #1a202c 0%, #2d3748 60%, #3d4e63 100%); color: white; padding: 0; }
+  .header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 2rem; background: rgba(0,0,0,0.22);
+    font-size: 0.83rem; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .header-top a { color: rgba(255,255,255,0.75); text-decoration: none; }
+  .header-top a:hover { color: #90cdf4; }
+  .header-content { padding: 2rem 3rem 2.5rem; }
+  .role-pill {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(144,205,244,0.18); border: 1px solid rgba(144,205,244,0.35);
+    border-radius: 20px; padding: 0.2rem 0.9rem; font-size: 0.8rem;
+    margin-bottom: 0.8rem; letter-spacing: 0.03em; text-transform: uppercase; color: #90cdf4;
+  }
+  header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.3px; }
+  header h1 span { color: #90cdf4; }
+  header .sub { margin-top: 0.4rem; opacity: 0.82; font-size: 0.97rem; }
+
+  /* ─── MAIN ─── */
+  main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+  /* ─── INTRO BOX ─── */
+  .intro-box {
+    background: #ebf8ff; border: 1px solid #bee3f8;
+    border-left: 5px solid #3182ce; border-radius: 10px;
+    padding: 1.3rem 1.5rem; margin-bottom: 2rem;
+  }
+  .intro-box .intro-role { font-weight: 700; color: #2b6cb0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+  .intro-box p { font-size: 0.95rem; color: #2c5282; line-height: 1.7; }
+  .login-block {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: #1a365d; color: #90cdf4; border-radius: 8px;
+    padding: 0.5rem 1rem; font-family: 'Courier New', monospace;
+    font-size: 0.88rem; margin-top: 0.8rem;
+  }
+  .login-block .sep { color: rgba(255,255,255,0.3); }
+
+  /* ─── TOC ─── */
+  .toc {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 1rem 1.4rem; margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .toc-label { font-size: 0.8rem; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
+  .toc-items { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .toc-item {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: #edf2f7; border-radius: 20px; padding: 0.25rem 0.75rem;
+    font-size: 0.82rem; color: #4a5568; text-decoration: none; transition: background 0.15s;
+  }
+  .toc-item:hover { background: #bee3f8; color: #2b6cb0; }
+  .toc-item .num {
+    background: #4299e1; color: white; width: 18px; height: 18px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+  }
+
+  /* ─── STEP ─── */
+  .step {
+    background: white; border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem; overflow: hidden;
+  }
+  .step-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.2rem 1.6rem;
+    background: linear-gradient(to right, #f7fafc, #fff);
+    border-bottom: 1px solid #edf2f7;
+  }
+  .step-num {
+    background: #4299e1; color: white; width: 38px; height: 38px;
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1rem; flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(66,153,225,0.35);
+  }
+  .step-header h2 { font-size: 1.12rem; font-weight: 700; color: #1a202c; }
+  .step-header .step-desc { font-size: 0.82rem; color: #718096; margin-top: 0.15rem; }
+
+  .step-body { padding: 1.5rem 1.6rem; }
+  .step-body p { line-height: 1.75; color: #4a5568; margin-bottom: 0.9rem; font-size: 0.95rem; }
+  .step-body p:last-child { margin-bottom: 0; }
+
+  /* ─── INSTRUCTIONS ─── */
+  .instructions { list-style: none; margin: 0.5rem 0 1rem; }
+  .instructions li {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    padding: 0.45rem 0; font-size: 0.93rem; color: #4a5568;
+    border-bottom: 1px solid #f7fafc;
+  }
+  .instructions li:last-child { border-bottom: none; }
+  .instructions .step-dot {
+    background: #ebf8ff; color: #3182ce; border-radius: 50%;
+    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; flex-shrink: 0; margin-top: 0.1rem;
+  }
+  kbd {
+    display: inline-block; background: #4299e1; color: white; border-radius: 5px;
+    padding: 0.1rem 0.5rem; font-size: 0.82em; font-family: inherit;
+    font-weight: 600; white-space: nowrap;
+  }
+  code {
+    background: #edf2f7; color: #2d3748; border-radius: 4px;
+    padding: 0.05rem 0.4rem; font-family: 'Courier New', monospace; font-size: 0.87em;
+  }
+  .path { color: #3182ce; font-weight: 600; }
+  .url-tag {
+    display: inline-block; background: #1a365d; color: #90cdf4; border-radius: 6px;
+    padding: 0.15rem 0.6rem; font-family: 'Courier New', monospace; font-size: 0.85em;
+    margin-left: 0.2rem;
+  }
+
+  /* ─── SCREENSHOT ─── */
+  .screenshot-wrap { margin-top: 1.2rem; }
+  .screenshot {
+    max-width: 100%; border-radius: 8px; display: block;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 1.5rem 0;
+    border: 1px solid #e2e8f0;
+  }
+  .caption { text-align: center; font-size: 0.8rem; color: #a0aec0; margin-top: -1rem; margin-bottom: 1rem; font-style: italic; }
+
+  /* ─── DASHBOARD CARDS ─── */
+  .dashboard-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 0.8rem; margin: 1rem 0;
+  }
+  .dash-card {
+    background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 1rem; text-align: center;
+  }
+  .dash-card .dc-label { font-size: 0.75rem; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+  .dash-card .dc-value { font-size: 1.1rem; font-weight: 700; color: #2d3748; }
+  .dash-card .dc-sub { font-size: 0.78rem; color: #718096; margin-top: 0.2rem; }
+  .dash-card.highlight { border-color: #bee3f8; background: #ebf8ff; }
+  .dash-card.highlight .dc-value { color: #2b6cb0; }
+  .dash-card.warning { border-color: #fbd38d; background: #fffbeb; }
+  .dash-card.warning .dc-value { color: #c05621; }
+
+  /* ─── NAV LINKS ─── */
+  .nav-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+  .nav-link {
+    background: #edf2f7; border: 1px solid #e2e8f0; border-radius: 8px;
+    padding: 0.4rem 0.9rem; font-size: 0.85rem; color: #4a5568;
+    text-decoration: none; display: inline-block;
+  }
+  .nav-link:hover { background: #bee3f8; color: #2b6cb0; border-color: #bee3f8; }
+
+  /* ─── DATA TABLE ─── */
+  .data-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+  .data-table th { background: #4299e1; color: white; padding: 0.6rem 0.9rem; text-align: left; font-weight: 600; }
+  .data-table th:first-child { border-radius: 6px 0 0 0; }
+  .data-table th:last-child  { border-radius: 0 6px 0 0; }
+  .data-table td { padding: 0.55rem 0.9rem; border-bottom: 1px solid #edf2f7; color: #4a5568; }
+  .data-table tr:hover td { background: #f7fafc; }
+  .badge-good { background: #c6f6d5; color: #276749; border-radius: 12px; padding: 0.1rem 0.6rem; font-size: 0.78rem; font-weight: 600; }
+  .badge-none { background: #edf2f7; color: #a0aec0; border-radius: 12px; padding: 0.1rem 0.6rem; font-size: 0.78rem; }
+  .btn-detail { background: #4299e1; color: white; border-radius: 5px; padding: 0.15rem 0.6rem; font-size: 0.78rem; font-weight: 600; white-space: nowrap; }
+
+  /* ─── SECTION NAV ─── */
+  .section-nav {
+    background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 1rem 1.2rem; margin: 1rem 0;
+  }
+  .section-nav h4 { font-size: 0.82rem; font-weight: 700; color: #718096; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.7rem; }
+  .section-nav-rows { display: flex; flex-direction: column; gap: 0.5rem; }
+  .snr { display: flex; align-items: center; gap: 0.8rem; }
+  .snr .snr-url { font-family: 'Courier New', monospace; font-size: 0.85rem; color: #3182ce; font-weight: 600; min-width: 160px; }
+  .snr .snr-desc { font-size: 0.88rem; color: #4a5568; }
+  .snr .snr-note { font-size: 0.78rem; color: #a0aec0; margin-left: auto; }
+
+  /* ─── CALLOUTS ─── */
+  .tip, .warn, .info {
+    border-radius: 8px; padding: 0.85rem 1rem 0.85rem 1.1rem; margin-top: 1rem;
+    font-size: 0.9rem; line-height: 1.65; display: flex; gap: 0.6rem; align-items: flex-start;
+  }
+  .tip  { background: #f0fff4; border-left: 3px solid #38a169; color: #276749; }
+  .warn { background: #fffbeb; border-left: 3px solid #d69e2e; color: #744210; }
+  .info { background: #ebf8ff; border-left: 3px solid #3182ce; color: #2b6cb0; }
+  .callout-icon { flex-shrink: 0; font-size: 1rem; margin-top: 0.05rem; font-style: normal; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center; padding: 2rem; color: #a0aec0;
+    font-size: 0.83rem; border-top: 1px solid #e2e8f0; margin-top: 2rem;
+    background: white;
+  }
+  footer a { color: #4299e1; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <a href="index.html">← Retour au portail des guides</a>
+    <span>As-Shafi Medical — HMS Néphro</span>
+  </div>
+  <div class="header-content">
+    <div class="role-pill">Patient — Portail Web</div>
+    <h1>Guide Patient — <span>Portail en ligne</span></h1>
+    <p class="sub">Séances de dialyse · Bilans biologiques · Rendez-vous · Ordonnances · Factures</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro-box">
+    <div class="intro-role">Votre portail patient</div>
+    <p>Le portail patient vous permet de consulter en toute autonomie vos informations médicales :
+       suivi de vos séances de dialyse, résultats biologiques, rendez-vous, ordonnances et
+       état de vos factures — le tout depuis votre navigateur, sans passer par le secrétariat.</p>
+    <div class="login-block">
+      <span>patient@nephro.test</span>
+      <span class="sep">|</span>
+      <span>Nephro2024!</span>
+      <span class="sep">|</span>
+      <span>http://localhost:8069/my/nephro</span>
+    </div>
+  </div>
+
+  <nav class="toc">
+    <span class="toc-label">Sections</span>
+    <div class="toc-items">
+      <a class="toc-item" href="#sec1"><span class="num">1</span> Connexion</a>
+      <a class="toc-item" href="#sec2"><span class="num">2</span> Tableau de bord</a>
+      <a class="toc-item" href="#sec3"><span class="num">3</span> Séances</a>
+      <a class="toc-item" href="#sec4"><span class="num">4</span> Bilans</a>
+      <a class="toc-item" href="#sec5"><span class="num">5</span> Autres sections</a>
+    </div>
+  </nav>
+
+  <!-- ═══ SECTION 1 ═══ -->
+  <div class="step" id="sec1">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <h2>Connexion au portail patient</h2>
+        <div class="step-desc">URL : <span class="path">http://localhost:8069/web/login</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Le portail patient est accessible depuis n'importe quel navigateur moderne, sur ordinateur
+         ou sur téléphone mobile. Vous n'avez besoin que de votre adresse e-mail et de votre mot de passe
+         communiqués par le secrétariat lors de votre inscription.</p>
+
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Ouvrez votre navigateur et accédez à <code>http://localhost:8069/web/login</code></span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Saisissez votre adresse e-mail et votre mot de passe dans les champs correspondants</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Cliquez sur <kbd>Se connecter</kbd> — vous êtes redirigé vers votre espace personnel <code>/my</code></span>
+        </li>
+        <li>
+          <span class="step-dot">d</span>
+          <span>Pour accéder directement à votre tableau de bord néphro, naviguez vers <code>/my/nephro</code></span>
+        </li>
+      </ol>
+
+      <div class="info">
+        <span class="callout-icon">i</span>
+        <span>Votre compte est de type <strong>utilisateur portail</strong>. Vous n'avez accès qu'à vos propres
+              données médicales — aucune information d'autres patients n'est visible depuis votre espace.</span>
+      </div>
+
+      <div class="warn">
+        <span class="callout-icon">!</span>
+        <span>En cas de perte de votre mot de passe, cliquez sur le lien <strong>Mot de passe oublié</strong>
+              sur la page de connexion, ou contactez le secrétariat de l'hôpital pour une réinitialisation.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2 ═══ -->
+  <div class="step" id="sec2">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div>
+        <h2>Tableau de bord patient</h2>
+        <div class="step-desc">URL : <span class="path">/my/nephro</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Votre tableau de bord vous offre une vue synthétique de votre suivi médical. Quatre cartes
+         résument les informations clés, et une barre de navigation rapide donne accès à toutes
+         les sections détaillées.</p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/portail_dashboard.png" alt="Tableau de bord patient" class="screenshot">
+        <div class="caption">Tableau de bord patient — vue <code>/my/nephro</code></div>
+      </div>
+
+      <p>Cartes de résumé affichées :</p>
+      <div class="dashboard-grid">
+        <div class="dash-card highlight">
+          <div class="dc-label">Prochain RDV</div>
+          <div class="dc-value">12/06 00:00</div>
+          <div class="dc-sub">Rendez-vous planifié</div>
+        </div>
+        <div class="dash-card">
+          <div class="dc-label">Dernier bilan</div>
+          <div class="dc-value">Hb 10.2 g/dL</div>
+          <div class="dc-sub">Hémoglobine</div>
+        </div>
+        <div class="dash-card warning">
+          <div class="dc-label">Solde</div>
+          <div class="dc-value">86 250 MAD</div>
+          <div class="dc-sub">En attente de paiement</div>
+        </div>
+        <div class="dash-card">
+          <div class="dc-label">Ordonnances</div>
+          <div class="dc-value">1 active</div>
+          <div class="dc-sub">Traitement en cours</div>
+        </div>
+      </div>
+
+      <p>Navigation rapide disponible :</p>
+      <div class="nav-links">
+        <a class="nav-link" href="#sec3">Mes séances</a>
+        <a class="nav-link" href="#sec4">Mes bilans</a>
+        <a class="nav-link" href="#sec5">Mes RDV</a>
+        <a class="nav-link" href="#sec5">Mes ordonnances</a>
+        <a class="nav-link" href="#sec5">Mes factures</a>
+      </div>
+
+      <div class="tip">
+        <span class="callout-icon">i</span>
+        <span>Le tableau de bord est la page d'accueil recommandée. Enregistrez <code>/my/nephro</code>
+              dans les favoris de votre navigateur pour y accéder en un clic après chaque connexion.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3 ═══ -->
+  <div class="step" id="sec3">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div>
+        <h2>Mes séances de dialyse</h2>
+        <div class="step-desc">URL : <span class="path">/my/seances</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Cette section affiche l'historique complet de vos séances de dialyse avec leurs paramètres
+         techniques et leur résultat. Vous pouvez consulter le détail de chaque séance en cliquant
+         sur le bouton <strong>Détail</strong> de la ligne correspondante.</p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/portail_seances.png" alt="Liste des séances de dialyse" class="screenshot">
+        <div class="caption">Liste des séances de dialyse — vue <code>/my/seances</code></div>
+      </div>
+
+      <p>Exemple de données affichées (séances du 7 au 12 juin 2026) :</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Durée</th>
+            <th>Efficacité</th>
+            <th>UF retirée</th>
+            <th>Tolérance</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>12/06/2026</td>
+            <td>4h00</td>
+            <td>Kt/V 1.4</td>
+            <td>2.5 L</td>
+            <td><span class="badge-good">Bonne</span></td>
+            <td><span class="btn-detail">Détail</span></td>
+          </tr>
+          <tr>
+            <td>10/06/2026</td>
+            <td>4h00</td>
+            <td>Kt/V 1.3</td>
+            <td>2.2 L</td>
+            <td><span class="badge-good">Bonne</span></td>
+            <td><span class="btn-detail">Détail</span></td>
+          </tr>
+          <tr>
+            <td>08/06/2026</td>
+            <td>4h00</td>
+            <td>—</td>
+            <td>—</td>
+            <td><span class="badge-none">—</span></td>
+            <td><span class="btn-detail">Détail</span></td>
+          </tr>
+          <tr>
+            <td>07/06/2026</td>
+            <td>4h00</td>
+            <td>Kt/V 1.2</td>
+            <td>1.8 L</td>
+            <td><span class="badge-good">Bonne</span></td>
+            <td><span class="btn-detail">Détail</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Signification des colonnes :</p>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">i</span>
+          <span><strong>Durée</strong> — durée effective de la séance de dialyse</span>
+        </li>
+        <li>
+          <span class="step-dot">i</span>
+          <span><strong>Efficacité (Kt/V)</strong> — indicateur d'épuration rénale ; une valeur supérieure à 1.2 est considérée comme satisfaisante</span>
+        </li>
+        <li>
+          <span class="step-dot">i</span>
+          <span><strong>UF retirée</strong> — volume de liquide retiré pendant la séance (ultrafiltration)</span>
+        </li>
+        <li>
+          <span class="step-dot">i</span>
+          <span><strong>Tolérance</strong> — appréciation clinique de la séance par l'infirmière</span>
+        </li>
+      </ol>
+
+      <div class="info">
+        <span class="callout-icon">i</span>
+        <span>Cliquez sur <strong>Détail</strong> pour accéder à la fiche complète d'une séance :
+              paramètres machine, constantes infirmières, observations, complications éventuelles.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4 ═══ -->
+  <div class="step" id="sec4">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div>
+        <h2>Mes bilans biologiques</h2>
+        <div class="step-desc">URL : <span class="path">/my/bilans</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>La section bilans regroupe tous vos résultats d'analyses biologiques. Un graphique d'évolution
+         en haut de page vous permet de visualiser les tendances sur les 6 derniers mois,
+         et le tableau liste chaque bilan avec ses valeurs clés.</p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/portail_bilans.png" alt="Bilans biologiques - graphique et tableau" class="screenshot">
+        <div class="caption">Bilans biologiques — graphique d'évolution (6 mois) et tableau détaillé</div>
+      </div>
+
+      <p>Structure de la page :</p>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span><strong>Graphique d'évolution</strong> (haut de page) — courbes Hb, K et P sur les 6 derniers mois pour suivre les tendances</span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span><strong>Tableau des bilans</strong> — liste chronologique avec les colonnes : Date, Type, Hb, K, P</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Cliquez sur <kbd>Détail</kbd> pour accéder à l'ensemble des valeurs d'un bilan (créatinine, urée, calcium, phosphore complet…)</span>
+        </li>
+      </ol>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Hb (g/dL)</th>
+            <th>K (mmol/L)</th>
+            <th>P (mmol/L)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>05/06/2026</td>
+            <td><code>monthly</code></td>
+            <td>10.2</td>
+            <td>4.8</td>
+            <td>1.6</td>
+            <td><span class="btn-detail">Détail</span></td>
+          </tr>
+          <tr>
+            <td>12/05/2026</td>
+            <td><code>punctual</code></td>
+            <td>9.8</td>
+            <td>5.1</td>
+            <td>1.9</td>
+            <td><span class="btn-detail">Détail</span></td>
+          </tr>
+          <tr>
+            <td>05/04/2026</td>
+            <td><code>monthly</code></td>
+            <td>10.5</td>
+            <td>4.5</td>
+            <td>1.5</td>
+            <td><span class="btn-detail">Détail</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>Signification des valeurs biologiques surveillées :</p>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">i</span>
+          <span><strong>Hb (Hémoglobine)</strong> — indicateur d'anémie ; valeur cible en dialyse : 10–12 g/dL</span>
+        </li>
+        <li>
+          <span class="step-dot">i</span>
+          <span><strong>K (Potassium)</strong> — électrolyte critique ; un taux trop élevé (hyperkaliémie) peut être dangereux</span>
+        </li>
+        <li>
+          <span class="step-dot">i</span>
+          <span><strong>P (Phosphore)</strong> — doit être contrôlé pour éviter les complications osseuses et cardiovasculaires</span>
+        </li>
+      </ol>
+
+      <div class="warn">
+        <span class="callout-icon">!</span>
+        <span>Les valeurs biologiques affichées sont fournies à titre informatif. Ne modifiez jamais votre
+              traitement vous-même en fonction de ces résultats. Consultez toujours votre médecin néphrologue
+              pour toute décision médicale.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5 ═══ -->
+  <div class="step" id="sec5">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      <div>
+        <h2>Autres sections disponibles</h2>
+        <div class="step-desc">RDV · Ordonnances · Factures</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>En plus des séances et des bilans, votre portail donne accès à trois autres sections
+         pour gérer votre suivi administratif et médical en autonomie.</p>
+
+      <div class="section-nav">
+        <h4>Pages disponibles</h4>
+        <div class="section-nav-rows">
+          <div class="snr">
+            <span class="snr-url">/my/rdv</span>
+            <span class="snr-desc">Mes rendez-vous médicaux</span>
+            <span class="snr-note">Annulation possible</span>
+          </div>
+          <div class="snr">
+            <span class="snr-url">/my/ordonnances</span>
+            <span class="snr-desc">Mes ordonnances actives</span>
+            <span class="snr-note">PRO001 visible</span>
+          </div>
+          <div class="snr">
+            <span class="snr-url">/my/factures</span>
+            <span class="snr-desc">Mes factures et solde</span>
+            <span class="snr-note">Téléchargement PDF</span>
+          </div>
+        </div>
+      </div>
+
+      <p><strong>Mes rendez-vous</strong> — <span class="url-tag">/my/rdv</span></p>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Consultez la liste de vos rendez-vous planifiés avec la date, l'heure et le médecin concerné</span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Cliquez sur <kbd>Annuler</kbd> pour annuler un rendez-vous — cette action est irréversible depuis le portail</span>
+        </li>
+      </ol>
+
+      <p style="margin-top:1.2rem;"><strong>Mes ordonnances</strong> — <span class="url-tag">/my/ordonnances</span></p>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Liste de vos ordonnances actives — l'ordonnance <code>PRO001</code> est actuellement visible</span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Cliquez sur une ordonnance pour voir le détail des médicaments prescrits, posologies et durée</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Vous pouvez télécharger l'ordonnance au format PDF pour la présenter en pharmacie</span>
+        </li>
+      </ol>
+
+      <p style="margin-top:1.2rem;"><strong>Mes factures</strong> — <span class="url-tag">/my/factures</span></p>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Consultez l'état de chaque facture : montant, statut (brouillon / confirmée / payée) et date d'échéance</span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Votre solde total en attente est affiché en haut de la page</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Cliquez sur une facture pour la consulter en détail ou la télécharger en PDF</span>
+        </li>
+      </ol>
+
+      <div class="info">
+        <span class="callout-icon">i</span>
+        <span>Pour toute question sur une facture ou un paiement, contactez directement le service facturation
+              par téléphone ou en vous présentant au guichet. Le portail est un outil de consultation —
+              les paiements s'effectuent auprès du service compétent.</span>
+      </div>
+
+      <div class="tip">
+        <span class="callout-icon">i</span>
+        <span>Si une section affiche un message <em>"Aucune donnée disponible"</em>, cela signifie que votre
+              dossier ne contient pas encore d'enregistrement pour cette catégorie, ou que votre médecin
+              n'a pas encore saisi les informations dans le système.</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p><strong>© 2026 As-Shafi Medical</strong> — <a href="index.html">Retour à l'index des guides</a></p>
+  <p style="margin-top:0.4rem; opacity:0.7;">HMS Néphro · Odoo 19 · Guide Patient — Portail Web</p>
+</footer>
+
+</body>
+</html>

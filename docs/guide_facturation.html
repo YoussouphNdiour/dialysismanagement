@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide Facturation Dialyse — HMS Néphro | As-Shafi Medical</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, Arial, sans-serif; background: #f0f4f8; color: #2d3748; line-height: 1.6; }
+
+  /* ─── HEADER ─── */
+  header { background: linear-gradient(135deg, #1a202c 0%, #2d3748 60%, #3d4e63 100%); color: white; padding: 0; }
+  .header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 2rem; background: rgba(0,0,0,0.22);
+    font-size: 0.83rem; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .header-top a { color: rgba(255,255,255,0.75); text-decoration: none; }
+  .header-top a:hover { color: #90cdf4; }
+  .header-content { padding: 2rem 3rem 2.5rem; }
+  .role-pill {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(144,205,244,0.18); border: 1px solid rgba(144,205,244,0.35);
+    border-radius: 20px; padding: 0.2rem 0.9rem; font-size: 0.8rem;
+    margin-bottom: 0.8rem; letter-spacing: 0.03em; text-transform: uppercase; color: #90cdf4;
+  }
+  header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.3px; }
+  header h1 span { color: #90cdf4; }
+  header .sub { margin-top: 0.4rem; opacity: 0.82; font-size: 0.97rem; }
+
+  /* ─── MAIN ─── */
+  main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+  /* ─── INTRO BOX ─── */
+  .intro-box {
+    background: #ebf8ff; border: 1px solid #bee3f8;
+    border-left: 5px solid #3182ce; border-radius: 10px;
+    padding: 1.3rem 1.5rem; margin-bottom: 2rem;
+  }
+  .intro-box .intro-role { font-weight: 700; color: #2b6cb0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+  .intro-box p { font-size: 0.95rem; color: #2c5282; line-height: 1.7; }
+  .login-block {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: #1a365d; color: #90cdf4; border-radius: 8px;
+    padding: 0.5rem 1rem; font-family: 'Courier New', monospace;
+    font-size: 0.88rem; margin-top: 0.8rem;
+  }
+  .login-block .sep { color: rgba(255,255,255,0.3); }
+
+  /* ─── NAV BAR ─── */
+  .nav-bar {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 0.75rem 1.2rem; margin-bottom: 1.5rem;
+    display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;
+  }
+  .nav-bar .nav-label { font-size: 0.78rem; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 0.3rem; }
+  .nav-btn {
+    background: #edf2f7; color: #4a5568; border-radius: 6px; padding: 0.25rem 0.7rem;
+    font-size: 0.8rem; white-space: nowrap; border: 1px solid #e2e8f0;
+  }
+  .nav-btn.active { background: #4299e1; color: white; border-color: #4299e1; }
+
+  /* ─── TOC ─── */
+  .toc {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 1rem 1.4rem; margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .toc-label { font-size: 0.8rem; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
+  .toc-items { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .toc-item {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: #edf2f7; border-radius: 20px; padding: 0.25rem 0.75rem;
+    font-size: 0.82rem; color: #4a5568; text-decoration: none; transition: background 0.15s;
+  }
+  .toc-item:hover { background: #bee3f8; color: #2b6cb0; }
+  .toc-item .num {
+    background: #4299e1; color: white; width: 18px; height: 18px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+  }
+
+  /* ─── STEP ─── */
+  .step {
+    background: white; border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem; overflow: hidden;
+  }
+  .step-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.2rem 1.6rem;
+    background: linear-gradient(to right, #f7fafc, #fff);
+    border-bottom: 1px solid #edf2f7;
+  }
+  .step-num {
+    background: #4299e1; color: white; width: 38px; height: 38px;
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1rem; flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(66,153,225,0.35);
+  }
+  .step-header h2 { font-size: 1.12rem; font-weight: 700; color: #1a202c; }
+  .step-header .step-desc { font-size: 0.82rem; color: #718096; margin-top: 0.15rem; }
+
+  .step-body { padding: 1.5rem 1.6rem; }
+  .step-body p { line-height: 1.75; color: #4a5568; margin-bottom: 0.9rem; font-size: 0.95rem; }
+  .step-body p:last-child { margin-bottom: 0; }
+
+  /* ─── INSTRUCTIONS ─── */
+  .instructions { list-style: none; margin: 0.5rem 0 1rem; }
+  .instructions li {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    padding: 0.45rem 0; font-size: 0.93rem; color: #4a5568;
+    border-bottom: 1px solid #f7fafc;
+  }
+  .instructions li:last-child { border-bottom: none; }
+  .instructions .step-dot {
+    background: #ebf8ff; color: #3182ce; border-radius: 50%;
+    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; flex-shrink: 0; margin-top: 0.1rem;
+  }
+  kbd {
+    display: inline-block; background: #4299e1; color: white; border-radius: 5px;
+    padding: 0.1rem 0.5rem; font-size: 0.82em; font-family: inherit;
+    font-weight: 600; white-space: nowrap;
+  }
+  kbd.green { background: #38a169; }
+  kbd.gray  { background: #718096; }
+  code {
+    background: #edf2f7; color: #2d3748; border-radius: 4px;
+    padding: 0.05rem 0.4rem; font-family: 'Courier New', monospace; font-size: 0.87em;
+  }
+  .path { color: #3182ce; font-weight: 600; }
+
+  /* ─── SCREENSHOT ─── */
+  .screenshot-wrap { margin-top: 1.2rem; }
+  .screenshot {
+    max-width: 100%; border-radius: 8px; display: block;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 1.5rem 0;
+    border: 1px solid #e2e8f0;
+  }
+  .caption { text-align: center; font-size: 0.8rem; color: #a0aec0; margin-top: -1rem; margin-bottom: 1rem; font-style: italic; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.2rem; }
+  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ─── STATUS FLOW ─── */
+  .status-flow { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin: 1rem 0; }
+  .sf-box {
+    border-radius: 8px; padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 700;
+    text-align: center; min-width: 80px;
+  }
+  .sf-draft  { background: #edf2f7; color: #4a5568; border: 1px solid #e2e8f0; }
+  .sf-posted { background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; }
+  .sf-paid   { background: #c6f6d5; color: #276749; border: 1px solid #9ae6b4; }
+  .sf-arrow  { color: #a0aec0; font-size: 1.2rem; }
+
+  /* ─── BUTTON ROW ─── */
+  .btn-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.8rem 0; }
+  .btn-sim {
+    border-radius: 6px; padding: 0.3rem 0.8rem; font-size: 0.82rem; font-weight: 600;
+    border: 1px solid transparent; cursor: default;
+  }
+  .btn-primary { background: #4299e1; color: white; }
+  .btn-success { background: #38a169; color: white; }
+  .btn-outline { background: white; color: #4a5568; border-color: #e2e8f0; }
+  .btn-danger  { background: #fff5f5; color: #c53030; border-color: #fed7d7; }
+
+  /* ─── CALLOUTS ─── */
+  .tip, .warn, .info {
+    border-radius: 8px; padding: 0.85rem 1rem 0.85rem 1.1rem; margin-top: 1rem;
+    font-size: 0.9rem; line-height: 1.65; display: flex; gap: 0.6rem; align-items: flex-start;
+  }
+  .tip  { background: #f0fff4; border-left: 3px solid #38a169; color: #276749; }
+  .warn { background: #fffbeb; border-left: 3px solid #d69e2e; color: #744210; }
+  .info { background: #ebf8ff; border-left: 3px solid #3182ce; color: #2b6cb0; }
+  .callout-icon { flex-shrink: 0; font-size: 1rem; margin-top: 0.05rem; font-style: normal; }
+
+  /* ─── TABLE ─── */
+  .data-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+  .data-table th { background: #4299e1; color: white; padding: 0.6rem 0.9rem; text-align: left; font-weight: 600; }
+  .data-table th:first-child { border-radius: 6px 0 0 0; }
+  .data-table th:last-child  { border-radius: 0 6px 0 0; }
+  .data-table td { padding: 0.55rem 0.9rem; border-bottom: 1px solid #edf2f7; color: #4a5568; }
+  .data-table tr:hover td { background: #f7fafc; }
+  .amount { font-weight: 700; color: #2d3748; font-family: 'Courier New', monospace; }
+
+  /* ─── WIZARD BOX ─── */
+  .wizard-box {
+    background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 1.2rem 1.4rem; margin: 1rem 0;
+  }
+  .wizard-box h4 { font-size: 0.88rem; font-weight: 700; color: #4a5568; margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .wizard-field { display: flex; gap: 1rem; align-items: center; margin-bottom: 0.5rem; font-size: 0.88rem; }
+  .wizard-field .wf-label { color: #718096; width: 120px; flex-shrink: 0; }
+  .wizard-field .wf-val { color: #2d3748; font-weight: 600; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center; padding: 2rem; color: #a0aec0;
+    font-size: 0.83rem; border-top: 1px solid #e2e8f0; margin-top: 2rem;
+    background: white;
+  }
+  footer a { color: #4299e1; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <a href="index.html">← Retour au portail des guides</a>
+    <span>As-Shafi Medical — HMS Néphro</span>
+  </div>
+  <div class="header-content">
+    <div class="role-pill">Agent de Facturation</div>
+    <h1>Guide Utilisateur — <span>Facturation</span></h1>
+    <p class="sub">Factures dialyse · Paiements · Assureurs · Rapports mensuels</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro-box">
+    <div class="intro-role">Votre rôle</div>
+    <p>En tant qu'agent de facturation, vous gérez l'ensemble du cycle de facturation des séances de dialyse :
+       création des factures, confirmation, enregistrement des paiements, gestion des dossiers assureurs
+       et production des rapports financiers mensuels.</p>
+    <div class="login-block">
+      <span>facturation@nephro.test</span>
+      <span class="sep">|</span>
+      <span>Nephro2024!</span>
+      <span class="sep">|</span>
+      <span>http://localhost:8069</span>
+    </div>
+  </div>
+
+  <nav class="toc">
+    <span class="toc-label">Sections</span>
+    <div class="toc-items">
+      <a class="toc-item" href="#sec1"><span class="num">1</span> Vue d'ensemble</a>
+      <a class="toc-item" href="#sec2"><span class="num">2</span> Créer une facture</a>
+      <a class="toc-item" href="#sec3"><span class="num">3</span> Confirmer</a>
+      <a class="toc-item" href="#sec4"><span class="num">4</span> Paiement</a>
+      <a class="toc-item" href="#sec5"><span class="num">5</span> Assureurs</a>
+      <a class="toc-item" href="#sec6"><span class="num">6</span> Tarifs</a>
+      <a class="toc-item" href="#sec7"><span class="num">7</span> Rapport mensuel</a>
+      <a class="toc-item" href="#sec8"><span class="num">8</span> Soldes &amp; groupée</a>
+    </div>
+  </nav>
+
+  <!-- ═══ SECTION 1 ═══ -->
+  <div class="step" id="sec1">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <h2>Vue d'ensemble de l'interface facturation</h2>
+        <div class="step-desc">Accès automatique via <span class="path">Factures Dialyse</span> (action-581) après connexion</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Dès votre connexion, vous êtes redirigé vers le module <strong>Factures Dialyse</strong>.
+         La barre de navigation en haut de page donne accès à toutes les fonctionnalités de facturation.</p>
+
+      <div class="nav-bar">
+        <span class="nav-label">Menu :</span>
+        <span class="nav-btn active">Séances non facturées</span>
+        <span class="nav-btn">Toutes les factures</span>
+        <span class="nav-btn">Dossiers assureurs</span>
+        <span class="nav-btn">Soldes patients</span>
+        <span class="nav-btn">Facturation groupée</span>
+        <span class="nav-btn">Rapports</span>
+        <span class="nav-btn">Configuration</span>
+      </div>
+
+      <p>Cycle de vie complet d'une facture dialyse :</p>
+      <div class="status-flow">
+        <div class="sf-box sf-draft">Draft<br><small style="font-weight:400">Brouillon</small></div>
+        <span class="sf-arrow">→</span>
+        <div class="sf-box sf-posted">Posted<br><small style="font-weight:400">Confirmée</small></div>
+        <span class="sf-arrow">→</span>
+        <div class="sf-box sf-paid">Paid<br><small style="font-weight:400">Payée</small></div>
+      </div>
+
+      <div class="info">
+        <span class="callout-icon">i</span>
+        <span>La section <strong>Séances non facturées</strong> est votre tableau de bord opérationnel quotidien :
+              elle liste toutes les séances terminées qui n'ont pas encore été facturées et qui requièrent votre action.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2 ═══ -->
+  <div class="step" id="sec2">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div>
+        <h2>Créer une facture dialyse</h2>
+        <div class="step-desc">Menu : <span class="path">Toutes les factures &gt; Bouton "New"</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>La création manuelle d'une facture est utile pour les cas particuliers ou les corrections.
+         Dans le flux normal, les factures sont générées automatiquement depuis les séances non facturées.</p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/fac_brouillon.png" alt="Facture dialyse en statut brouillon" class="screenshot">
+        <div class="caption">Formulaire de facture en mode brouillon — champs principaux visibles</div>
+      </div>
+
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Naviguez vers <span class="path">Toutes les factures</span> et cliquez sur <kbd>New</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Sélectionnez le <strong>Customer</strong> (patient) dans le menu déroulant</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Dans l'onglet <strong>Invoice Lines</strong>, cliquez sur <kbd>Add a line</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">d</span>
+          <span>Sélectionnez le produit <code>Séance de dialyse E2E</code> — le prix unitaire <code>15 000 CFA</code> se renseigne automatiquement</span>
+        </li>
+        <li>
+          <span class="step-dot">e</span>
+          <span>Vérifiez les onglets : <strong>Invoice Lines</strong> (lignes), <strong>Other Info</strong> (conditions de paiement), <strong>Hospital Info</strong> (données médicales liées)</span>
+        </li>
+        <li>
+          <span class="step-dot">f</span>
+          <span>Sauvegardez — la facture reste en statut <code>Draft</code> jusqu'à confirmation</span>
+        </li>
+      </ol>
+
+      <div class="warn">
+        <span class="callout-icon">!</span>
+        <span>Une facture en <strong>Draft</strong> peut être modifiée ou supprimée librement.
+              Une fois confirmée (Posted), seul un avoir (Credit Note) permet de l'annuler.
+              Vérifiez le patient et le montant avant de confirmer.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3 ═══ -->
+  <div class="step" id="sec3">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div>
+        <h2>Valider (confirmer) une facture</h2>
+        <div class="step-desc">Bouton <span class="path">Confirm</span> → statut Posted</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>La confirmation transforme le brouillon en facture officielle, lui attribue un numéro séquentiel
+         (ex. <code>INV/2026/00012</code>) et la rend visible dans la comptabilité.</p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/fac_validee.png" alt="Facture confirmée - statut Posted" class="screenshot">
+        <div class="caption">Facture confirmée — statut Posted avec numéro INV/2026/00012</div>
+      </div>
+
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Depuis la facture en statut <code>Draft</code>, cliquez sur le bouton <kbd>Confirm</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>La facture passe au statut <code>Posted</code> et reçoit son numéro officiel (<code>INV/2026/00012</code>)</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Les actions disponibles sont maintenant :</span>
+        </li>
+      </ol>
+
+      <div class="btn-row">
+        <span class="btn-sim btn-primary">Send</span>
+        <span class="btn-sim btn-outline">Send via WhatsApp</span>
+        <span class="btn-sim btn-outline">Print</span>
+        <span class="btn-sim btn-success">Pay</span>
+        <span class="btn-sim btn-outline">Preview</span>
+        <span class="btn-sim btn-danger">Credit Note</span>
+      </div>
+
+      <div class="tip">
+        <span class="callout-icon">i</span>
+        <span>Le bouton <strong>Send</strong> envoie la facture par e-mail au patient.
+              <strong>Send via WhatsApp</strong> génère un lien de partage WhatsApp.
+              Utilisez <strong>Print</strong> pour imprimer un exemplaire papier.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4 ═══ -->
+  <div class="step" id="sec4">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div>
+        <h2>Enregistrer un paiement</h2>
+        <div class="step-desc">Bouton <span class="path">Pay</span> depuis la facture confirmée</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>L'enregistrement du paiement solde la facture et la fait passer au statut <strong>Paid</strong>.
+         Un bandeau vert confirme visuellement le statut et un smart button <strong>Payments 1</strong>
+         apparaît pour accéder au détail du paiement.</p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/fac_payee.png" alt="Facture payée - bandeau vert PAID" class="screenshot">
+        <div class="caption">Facture payée — bandeau vert PAID et smart button Payments 1</div>
+      </div>
+
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Depuis la facture confirmée (<code>Posted</code>), cliquez sur <kbd class="green">Pay</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Un dialog de paiement s'ouvre — renseignez les champs :</span>
+        </li>
+      </ol>
+
+      <div class="wizard-box">
+        <h4>Dialog — Enregistrement du paiement</h4>
+        <div class="wizard-field">
+          <span class="wf-label">Journal</span>
+          <span class="wf-val"><code>Bank</code></span>
+        </div>
+        <div class="wizard-field">
+          <span class="wf-label">Amount</span>
+          <span class="wf-val"><code>15 000 CFA</code></span>
+        </div>
+        <div class="wizard-field">
+          <span class="wf-label">Payment Date</span>
+          <span class="wf-val">Date du jour (modifiable)</span>
+        </div>
+        <div class="wizard-field">
+          <span class="wf-label">Memo</span>
+          <span class="wf-val">Référence libre (ex. <code>INV/2026/00012</code>)</span>
+        </div>
+      </div>
+
+      <ol class="instructions" style="margin-top:0.8rem;">
+        <li>
+          <span class="step-dot">c</span>
+          <span>Cliquez sur <kbd class="green">Create Payment</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">d</span>
+          <span>La facture passe au statut <code>Paid</code> — un bandeau vert <strong>PAID</strong> apparaît en haut</span>
+        </li>
+        <li>
+          <span class="step-dot">e</span>
+          <span>Le smart button <kbd>Payments 1</kbd> permet d'accéder au détail de l'écriture comptable</span>
+        </li>
+      </ol>
+
+      <div class="info">
+        <span class="callout-icon">i</span>
+        <span>Si le patient paie en plusieurs fois, chaque paiement partiel crée un enregistrement distinct
+              dans les Payments. La facture restera en statut <code>In Payment</code> jusqu'au solde complet.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5 ═══ -->
+  <div class="step" id="sec5">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      <div>
+        <h2>Assureurs et dossiers de prise en charge</h2>
+        <div class="step-desc">Menu : <span class="path">Configuration &gt; Assureurs</span> (action-576) · <span class="path">Configuration &gt; Dossiers assureurs</span> (action-577)</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Le module gère les organismes d'assurance et leurs dossiers de prise en charge patients.
+         Chaque assureur peut avoir plusieurs dossiers actifs correspondant à des patients différents.</p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/assureurs.png" alt="Liste des assureurs" class="screenshot">
+        <div class="caption">Liste des assureurs enregistrés dans le système</div>
+      </div>
+
+      <p><strong>Fiche assureur de référence :</strong></p>
+      <table class="data-table">
+        <thead>
+          <tr><th>Champ</th><th>Valeur</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Nom</td><td>Assureur Test</td></tr>
+          <tr><td>Code</td><td><code>ASS-TEST</code></td></tr>
+          <tr><td>Téléphone</td><td>+221 33 000 0000</td></tr>
+          <tr><td>E-mail</td><td>test@assureur.sn</td></tr>
+        </tbody>
+      </table>
+
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Accédez à <span class="path">Configuration &gt; Assureurs</span> pour gérer la liste des assureurs partenaires</span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Cliquez sur <kbd>New</kbd> pour créer un nouvel assureur — renseignez le nom, le code, les coordonnées</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Accédez à <span class="path">Configuration &gt; Dossiers assureurs</span> pour les dossiers de prise en charge</span>
+        </li>
+        <li>
+          <span class="step-dot">d</span>
+          <span>Chaque dossier lie un <strong>Patient</strong> à un <strong>Assureur</strong> avec un taux de couverture et une période de validité</span>
+        </li>
+      </ol>
+
+      <div class="tip">
+        <span class="callout-icon">i</span>
+        <span>Quand un dossier assureur est actif pour un patient, la facture peut être scindée automatiquement
+              entre la part assureur et la part patient. Vérifiez la date d'expiration du dossier régulièrement.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 6 ═══ -->
+  <div class="step" id="sec6">
+    <div class="step-header">
+      <div class="step-num">6</div>
+      <div>
+        <h2>Règles tarifaires</h2>
+        <div class="step-desc">Menu : <span class="path">Configuration &gt; Règles tarifaires</span> (action-575)</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Les règles tarifaires définissent les prix applicables par type de séance. Elles sont appliquées
+         automatiquement lors de la génération des factures depuis les séances.</p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/config_tarifs.png" alt="Règles tarifaires" class="screenshot">
+        <div class="caption">Liste des règles tarifaires — tarifs par type de séance</div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>Règle tarifaire</th><th>Montant</th><th>Applicable à</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Tarif Standard E2E</td>
+            <td class="amount">15 000 CFA</td>
+            <td>Séance de dialyse End-to-End standard</td>
+          </tr>
+          <tr>
+            <td>Tarif Standard Test</td>
+            <td class="amount">25 000 CFA</td>
+            <td>Séance de test / protocole spécial</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <span class="callout-icon">!</span>
+        <span>La modification d'une règle tarifaire s'applique uniquement aux <strong>nouvelles factures</strong>.
+              Les factures déjà créées (même en brouillon) conservent leur tarif d'origine.
+              Toute modification tarifaire doit être validée par le responsable médical.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 7 ═══ -->
+  <div class="step" id="sec7">
+    <div class="step-header">
+      <div class="step-num">7</div>
+      <div>
+        <h2>Générer le rapport mensuel</h2>
+        <div class="step-desc">Menu : <span class="path">Rapports &gt; Rapport mensuel PDF</span> (action-584)</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Le rapport mensuel PDF compile l'ensemble des factures d'un mois donné et produit un document
+         de synthèse téléchargeable pour la comptabilité et la direction.</p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/rapports_facturation.png" alt="Wizard rapport mensuel" class="screenshot">
+        <div class="caption">Wizard de génération du rapport mensuel — saisie mois et année</div>
+      </div>
+
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Accédez à <span class="path">Rapports &gt; Rapport mensuel PDF</span></span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Un wizard s'ouvre — sélectionnez le <strong>Mois</strong> (ex. <code>June</code>) et l'<strong>Année</strong> (ex. <code>2026</code>)</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Cliquez sur <kbd>Générer le rapport</kbd></span>
+        </li>
+        <li>
+          <span class="step-dot">d</span>
+          <span>Le PDF est généré et téléchargé automatiquement — il contient le récapitulatif de toutes les factures du mois</span>
+        </li>
+      </ol>
+
+      <div class="info">
+        <span class="callout-icon">i</span>
+        <span>Le rapport inclut : total des factures émises, total encaissé, soldes en attente, répartition
+              par patient et par assureur. Transmettez-le à la direction avant le 5 du mois suivant.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 8 ═══ -->
+  <div class="step" id="sec8">
+    <div class="step-header">
+      <div class="step-num">8</div>
+      <div>
+        <h2>Soldes patients et facturation groupée</h2>
+        <div class="step-desc">Menu : <span class="path">Soldes patients</span> · <span class="path">Facturation groupée</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Ces deux outils permettent d'optimiser le traitement en masse des opérations de facturation.</p>
+
+      <p><strong>Soldes patients</strong></p>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Accédez à <span class="path">Soldes patients</span> pour visualiser l'état des créances par patient</span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>La vue liste indique le montant total dû, les factures en retard et le dernier paiement reçu</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Cliquez sur un patient pour accéder directement à ses factures impayées</span>
+        </li>
+      </ol>
+
+      <p style="margin-top:1.2rem;"><strong>Facturation groupée</strong></p>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Accédez à <span class="path">Facturation groupée</span> pour traiter toutes les séances non facturées en une seule opération</span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Sélectionnez la période et les patients concernés (ou laissez la sélection complète)</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Cliquez sur <kbd>Générer les factures</kbd> — une facture est créée pour chaque patient ayant des séances non facturées sur la période</span>
+        </li>
+      </ol>
+
+      <div class="tip">
+        <span class="callout-icon">i</span>
+        <span>La facturation groupée crée les factures en statut <strong>Draft</strong>. Vous devez les
+              confirmer individuellement ou utiliser l'action de masse <kbd>Confirm</kbd> depuis la vue liste.</span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p><strong>© 2026 As-Shafi Medical</strong> — <a href="index.html">Retour à l'index des guides</a></p>
+  <p style="margin-top:0.4rem; opacity:0.7;">HMS Néphro · Odoo 19 · Guide Agent de Facturation</p>
+</footer>
+
+</body>
+</html>

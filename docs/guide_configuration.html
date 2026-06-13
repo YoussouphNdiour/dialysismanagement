@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide Configuration — HMS Néphro | As-Shafi Medical</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, Arial, sans-serif; background: #f0f4f8; color: #2d3748; line-height: 1.6; }
+
+  /* ─── HEADER ─── */
+  header { background: linear-gradient(135deg, #1a202c 0%, #2d3748 60%, #3d4e63 100%); color: white; padding: 0; }
+  .header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 2rem; background: rgba(0,0,0,0.2);
+    font-size: 0.83rem; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .header-top a { color: rgba(255,255,255,0.75); text-decoration: none; }
+  .header-top a:hover { color: #90cdf4; }
+  .header-content { padding: 2rem 3rem 2.5rem; }
+  .role-pill {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 20px; padding: 0.2rem 0.9rem; font-size: 0.8rem;
+    margin-bottom: 0.8rem; letter-spacing: 0.03em; text-transform: uppercase;
+  }
+  header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.3px; }
+  header h1 span { color: #90cdf4; }
+  header .sub { margin-top: 0.4rem; opacity: 0.82; font-size: 0.97rem; }
+
+  /* ─── MAIN ─── */
+  main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+  /* ─── INTRO BOX ─── */
+  .intro-box {
+    background: #ebf8ff; border: 1px solid #bee3f8;
+    border-left: 5px solid #3182ce; border-radius: 10px;
+    padding: 1.3rem 1.5rem; margin-bottom: 2rem;
+  }
+  .intro-box .intro-role { font-weight: 700; color: #2b6cb0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+  .intro-box p { font-size: 0.95rem; color: #2c5282; line-height: 1.7; }
+
+  /* ─── ACCESS MATRIX ─── */
+  .access-matrix {
+    background: white; border: 1px solid #e2e8f0; border-radius: 12px;
+    padding: 1.2rem 1.5rem; margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .access-matrix h3 { font-size: 0.85rem; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1rem; }
+  .access-rows { display: flex; flex-direction: column; gap: 0.5rem; }
+  .access-row {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.55rem 0.75rem; background: #f7fafc; border-radius: 8px;
+    flex-wrap: wrap;
+  }
+  .access-role {
+    font-size: 0.82rem; font-weight: 700; min-width: 130px;
+    padding: 0.2rem 0.6rem; border-radius: 12px; text-align: center;
+  }
+  .access-role.admin { background: #fef3c7; color: #92400e; }
+  .access-role.secretaire { background: #dbeafe; color: #1e40af; }
+  .access-role.medecin { background: #dcfce7; color: #166534; }
+  .access-role.facturation { background: #ffedd5; color: #9a3412; }
+  .access-items { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .access-item {
+    background: white; border: 1px solid #e2e8f0;
+    border-radius: 6px; padding: 0.15rem 0.55rem;
+    font-size: 0.78rem; color: #4a5568;
+  }
+
+  /* ─── TOC ─── */
+  .toc {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 1rem 1.4rem; margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .toc-label { font-size: 0.8rem; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
+  .toc-items { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .toc-item {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: #edf2f7; border-radius: 20px; padding: 0.25rem 0.75rem;
+    font-size: 0.82rem; color: #4a5568; text-decoration: none; transition: background 0.15s;
+  }
+  .toc-item:hover { background: #bee3f8; color: #2b6cb0; }
+  .toc-item .num {
+    background: #4299e1; color: white; width: 18px; height: 18px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+  }
+
+  /* ─── STEP ─── */
+  .step {
+    background: white; border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem; overflow: hidden;
+  }
+  .step-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.2rem 1.6rem;
+    background: linear-gradient(to right, #edf2f7, #fff);
+    border-bottom: 1px solid #edf2f7;
+  }
+  .step-num {
+    background: #4299e1; color: white; width: 38px; height: 38px;
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1rem; flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(66,153,225,0.4);
+  }
+  .step-header h2 { font-size: 1.12rem; font-weight: 700; color: #1a202c; }
+  .step-header .step-desc { font-size: 0.82rem; color: #718096; margin-top: 0.15rem; }
+  .step-header .url-badge {
+    margin-left: auto; background: #edf2f7; border: 1px solid #e2e8f0;
+    border-radius: 6px; padding: 0.25rem 0.65rem;
+    font-family: 'Courier New', monospace; font-size: 0.78rem; color: #4a5568;
+    white-space: nowrap; flex-shrink: 0;
+  }
+
+  .step-body { padding: 1.5rem 1.6rem; }
+  .step-body p { line-height: 1.75; color: #4a5568; margin-bottom: 0.9rem; font-size: 0.95rem; }
+  .step-body p:last-child { margin-bottom: 0; }
+
+  /* ─── INSTRUCTIONS ─── */
+  .instructions { list-style: none; margin: 0.5rem 0 1rem; }
+  .instructions li {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    padding: 0.45rem 0; font-size: 0.93rem; color: #4a5568;
+    border-bottom: 1px solid #f7fafc;
+  }
+  .instructions li:last-child { border-bottom: none; }
+  .instructions .step-dot {
+    background: #ebf8ff; color: #3182ce; border-radius: 50%;
+    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; flex-shrink: 0; margin-top: 0.1rem;
+  }
+
+  /* ─── TABLE ─── */
+  .data-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+  .data-table th {
+    background: #2d3748; color: white; text-align: left;
+    padding: 0.7rem 1rem; font-size: 0.8rem; letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .data-table th:first-child { border-radius: 8px 0 0 0; }
+  .data-table th:last-child { border-radius: 0 8px 0 0; }
+  .data-table td { padding: 0.65rem 1rem; border-bottom: 1px solid #edf2f7; vertical-align: top; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tr:nth-child(even) td { background: #f7fafc; }
+
+  /* ─── PLANNING CARDS ─── */
+  .planning-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; margin: 1rem 0; }
+  .planning-card {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 0.85rem 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border-top: 4px solid #4299e1;
+  }
+  .planning-card .pc-code { font-family: 'Courier New', monospace; font-size: 0.78rem; color: #a0aec0; margin-bottom: 0.25rem; }
+  .planning-card .pc-name { font-size: 0.9rem; font-weight: 700; color: #2d3748; margin-bottom: 0.4rem; }
+  .planning-card .pc-days { display: flex; gap: 0.25rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
+  .pc-day {
+    background: #4299e1; color: white; font-size: 0.7rem; font-weight: 700;
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pc-day.off { background: #e2e8f0; color: #a0aec0; }
+  .planning-card .pc-time { font-size: 0.8rem; color: #718096; }
+
+  /* ─── TARIF CARDS ─── */
+  .tarif-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.75rem; margin: 1rem 0; }
+  .tarif-card {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 1rem 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border-left: 5px solid #c05621;
+  }
+  .tarif-card .tc-name { font-size: 0.88rem; font-weight: 700; color: #2d3748; margin-bottom: 0.3rem; }
+  .tarif-card .tc-amount { font-size: 1.4rem; font-weight: 700; color: #c05621; }
+  .tarif-card .tc-currency { font-size: 0.85rem; color: #718096; }
+  .tarif-card .tc-note { font-size: 0.78rem; color: #a0aec0; margin-top: 0.3rem; }
+
+  /* ─── SCREENSHOT ─── */
+  .screenshot-wrap { margin-top: 1.2rem; }
+  .screenshot {
+    width: 100%; border: 1px solid #e2e8f0; border-radius: 10px;
+    display: block; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .caption { text-align: center; font-size: 0.8rem; color: #a0aec0; margin-top: 0.5rem; font-style: italic; }
+
+  /* ─── CALLOUTS ─── */
+  .tip, .warn, .alert, .info {
+    border-radius: 8px; padding: 0.85rem 1rem 0.85rem 1.1rem; margin-top: 1rem;
+    font-size: 0.9rem; line-height: 1.65; display: flex; gap: 0.6rem; align-items: flex-start;
+  }
+  .info { background: #ebf8ff; border-left: 4px solid #3182ce; color: #2b6cb0; }
+  .warn { background: #fffbeb; border-left: 4px solid #d69e2e; color: #744210; }
+  .alert { background: #fff5f5; border-left: 4px solid #e53e3e; color: #c53030; }
+  .tip { background: #f0fff4; border-left: 4px solid #38a169; color: #276749; }
+  .callout-icon { flex-shrink: 0; font-size: 1rem; margin-top: 0.05rem; }
+
+  kbd {
+    display: inline-block; background: #2d3748; color: white; border-radius: 5px;
+    padding: 0.1rem 0.5rem; font-size: 0.82em; font-family: inherit;
+    font-weight: 600; white-space: nowrap;
+  }
+  code {
+    background: #edf2f7; color: #2d3748; border-radius: 4px;
+    padding: 0.05rem 0.4rem; font-family: 'Courier New', monospace; font-size: 0.87em;
+  }
+  .path { color: #2b6cb0; font-weight: 600; }
+  .mono { font-family: 'Courier New', monospace; background: #edf2f7; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.85em; color: #2d3748; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center; padding: 2rem; color: #a0aec0;
+    font-size: 0.83rem; border-top: 1px solid #e2e8f0; margin-top: 2rem;
+  }
+  footer a { color: #4299e1; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <span>HMS Néphro — As-Shafi Medical</span>
+    <a href="index.html">← Retour aux guides</a>
+  </div>
+  <div class="header-content">
+    <div class="role-pill">⚙️ Configuration Système</div>
+    <h1>Guide de <span>Configuration</span></h1>
+    <p class="sub">Plannings, tarifs, dialyseurs, assureurs et paramètres systèmes — HMS Néphro</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro-box">
+    <div class="intro-role">Accès selon les rôles</div>
+    <p>
+      Les menus de configuration sont accessibles différemment selon le rôle de l'utilisateur.
+      Certains items sont réservés à l'administrateur ou au médecin.
+      Ce guide recense toutes les sections de configuration disponibles, les URLs directes,
+      et les bonnes pratiques d'utilisation.
+    </p>
+  </div>
+
+  <!-- Matrice des accès -->
+  <div class="access-matrix">
+    <h3>Matrice des accès de configuration</h3>
+    <div class="access-rows">
+      <div class="access-row">
+        <span class="access-role admin">Admin</span>
+        <div class="access-items">
+          <span class="access-item">Tous les menus</span>
+          <span class="access-item">Jours fériés</span>
+          <span class="access-item">Modèles système</span>
+        </div>
+      </div>
+      <div class="access-row">
+        <span class="access-role secretaire">Secrétaire</span>
+        <div class="access-items">
+          <span class="access-item">Plannings dialyse</span>
+          <span class="access-item">Vue lecture seule</span>
+        </div>
+      </div>
+      <div class="access-row">
+        <span class="access-role medecin">Médecin</span>
+        <div class="access-items">
+          <span class="access-item">Plannings dialyse</span>
+          <span class="access-item">Hémodialyses</span>
+          <span class="access-item">Types dialyseur</span>
+          <span class="access-item">Types dialysat</span>
+        </div>
+      </div>
+      <div class="access-row">
+        <span class="access-role facturation">Facturation</span>
+        <div class="access-items">
+          <span class="access-item">Règles tarifaires</span>
+          <span class="access-item">Assureurs</span>
+          <span class="access-item">Dossiers assureurs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <span class="toc-label">Sections</span>
+    <div class="toc-items">
+      <a href="#plannings" class="toc-item"><span class="num">1</span> Plannings dialyse</a>
+      <a href="#hemodialyses" class="toc-item"><span class="num">2</span> Hémodialyses</a>
+      <a href="#tarifs" class="toc-item"><span class="num">3</span> Règles tarifaires</a>
+      <a href="#assureurs" class="toc-item"><span class="num">4</span> Assureurs</a>
+      <a href="#dialyseur" class="toc-item"><span class="num">5</span> Types dialyseur</a>
+      <a href="#dialysat" class="toc-item"><span class="num">6</span> Types dialysat</a>
+      <a href="#feries" class="toc-item"><span class="num">7</span> Jours fériés</a>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 1 : PLANNINGS ─── -->
+  <div class="step" id="plannings">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <h2>Planning de dialyse (Nephrology Schedule)</h2>
+        <div class="step-desc">Définir les rotations et assigner les équipes soignantes</div>
+      </div>
+      <span class="url-badge">/odoo/action-551</span>
+    </div>
+    <div class="step-body">
+      <p>
+        Les plannings de dialyse organisent les séances en créneaux hebdomadaires récurrents.
+        Chaque planning définit les jours de la semaine, les horaires, le poste de dialyse par défaut,
+        le médecin référent et les infirmières assignées.
+      </p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/config_nephro.png" alt="Liste des plannings de dialyse" class="screenshot">
+        <p class="caption">Liste des plannings — 4 plannings configurés</p>
+      </div>
+
+      <p style="margin-top: 1.2rem;">Plannings actuellement configurés :</p>
+      <div class="planning-grid">
+        <div class="planning-card">
+          <div class="pc-code">LMV M01</div>
+          <div class="pc-name">LMV Matin</div>
+          <div class="pc-days">
+            <span class="pc-day">L</span>
+            <span class="pc-day off">M</span>
+            <span class="pc-day">M</span>
+            <span class="pc-day off">J</span>
+            <span class="pc-day">V</span>
+            <span class="pc-day off">S</span>
+            <span class="pc-day off">D</span>
+          </div>
+          <div class="pc-time">08:00 – 12:30</div>
+        </div>
+        <div class="planning-card">
+          <div class="pc-code">LMV TEST</div>
+          <div class="pc-name">Planning Test LMV</div>
+          <div class="pc-days">
+            <span class="pc-day">L</span>
+            <span class="pc-day off">M</span>
+            <span class="pc-day">M</span>
+            <span class="pc-day off">J</span>
+            <span class="pc-day">V</span>
+            <span class="pc-day off">S</span>
+            <span class="pc-day off">D</span>
+          </div>
+          <div class="pc-time">07:00 – 11:30</div>
+        </div>
+        <div class="planning-card">
+          <div class="pc-code">DIMF</div>
+          <div class="pc-name">Planning Dimanche + Férie</div>
+          <div class="pc-days">
+            <span class="pc-day off">L</span>
+            <span class="pc-day off">M</span>
+            <span class="pc-day off">M</span>
+            <span class="pc-day off">J</span>
+            <span class="pc-day off">V</span>
+            <span class="pc-day off">S</span>
+            <span class="pc-day">D</span>
+          </div>
+          <div class="pc-time">09:00 – 13:00</div>
+        </div>
+        <div class="planning-card">
+          <div class="pc-code">E2E LUN</div>
+          <div class="pc-name">Planning E2E Lundi</div>
+          <div class="pc-days">
+            <span class="pc-day">L</span>
+            <span class="pc-day off">M</span>
+            <span class="pc-day off">M</span>
+            <span class="pc-day off">J</span>
+            <span class="pc-day off">V</span>
+            <span class="pc-day off">S</span>
+            <span class="pc-day off">D</span>
+          </div>
+          <div class="pc-time">08:00 – 12:30</div>
+        </div>
+      </div>
+
+      <p style="margin-top: 1.2rem;">Champs d'un planning :</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Champ</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Nom</strong></td>
+            <td>Libellé affiché dans les listes et dashboards</td>
+          </tr>
+          <tr>
+            <td><strong>Code</strong></td>
+            <td>Identifiant court pour les références internes</td>
+          </tr>
+          <tr>
+            <td><strong>Jours de la semaine</strong></td>
+            <td>Cases à cocher L / M / M / J / V / S / D</td>
+          </tr>
+          <tr>
+            <td><strong>Heure début / fin</strong></td>
+            <td>Plage horaire du créneau de dialyse</td>
+          </tr>
+          <tr>
+            <td><strong>Poste de dialyse par défaut</strong></td>
+            <td>Fauteuil ou poste attribué par défaut aux séances de ce planning</td>
+          </tr>
+          <tr>
+            <td><strong>Médecin référent</strong></td>
+            <td>Médecin responsable du planning (visible dans le dashboard médecin)</td>
+          </tr>
+          <tr>
+            <td><strong>Infirmières assignées</strong></td>
+            <td>Liste des infirmières autorisées à voir les patients de ce planning</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="warn">
+        <span class="callout-icon">⚠️</span>
+        <span>
+          <strong>Important :</strong> Les infirmières ne voient dans leur dashboard que les patients
+          des plannings auxquels elles sont assignées. Si une infirmière ne voit pas un patient,
+          vérifiez d'abord qu'elle est bien listée dans le champ <em>Infirmières assignées</em>
+          du planning correspondant.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 2 : HÉMODIALYSES ─── -->
+  <div class="step" id="hemodialyses">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div>
+        <h2>Hémodialyses (catalogue produits)</h2>
+        <div class="step-desc">Produits de type "procédure néphro" utilisés dans les prescriptions</div>
+      </div>
+      <span class="url-badge">/odoo/action-561</span>
+    </div>
+    <div class="step-body">
+      <p>
+        Cette section liste les produits de type <code>nephrology_procedure</code> disponibles pour la prescription.
+        Chaque enregistrement représente un type de séance d'hémodialyse facturable.
+        Ces produits sont liés aux lignes de facture de dialyse générées automatiquement.
+      </p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/examens.png" alt="Catalogue des hémodialyses" class="screenshot">
+        <p class="caption">Catalogue des procédures néphro — exemple : Hémodialyse Test</p>
+      </div>
+
+      <ul class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span>Accédez via <span class="mono">/odoo/action-561</span> ou via le menu médecin.</span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>Cliquez sur <kbd>New</kbd> pour créer un nouveau type de procédure.</span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>Renseignez le <strong>Nom</strong>, le <strong>Prix de vente</strong> (en CFA) et le <strong>type interne</strong> <code>nephrology_procedure</code>.</span>
+        </li>
+        <li>
+          <span class="step-dot">4</span>
+          <span>Ce produit sera sélectionnable dans les prescriptions d'hémodialyse du médecin.</span>
+        </li>
+      </ul>
+
+      <div class="info">
+        <span class="callout-icon">ℹ️</span>
+        <span>Exemple existant : <strong>Hémodialyse Test</strong> — Prix : <strong>1,00 CFA</strong>
+        (tarif test, non représentatif des tarifs réels de production).</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 3 : TARIFS ─── -->
+  <div class="step" id="tarifs">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div>
+        <h2>Règles tarifaires</h2>
+        <div class="step-desc">Tarification automatique selon patient et assureur</div>
+      </div>
+      <span class="url-badge">/odoo/action-575</span>
+    </div>
+    <div class="step-body">
+      <p>
+        Les règles tarifaires définissent le prix à appliquer pour les séances de dialyse
+        selon le patient, son assureur, ou tout autre critère configurable.
+        Elles sont appliquées automatiquement lors de la génération des factures.
+      </p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/config_tarifs.png" alt="Règles tarifaires de dialyse" class="screenshot">
+        <p class="caption">Règles tarifaires configurées — deux tarifs standards</p>
+      </div>
+
+      <p style="margin-top: 1.2rem;">Tarifs actuellement configurés :</p>
+      <div class="tarif-grid">
+        <div class="tarif-card">
+          <div class="tc-name">Tarif Standard E2E</div>
+          <div><span class="tc-amount">15 000</span> <span class="tc-currency">CFA</span></div>
+          <div class="tc-note">Appliqué aux séances de type end-to-end test</div>
+        </div>
+        <div class="tarif-card">
+          <div class="tc-name">Tarif Standard Test</div>
+          <div><span class="tc-amount">25 000</span> <span class="tc-currency">CFA</span></div>
+          <div class="tc-note">Tarif général pour les séances standard</div>
+        </div>
+      </div>
+
+      <div class="info">
+        <span class="callout-icon">ℹ️</span>
+        <span>Pour créer une nouvelle règle tarifaire, cliquez sur <kbd>New</kbd> et définissez
+        le critère d'application (assureur, type de séance, patient spécifique) et le montant en CFA.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 4 : ASSUREURS ─── -->
+  <div class="step" id="assureurs">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div>
+        <h2>Assureurs</h2>
+        <div class="step-desc">Organismes de prise en charge et dossiers patients assurés</div>
+      </div>
+      <span class="url-badge">/odoo/action-576</span>
+    </div>
+    <div class="step-body">
+      <p>
+        Ce menu liste les organismes d'assurance maladie partenaires du centre de dialyse.
+        Chaque assureur peut être lié à un ou plusieurs patients via un <em>dossier assureur</em>
+        qui précise le taux de prise en charge.
+      </p>
+
+      <div class="screenshot-wrap">
+        <img src="../tests/screenshots/assureurs.png" alt="Liste des assureurs partenaires" class="screenshot">
+        <p class="caption">Liste des assureurs — Assureur Test configuré</p>
+      </div>
+
+      <p style="margin-top: 1.2rem;">Exemple d'assureur configuré :</p>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Champ</th>
+            <th>Valeur</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Nom</strong></td>
+            <td>Assureur Test</td>
+          </tr>
+          <tr>
+            <td><strong>Code</strong></td>
+            <td><span class="mono">ASS-TEST</span></td>
+          </tr>
+          <tr>
+            <td><strong>Téléphone</strong></td>
+            <td>+221 33 000 0000</td>
+          </tr>
+          <tr>
+            <td><strong>Email</strong></td>
+            <td>test@assureur.sn</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ul class="instructions" style="margin-top: 1rem;">
+        <li>
+          <span class="step-dot">1</span>
+          <span>Pour créer un assureur, cliquez sur <kbd>New</kbd> et renseignez les informations de contact.</span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>Pour lier un patient à un assureur, ouvrez le <strong>dossier assureur</strong> depuis la fiche patient
+          et sélectionnez l'assureur ainsi que le <strong>taux de prise en charge</strong> (en %).</span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>Le taux est appliqué automatiquement lors de la génération de la facture : la part assureur
+          et la part patient sont calculées et affichées séparément.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 5 : DIALYSEUR ─── -->
+  <div class="step" id="dialyseur">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      <div>
+        <h2>Types de dialyseur</h2>
+        <div class="step-desc">Catalogue des membranes et filtres utilisés en prescription</div>
+      </div>
+      <span class="url-badge">/odoo/action-549</span>
+    </div>
+    <div class="step-body">
+      <p>
+        Les types de dialyseur correspondent aux membranes de filtration utilisées lors des séances.
+        Ils sont sélectionnables dans la prescription d'hémodialyse rédigée par le médecin.
+      </p>
+
+      <ul class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span>Accédez via <span class="mono">/odoo/action-549</span>.</span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>Exemple existant : <strong>Fresenius FX80</strong> — dialyseur haute perméabilité,
+          couramment utilisé en hémodialyse de haute efficacité.</span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>Pour ajouter un nouveau type, cliquez sur <kbd>New</kbd>, renseignez le <strong>Nom</strong>,
+          le <strong>Fabricant</strong> et les caractéristiques techniques si disponibles.</span>
+        </li>
+      </ul>
+
+      <div class="info">
+        <span class="callout-icon">ℹ️</span>
+        <span>Le type de dialyseur sélectionné dans la prescription est reporté sur la fiche de séance
+        et dans les rapports cliniques. Il n'impacte pas directement la facturation.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 6 : DIALYSAT ─── -->
+  <div class="step" id="dialysat">
+    <div class="step-header">
+      <div class="step-num">6</div>
+      <div>
+        <h2>Types de dialysat</h2>
+        <div class="step-desc">Compositions de bain de dialyse disponibles en prescription</div>
+      </div>
+      <span class="url-badge">/odoo/action-548</span>
+    </div>
+    <div class="step-body">
+      <p>
+        Le dialysat est la solution de rinçage utilisée pendant la séance pour éliminer les déchets.
+        Le type de dialysat est prescrit par le médecin et consigné dans la fiche de séance.
+      </p>
+
+      <ul class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span>Accédez via <span class="mono">/odoo/action-548</span>.</span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span>Exemple existant : <strong>Dialysat Bicarbonate Standard</strong> — composition standard
+          à base de bicarbonate, la plus courante en hémodialyse.</span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span>Pour ajouter une nouvelle composition, renseignez le <strong>Nom</strong>,
+          la <strong>Concentration en bicarbonate</strong> et les ajustements électrolytiques si nécessaires.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ─── SECTION 7 : JOURS FÉRIÉS ─── -->
+  <div class="step" id="feries">
+    <div class="step-header">
+      <div class="step-num">7</div>
+      <div>
+        <h2>Jours fériés néphro</h2>
+        <div class="step-desc">Exclure des dates de la génération automatique de séances</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>
+        Le module HMS Néphro dispose d'un calendrier de jours fériés spécifique
+        (modèle <code>acs.nephrology.holiday</code>). Les dates configurées ici sont
+        <strong>exclues automatiquement</strong> lors de la génération en lot des séances de dialyse,
+        évitant la création de séances sur des jours non ouvrables.
+      </p>
+
+      <ul class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span><strong>Nom</strong> — libellé du jour férié (ex : "Fête de l'Indépendance").</span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span><strong>Date</strong> — date exacte du jour non travaillé.</span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span><strong>Récurrent</strong> — si coché, ce jour férié est automatiquement reconduit
+          chaque année à la même date (ex : 1er janvier, 1er mai…).</span>
+        </li>
+        <li>
+          <span class="step-dot">4</span>
+          <span>Les jours fériés n'affectent pas les séances déjà planifiées — ils n'impactent
+          que la <em>génération future</em> via le bouton <kbd>Générer les séances</kbd>.</span>
+        </li>
+      </ul>
+
+      <div class="warn">
+        <span class="callout-icon">⚠️</span>
+        <span>
+          Si un jour férié est ajouté après une génération de séances, les séances déjà créées
+          sur cette date ne sont <strong>pas supprimées automatiquement</strong>.
+          Il faut les annuler manuellement depuis le planning ou la liste des séances.
+        </span>
+      </div>
+
+      <div class="tip">
+        <span class="callout-icon">✓</span>
+        <span>
+          <strong>Bonne pratique :</strong> Configurez les jours fériés de l'année entière
+          <em>avant</em> de lancer la première génération de séances annuelle.
+          Utilisez l'option <em>Récurrent</em> pour les fêtes nationales fixes.
+        </span>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>
+    <strong>As-Shafi Medical</strong> &nbsp;|&nbsp; Documentation HMS Néphro &nbsp;|&nbsp; Odoo 19 &nbsp;|&nbsp;
+    Base : <span class="mono">asshafi</span> &nbsp;|&nbsp;
+    <a href="index.html">Retour aux guides</a> &nbsp;|&nbsp; Version 2026-06-11
+  </p>
+</footer>
+
+</body>
+</html>

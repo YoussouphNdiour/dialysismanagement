@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide Infirmière — Interface Dialyse | As-Shafi Medical</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, Arial, sans-serif; background: #f0f4f8; color: #2d3748; line-height: 1.6; }
+  a { color: #4299e1; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  header {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 60%, #3d4e63 100%);
+    color: white; padding: 2.5rem 2rem 2rem; text-align: center;
+  }
+  .back-link { display: inline-block; margin-bottom: 1.2rem; color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+  .back-link:hover { color: white; text-decoration: none; }
+  .role-badge { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 0.3rem 1.1rem; font-size: 0.82rem; margin-bottom: 0.8rem; }
+  header h1 { font-size: 2rem; font-weight: 700; }
+  header h1 span { color: #90cdf4; }
+  header p { opacity: 0.72; margin-top: 0.4rem; }
+  .creds { display: inline-flex; gap: 1.5rem; margin-top: 1rem; font-size: 0.83rem; opacity: 0.65; flex-wrap: wrap; justify-content: center; }
+
+  main { max-width: 960px; margin: 2rem auto; padding: 0 1.5rem 4rem; }
+
+  .toc { background: white; border-radius: 12px; padding: 1.5rem 2rem; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .toc h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: #718096; margin-bottom: 0.8rem; }
+  .toc ol { padding-left: 1.2rem; }
+  .toc li { margin: 0.3rem 0; }
+
+  .section { background: white; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid #ebf4ff; }
+  .step-num { width: 2.2rem; height: 2.2rem; background: #4299e1; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; flex-shrink: 0; }
+  .section h2 { font-size: 1.25rem; color: #2d3748; }
+
+  .steps { list-style: none; padding: 0; }
+  .steps li { padding: 0.55rem 0 0.55rem 1.8rem; position: relative; border-bottom: 1px solid #f7fafc; }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before { content: '→'; position: absolute; left: 0; color: #4299e1; font-weight: 700; }
+
+  .screenshot { display: block; max-width: 100%; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); margin: 1.5rem 0; border: 1px solid #e2e8f0; }
+  .img-caption { text-align: center; font-size: 0.82rem; color: #718096; margin-top: -0.8rem; margin-bottom: 1.5rem; font-style: italic; }
+
+  .info-box { background: #ebf8ff; border-left: 4px solid #3182ce; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1.2rem 0; }
+  .info-box strong { color: #2b6cb0; }
+  .warn-box { background: #fffbeb; border-left: 4px solid #d69e2e; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1.2rem 0; }
+  .warn-box strong { color: #b7791f; }
+  .danger-box { background: #fff5f5; border-left: 4px solid #e53e3e; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1.2rem 0; }
+  .danger-box strong { color: #c53030; }
+
+  .tag-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.7rem; margin: 1rem 0; }
+  .tag { background: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px; padding: 0.6rem 0.8rem; font-size: 0.9rem; text-align: center; }
+
+  footer { text-align: center; padding: 2rem; color: #a0aec0; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back-link" href="index.html">← Retour à l'index des guides</a>
+  <div class="role-badge">💉 Rôle Infirmière</div>
+  <h1>Interface <span>Infirmière Dialyse</span></h1>
+  <p>Gérer les séances de dialyse au quotidien</p>
+  <div class="creds">
+    <span>infirmiere@nephro.test</span>
+    <span>Mot de passe : Nephro2024!</span>
+    <span>URL : /odoo/action-588</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="toc">
+    <h2>Sommaire</h2>
+    <ol>
+      <li><a href="#acces">Accès et interface</a></li>
+      <li><a href="#demarrer">Démarrer une séance</a></li>
+      <li><a href="#suivi">Suivi en cours de séance</a></li>
+      <li><a href="#complication">Signaler une complication</a></li>
+      <li><a href="#terminer">Terminer la séance</a></li>
+      <li><a href="#notes">Notes importantes</a></li>
+    </ol>
+  </div>
+
+  <!-- Section 1 -->
+  <div class="section" id="acces">
+    <div class="section-header">
+      <div class="step-num">1</div>
+      <h2>Accès et interface infirmière</h2>
+    </div>
+    <p>L'interface infirmière est le tableau de bord dédié à la gestion des séances en cours. Elle est accessible directement après connexion.</p>
+    <ul class="steps" style="margin-top: 1rem;">
+      <li>Connectez-vous sur <strong>http://localhost:8069/web/login</strong> avec vos identifiants infirmière</li>
+      <li>Vous êtes redirigée automatiquement vers l'Interface Infirmier (<strong>action-588</strong>)</li>
+      <li>Le tableau affiche uniquement les patients des <strong>plannings auxquels vous êtes assignée</strong></li>
+      <li>Chaque carte patient indique : nom, poste, statut de la séance, durée prévue</li>
+    </ul>
+    <div class="warn-box">
+      <strong>⚠ Important :</strong> Si vous ne voyez pas un patient, vérifiez que votre nom figure dans la liste des infirmières du planning correspondant (à configurer par l'administrateur).
+    </div>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="section" id="demarrer">
+    <div class="section-header">
+      <div class="step-num">2</div>
+      <h2>Démarrer une séance</h2>
+    </div>
+    <img src="../tests/screenshots/inf_seance_debut.png" alt="Début de séance infirmière" class="screenshot">
+    <p class="img-caption">Fig. 1 — Interface infirmière : démarrage d'une séance avec saisie des constantes initiales</p>
+    <ol class="steps">
+      <li>Sur le tableau de bord, repérez la carte du patient avec la séance à démarrer (statut <strong>Programmé</strong>)</li>
+      <li>Cliquez sur le bouton <strong>Démarrer</strong> (ou icône play) sur la carte patient</li>
+      <li>Le timer démarre automatiquement — la durée prévue s'affiche (ex: 4h00)</li>
+      <li>Saisissez les <strong>constantes initiales</strong> : TA pré-dialyse, Poids pré-dialyse</li>
+      <li>Confirmez le <strong>type d'accès vasculaire</strong> (FAV, Cathéter, etc.)</li>
+      <li>Enregistrez pour démarrer officiellement la séance</li>
+    </ol>
+    <div class="info-box">
+      <strong>ℹ Timer :</strong> Le chronomètre visible en haut de la carte compte la durée écoulée depuis le début de la séance. Il permet de surveiller le temps restant par rapport à la durée prescrite.
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="section" id="suivi">
+    <div class="section-header">
+      <div class="step-num">3</div>
+      <h2>Suivi en cours de séance</h2>
+    </div>
+    <p>Pendant la séance, vous pouvez enregistrer des mesures intermédiaires pour assurer le suivi clinique.</p>
+    <ul class="steps" style="margin-top: 1rem;">
+      <li>Cliquez sur la carte patient en cours → formulaire de suivi s'ouvre</li>
+      <li>Enregistrez les <strong>TA mi-séance</strong> (tension artérielle toutes les 30 min recommandées)</li>
+      <li>Notez les éventuels <strong>ajustements de débit</strong> ou UF</li>
+      <li>Consultez les <strong>alertes en temps réel</strong> : le dashboard médecin surveille les mêmes données</li>
+      <li>En cas de problème clinique → passez à l'étape <a href="#complication">Signaler une complication</a></li>
+    </ul>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="section" id="complication">
+    <div class="section-header">
+      <div class="step-num">4</div>
+      <h2>Signaler une complication</h2>
+    </div>
+    <img src="../tests/screenshots/inf_complication_popup.png" alt="Modal signalement complication" class="screenshot">
+    <p class="img-caption">Fig. 2 — Popup de signalement de complication avec tous les types disponibles</p>
+    <ol class="steps">
+      <li>Cliquez sur le bouton <strong>"Signaler une complication"</strong> sur la carte du patient concerné</li>
+      <li>Dans le popup, sélectionnez le <strong>Type de complication</strong> :</li>
+    </ol>
+    <div class="tag-grid" style="margin-left: 1.5rem;">
+      <div class="tag">🔴 Hypotension</div>
+      <div class="tag">😣 Crampes</div>
+      <div class="tag">🤢 Nausées</div>
+      <div class="tag">🌡️ Fièvre</div>
+      <div class="tag">😖 Prurit</div>
+      <div class="tag">⛔ Arrêt prématuré</div>
+      <div class="tag">📝 Autre</div>
+    </div>
+    <ol class="steps" style="margin-top: 1rem;" start="3">
+      <li>Saisissez l'<strong>heure de survenue</strong> (remplie automatiquement)</li>
+      <li>Entrez la <strong>TA au moment de la complication</strong> (ex: 80/50)</li>
+      <li>Décrivez l'<strong>action prise</strong> (ex: "Administration NaCl 0.9%", "Réduction débit UF")</li>
+      <li>Indiquez la <strong>résolution</strong> : Résolue / Partiellement résolue / Non résolue</li>
+      <li>Validez — la complication est enregistrée et visible par le médecin</li>
+    </ol>
+    <div class="danger-box">
+      <strong>🚨 En cas de complication grave :</strong> Contactez immédiatement le médecin de garde. Le dashboard médecin affiche en temps réel les alertes — le compteur "Complications" se met à jour instantanément.
+    </div>
+  </div>
+
+  <!-- Section 5 -->
+  <div class="section" id="terminer">
+    <div class="section-header">
+      <div class="step-num">5</div>
+      <h2>Terminer la séance</h2>
+    </div>
+    <img src="../tests/screenshots/inf_seance_terminee.png" alt="Séances terminées - tableau de bord infirmière" class="screenshot">
+    <p class="img-caption">Fig. 3 — Dashboard infirmière avec toutes les séances en statut "Terminé"</p>
+    <ol class="steps">
+      <li>Une fois la durée de dialyse atteinte, cliquez sur <strong>"Terminer la séance"</strong></li>
+      <li>Saisissez les <strong>constantes post-dialyse</strong> obligatoires :</li>
+    </ol>
+    <ul style="margin-left: 3rem; margin-top: 0.5rem;">
+      <li><strong>TA post-dialyse</strong> (ex: 120/70)</li>
+      <li><strong>Poids post-dialyse</strong> (pour calculer l'UF réelle)</li>
+      <li><strong>UF retirée</strong> (volume ultrafiltré en ml)</li>
+      <li><strong>KT/V</strong> (si calculé manuellement)</li>
+    </ul>
+    <ol class="steps" start="3" style="margin-top: 1rem;">
+      <li>Confirmez la fin — le statut passe à <strong>Terminé</strong></li>
+      <li>Le poste est libéré et apparaît disponible pour la prochaine séance</li>
+      <li>Les données sont transmises au portail patient et visibles dans les bilans</li>
+    </ol>
+    <div class="info-box">
+      <strong>ℹ KT/V :</strong> L'efficacité de la dialyse est automatiquement calculée à partir de l'urée pré et post saisie dans les bilans biologiques. Un KT/V ≥ 1.2 est considéré comme adéquat.
+    </div>
+  </div>
+
+  <!-- Section 6 -->
+  <div class="section" id="notes">
+    <div class="section-header">
+      <div class="step-num">6</div>
+      <h2>Notes importantes</h2>
+    </div>
+    <div class="warn-box" style="margin-top: 0;">
+      <strong>📋 Planning et visibilité :</strong> L'infirmière ne voit que les séances des plannings auxquels elle est assignée. Pour être ajoutée à un planning, contacter l'administrateur (menu Configuration > Nephrology Schedule).
+    </div>
+    <div class="info-box">
+      <strong>🔄 Synchronisation temps réel :</strong> Toutes les actions de l'infirmière (démarrage, complications, fin de séance) sont immédiatement reflétées sur le dashboard du médecin de garde.
+    </div>
+    <div class="info-box">
+      <strong>📊 Traçabilité :</strong> Chaque complication enregistrée est stockée dans le module Complications (acs.dialysis.complication) et rattachée à la séance correspondante pour les rapports mensuels.
+    </div>
+  </div>
+
+  <div style="text-align: center; margin-top: 2rem;">
+    <a href="index.html" style="background: #4299e1; color: white; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; display: inline-block;">← Retour à l'index des guides</a>
+  </div>
+
+</main>
+
+<footer>
+  <p>Guide Infirmière — Module HMS Néphro &nbsp;|&nbsp; <strong>As-Shafi Medical</strong> &nbsp;|&nbsp; 2026</p>
+</footer>
+
+</body>
+</html>
