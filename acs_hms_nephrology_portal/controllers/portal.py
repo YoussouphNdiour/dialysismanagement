@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-from collections import defaultdict
-from datetime import date, timedelta
 
 from odoo import fields, http
 from odoo.http import request
@@ -35,33 +33,15 @@ class NephrologyPortal(CustomerPortal):
 
     def _build_chart_data(self, bilans):
         """
-        Construit le dict Chart.js depuis une liste de acs.nephro.bilan
-        sur les 6 derniers mois. Retourne un JSON string.
+        Construit le dict Chart.js depuis une liste ordonnée de acs.nephro.bilan.
+        Les labels sont les dates réelles des bilans (format dd/mm/yy).
+        Retourne un JSON string.
         """
-        today = date.today()
-        months = []
-        for i in range(5, -1, -1):
-            d = today.replace(day=1) - timedelta(days=i * 30)
-            months.append(d.strftime('%b %Y'))
-
-        # Index bilans par mois (dernier bilan du mois retenu)
-        by_month = defaultdict(dict)
-        for b in bilans:
-            key = b.exam_date.strftime('%b %Y') if b.exam_date else None
-            if key:
-                by_month[key] = b
-
-        def series(field):
-            return [
-                round(getattr(by_month.get(m), field, None) or 0, 2)
-                for m in months
-            ]
-
         chart_data = {
-            'labels': months,
-            'hemoglobin': series('hemoglobin'),
-            'potassium': series('potassium'),
-            'phosphorus': series('phosphorus'),
+            'labels':     [b.exam_date.strftime('%d/%m/%y') for b in bilans if b.exam_date],
+            'hemoglobin': [round(b.hemoglobin or 0, 2) for b in bilans if b.exam_date],
+            'potassium':  [round(b.potassium or 0, 2) for b in bilans if b.exam_date],
+            'phosphorus': [round(b.phosphorus or 0, 2) for b in bilans if b.exam_date],
         }
         return json.dumps(chart_data)
 
