@@ -31,6 +31,8 @@
     'assets': {
         'web.assets_frontend': [
             'acs_hms_nephrology_portal/static/src/css/portal_nephro.css',
+        ],
+        'acs_hms_nephrology_portal.assets_bilans': [
             'acs_hms_nephrology_portal/static/src/lib/chart.umd.min.js',
         ],
     },

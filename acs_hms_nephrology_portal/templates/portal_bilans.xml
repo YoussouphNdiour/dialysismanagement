@@ -9,6 +9,7 @@
 
                     <!-- Graphiques évolution 6 mois -->
                     <t t-if="bilans">
+                        <t t-call-assets="acs_hms_nephrology_portal.assets_bilans" t-js="true" t-css="false"/>
                         <div class="nephro-card mb-4">
                             <h5 class="mb-3">Évolution — 6 derniers mois</h5>
                             <div class="row g-3">
@@ -27,6 +28,7 @@
                         <script type="text/javascript">
                             (function() {
                                 var data = JSON.parse(document.getElementById('nephroChartData').dataset.chart);
+                                if (!data || !data.labels || !data.labels.length) return;
                                 function makeChart(id, label, key, color) {
                                     var ctx = document.getElementById(id);
                                     if (!ctx) return;
