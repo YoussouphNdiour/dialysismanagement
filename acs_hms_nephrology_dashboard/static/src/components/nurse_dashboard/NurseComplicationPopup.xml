@@ -21,7 +21,7 @@
                             t-att-class="form.complication_type === ct.value
                                 ? 'btn btn-danger'
                                 : 'btn btn-outline-secondary'"
-                            t-on-click="() => selectType(ct.value)">
+                            t-on-click="() => this.selectType(ct.value)">
                             <t t-esc="ct.label"/>
                         </button>
                     </t>
@@ -60,11 +60,11 @@
                 <label class="form-label fw-semibold">Résolution <span class="text-danger">*</span></label>
                 <div class="d-flex gap-2">
                     <button t-att-class="form.resolution === 'yes' ? 'btn btn-success' : 'btn btn-outline-success'"
-                            t-on-click="() => form.resolution = 'yes'">Résolue</button>
+                            t-on-click="() => this.form.resolution = 'yes'">Résolue</button>
                     <button t-att-class="form.resolution === 'partial' ? 'btn btn-warning' : 'btn btn-outline-warning'"
-                            t-on-click="() => form.resolution = 'partial'">Partielle</button>
+                            t-on-click="() => this.form.resolution = 'partial'">Partielle</button>
                     <button t-att-class="form.resolution === 'no' ? 'btn btn-danger' : 'btn btn-outline-danger'"
-                            t-on-click="() => form.resolution = 'no'">Non résolue</button>
+                            t-on-click="() => this.form.resolution = 'no'">Non résolue</button>
                 </div>
             </div>
 

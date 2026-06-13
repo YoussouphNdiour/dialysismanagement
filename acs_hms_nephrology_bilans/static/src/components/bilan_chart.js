@@ -34,17 +34,20 @@ export class BilanChartWidget extends Component {
     }
 
     async _loadData() {
+        if (!this.props.parameter) return;
+
         const twelveMonthsAgo = new Date();
         twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
 
         const dateStr = twelveMonthsAgo.toISOString().split("T")[0];
+        const fields = ["exam_date", this.props.parameter].filter(Boolean);
         const bilans = await this.orm.searchRead(
             "acs.nephro.bilan",
             [
                 ["patient_id", "=", this.props.patient_id],
                 ["exam_date", ">=", dateStr],
             ],
-            ["exam_date", this.props.parameter],
+            fields,
             { order: "exam_date asc", limit: 24 }
         );
 

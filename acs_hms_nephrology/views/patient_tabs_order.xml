@@ -14,13 +14,13 @@
                  2. Antécédants (hospital_info) - déjà en deuxième
                  3. Famille (emergency_contacts_family) - déjà en troisième
                  4. Examens Physiques (clinical_ass) - déjà en quatrième
-                 5. Biologie (biologie) - déjà en cinquième
+                 5. Bilans Biologiques (bilans_biologiques) - nouveau module nephro bilans
                  6. Imagerie (nephrology_imaging) - doit être déplacé ICI
                  7. Diagnostic (diseases) - doit être après Imagerie
                  8. Néphropathie Initiale (nephrology_history) - doit être à la fin
             -->
 
-            <!-- Déplacer l'onglet Imagerie juste après Biologie -->
+            <!-- Déplacer l'onglet Imagerie juste après Biologie/Bilans (biologie reste dans DOM même si invisible) -->
             <xpath expr="//page[@name='nephrology_imaging']" position="replace"/>
             <xpath expr="//page[@name='biologie']" position="after">
                 <page name='nephrology_imaging' string="Imagerie">

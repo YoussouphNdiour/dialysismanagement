@@ -6,7 +6,7 @@ export class NursePatientList extends Component {
     static props = {
         procedures: Array,
         schedules: Array,
-        scheduleId: { type: Number, optional: true },
+        scheduleId: { type: [Number, { value: null }] },
         onSelectProcedure: Function,
         onScheduleChange: Function,
         onMarkAbsent: Function,

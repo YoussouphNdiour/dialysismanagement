@@ -8,18 +8,9 @@
         <field name="inherit_id" ref="acs_hms.view_patient_form"/>
         <field name="arch" type="xml">
 
-            <!-- 1. Déplacer le groupe sanguin vers l'onglet Biologie -->
-            <!-- D'abord le retirer de "Other Info" -->
-            <xpath expr="//page[@name='hospital_info']//field[@name='blood_group']" position="replace"/>
-
-            <!-- Puis l'ajouter dans l'onglet Biologie -->
-            <xpath expr="//page[@name='biologie']//div[1]" position="after">
-                <group>
-                    <group>
-                        <field name="blood_group"/>
-                    </group>
-                </group>
-                <separator/>
+            <!-- 1. Masquer l'ancien onglet Biologie (acs.patient.biologie) remplacé par Bilans Biologiques -->
+            <xpath expr="//page[@name='biologie']" position="attributes">
+                <attribute name="invisible">True</attribute>
             </xpath>
 
             <!-- 2. Ajouter "Soins de néphrologie" juste après "Médecin de soins primaires" -->

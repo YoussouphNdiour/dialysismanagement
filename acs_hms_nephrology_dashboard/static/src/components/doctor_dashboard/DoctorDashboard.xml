@@ -16,11 +16,11 @@
       <div class="dd-main">
         <div class="dd-tabs">
           <button t-att-class="'dd-tab ' + (state.tab === 'grid' ? 'active' : '')"
-                  t-on-click="() => setTab('grid')">⬛ Grille</button>
+                  t-on-click="setTab" data-tab="grid">⬛ Grille</button>
           <button t-att-class="'dd-tab ' + (state.tab === 'list' ? 'active' : '')"
-                  t-on-click="() => setTab('list')">☰ Liste</button>
+                  t-on-click="setTab" data-tab="list">☰ Liste</button>
           <button t-att-class="'dd-tab ' + (state.tab === 'stats' ? 'active' : '')"
-                  t-on-click="() => setTab('stats')">📊 Stats</button>
+                  t-on-click="setTab" data-tab="stats">📊 Stats</button>
         </div>
 
         <div class="dd-content">
@@ -43,7 +43,8 @@
               <tbody>
                 <t t-foreach="state.stations" t-as="station" t-key="station.id">
                   <tr t-att-class="station.procedure and station.procedure.alert_level === 'critical' ? 'dd-row-critical' : ''"
-                      t-on-click="() => station.procedure and onSelectStation(station.procedure.id)">
+                      t-on-click="onClickRow"
+                      t-att-data-procedure-id="station.procedure ? station.procedure.id : 0">
                     <td t-esc="station.name"/>
                     <td t-esc="station.procedure ? station.procedure.patient_id[1] : '—'"/>
                     <td t-esc="station.procedure ? station.procedure.state : 'Libre'"/>

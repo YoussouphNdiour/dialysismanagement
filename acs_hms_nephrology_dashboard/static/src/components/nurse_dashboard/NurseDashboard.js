@@ -2,6 +2,7 @@
 import { Component, useState, useEffect } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { user } from "@web/core/user";
 import { NursePatientList } from "./NursePatientList";
 import { NurseSessionForm } from "./NurseSessionForm";
 import { NurseEndSession } from "./NurseEndSession";
@@ -37,7 +38,7 @@ export class NurseDashboard extends Component {
 
     setup() {
         this.orm = useService("orm");
-        this.user = useService("user");
+        this.user = user;
         this.state = useState({
             screen: 'list',
             procedureId: null,
@@ -56,6 +57,7 @@ export class NurseDashboard extends Component {
 
         useEffect(() => {
             if (this.state.screen !== 'session') return;
+            if (this.state.procedure?.state === 'done') return;
             const id = setInterval(() => {
                 if (this.timer.secondsLeft > 0) {
                     this.timer.secondsLeft -= 1;

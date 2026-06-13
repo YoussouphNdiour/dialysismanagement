@@ -47,11 +47,11 @@
         action="action_appointment"
         sequence="40"/>
 
-    <!-- 5. Biologie (analyses de laboratoire) -->
+    <!-- 5. Bilans Biologiques (nouveau module acs.nephro.bilan) -->
     <menuitem id="menu_acs_biologie"
-        name="Biologie"
+        name="Bilans Biologiques"
         parent="menu_acs_main_nephrology"
-        action="acs_hms.action_acs_patient_biologie"
+        action="acs_hms_nephrology_bilans.action_acs_nephro_bilan"
         sequence="50"/>
 
     <!-- 6. Ordonnances -->

@@ -14,7 +14,11 @@ class ACSDialysisAbsence(models.Model):
     _description = 'Absence patient — dialyse'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'start_date desc'
+    _rec_name = 'name'
 
+    name = fields.Char(
+        string='Référence', compute='_compute_name', store=True,
+    )
     patient_id = fields.Many2one(
         'hms.patient', string='Patient', required=True, index=True,
         tracking=True,
@@ -42,6 +46,14 @@ class ACSDialysisAbsence(models.Model):
         default=False, copy=False,
         help="Anti-doublon cron WhatsApp reprise",
     )
+
+    @api.depends('patient_id', 'start_date', 'end_date')
+    def _compute_name(self):
+        for rec in self:
+            if rec.patient_id and rec.start_date:
+                rec.name = f"{rec.patient_id.name} — {rec.start_date}"
+            else:
+                rec.name = _("Nouvelle absence")
 
     _sql_constraints = [
         ('date_order_check', 'CHECK(end_date >= start_date)',

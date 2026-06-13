@@ -16,6 +16,7 @@ class ACSNephroBilan(models.Model):
                                  default=fields.Datetime.now, required=True, tracking=True)
     physician_id = fields.Many2one('hms.physician', string='Médecin prescripteur')
     bilan_type = fields.Selection([
+        ('predialysis', 'Pré-dialyse'),
         ('monthly', 'Mensuel'),
         ('quarterly', 'Trimestriel'),
         ('biannual', 'Semestriel'),
@@ -217,3 +218,16 @@ class ACSPatientBilanRelation(models.Model):
     bilan_ids = fields.One2many(
         'acs.nephro.bilan', 'patient_id', string='Bilans Biologiques'
     )
+    bilan_count = fields.Integer(compute='_compute_bilan_count', string='# Bilans')
+
+    def _compute_bilan_count(self):
+        for rec in self:
+            rec.bilan_count = len(rec.bilan_ids)
+
+    def action_open_bilans(self):
+        action = self.env['ir.actions.actions']._for_xml_id(
+            'acs_hms_nephrology_bilans.action_acs_nephro_bilan'
+        )
+        action['domain'] = [('patient_id', '=', self.id)]
+        action['context'] = {'default_patient_id': self.id}
+        return action

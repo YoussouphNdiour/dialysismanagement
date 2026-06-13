@@ -63,11 +63,11 @@
                         <label class="form-label fw-semibold">Tolérance globale <span class="text-danger">*</span></label>
                         <div class="d-flex gap-2">
                             <button t-att-class="form.global_tolerance === 'good' ? 'btn btn-success btn-lg' : 'btn btn-outline-success btn-lg'"
-                                    t-on-click="() => form.global_tolerance = 'good'">Bonne</button>
+                                    t-on-click="() => this.form.global_tolerance = 'good'">Bonne</button>
                             <button t-att-class="form.global_tolerance === 'average' ? 'btn btn-warning btn-lg' : 'btn btn-outline-warning btn-lg'"
-                                    t-on-click="() => form.global_tolerance = 'average'">Moyenne</button>
+                                    t-on-click="() => this.form.global_tolerance = 'average'">Moyenne</button>
                             <button t-att-class="form.global_tolerance === 'poor' ? 'btn btn-danger btn-lg' : 'btn btn-outline-danger btn-lg'"
-                                    t-on-click="() => form.global_tolerance = 'poor'">Mauvaise</button>
+                                    t-on-click="() => this.form.global_tolerance = 'poor'">Mauvaise</button>
                         </div>
                     </div>
 

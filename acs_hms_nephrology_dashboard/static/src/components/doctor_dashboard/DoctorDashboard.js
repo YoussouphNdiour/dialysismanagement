@@ -58,9 +58,16 @@ export class DoctorDashboard extends Component {
         this.state.tab = "grid";
     }
 
-    setTab(tab) {
-        this.state.tab = tab;
+    setTab(ev) {
+        this.state.tab = ev.currentTarget.dataset.tab;
         this.state.alertFilter = null;
+    }
+
+    onClickRow(ev) {
+        const procedureId = parseInt(ev.currentTarget.dataset.procedureId);
+        if (procedureId) {
+            this.onSelectStation(procedureId);
+        }
     }
 
     fmtDur(hours) {

@@ -347,7 +347,7 @@ class ACSPatient(models.Model):
         for rec in self:
             company = rec.company_id or self.env.company
             acs_patient_progress = 0.0
-            dynamic_fields = company.acs_patient_field_ids.filtered(lambda f: f.model == 'hms.patient').mapped('name')
+            dynamic_fields = company.sudo().acs_patient_field_ids.filtered(lambda f: f.model == 'hms.patient').mapped('name')
             if dynamic_fields:
                 total = len(dynamic_fields)
                 filled = sum(1 for field_name in dynamic_fields if getattr(rec, field_name))
