@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+  <t t-name="acs_hms_nephrology_dashboard.DoctorKpiStats">
+    <div class="dd-kpi-stats">
+
+      <t t-if="state.loading">
+        <div class="dd-kpi-loading">Chargement des KPIs...</div>
+      </t>
+
+      <t t-elif="!state.data">
+        <div class="dd-kpi-loading">Données non disponibles.</div>
+      </t>
+
+      <t t-else="">
+        <div class="dd-kpi-header">
+          <span class="dd-kpi-period" t-esc="state.data.period_label"/>
+          <t t-if="state.data.is_manager">
+            <span class="dd-kpi-badge">Vue globale — tous les patients</span>
+          </t>
+        </div>
+
+        <div class="dd-kpi-grid">
+
+          <div class="dd-kpi-card dd-kpi-blue">
+            <div class="dd-kpi-label">Séances ce mois</div>
+            <div class="dd-kpi-value" t-esc="state.data.sessions_count"/>
+            <div t-if="deltaLabel" t-att-class="'dd-kpi-delta ' + deltaClass" t-esc="deltaLabel"/>
+          </div>
+
+          <div class="dd-kpi-card dd-kpi-green">
+            <div class="dd-kpi-label">Hb dans cible (10–12 g/dL)</div>
+            <div class="dd-kpi-value">
+              <t t-esc="state.data.hb_in_range_pct.toFixed(1)"/>%
+            </div>
+            <div class="dd-kpi-detail" t-esc="state.data.hb_in_range_detail + ' patients'"/>
+          </div>
+
+          <div class="dd-kpi-card dd-kpi-red">
+            <div class="dd-kpi-label">Taux complications</div>
+            <div class="dd-kpi-value">
+              <t t-esc="state.data.complication_rate.toFixed(1)"/>%
+            </div>
+            <div class="dd-kpi-detail" t-esc="state.data.complication_detail + ' séances'"/>
+          </div>
+
+          <div class="dd-kpi-card dd-kpi-yellow">
+            <div class="dd-kpi-label">KT/V adéquat (≥ 1.2)</div>
+            <div class="dd-kpi-value">
+              <t t-esc="state.data.ktv_adequate_pct.toFixed(1)"/>%
+            </div>
+            <div class="dd-kpi-detail" t-esc="state.data.ktv_adequate_detail + ' séances'"/>
+          </div>
+
+        </div>
+      </t>
+
+    </div>
+  </t>
+</templates>
