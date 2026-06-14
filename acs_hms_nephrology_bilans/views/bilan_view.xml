@@ -44,6 +44,13 @@
         <field name="model">acs.nephro.bilan</field>
         <field name="arch" type="xml">
             <form string="Bilan Biologique">
+                <header>
+                    <button name="%(acs_hms_nephrology_bilans.action_report_nephro_bilan)d"
+                            string="Imprimer le bilan"
+                            type="action"
+                            class="btn-secondary"
+                            icon="fa-print"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <h1>

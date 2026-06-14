@@ -16,70 +16,195 @@
             <t t-foreach="docs" t-as="o">
                 <t t-call="web.external_layout">
                     <div class="page">
-                        <h2>Bilan Biologique — <t t-esc="o.patient_id.name"/></h2>
-                        <p>
-                            <strong>Date :</strong> <t t-esc="o.exam_date.strftime('%d/%m/%Y')"/> |
-                            <strong>Type :</strong> <t t-esc="dict(o._fields['bilan_type'].selection).get(o.bilan_type, '')"/> |
-                            <strong>Médecin :</strong> <t t-esc="o.physician_id.name or 'N/A'"/>
-                        </p>
+                        <!-- En-tête -->
+                        <div style="margin-bottom: 16px;">
+                            <h2 style="margin: 0; color: #1565c0;">
+                                Bilan Biologique — <t t-esc="o.name"/>
+                            </h2>
+                            <p style="margin: 4px 0; color: #555;">
+                                <strong>Patient :</strong> <t t-esc="o.patient_id.name"/>
+                                &#160;|&#160;
+                                <strong>Date :</strong> <t t-esc="o.exam_date.strftime('%d/%m/%Y')"/>
+                                &#160;|&#160;
+                                <strong>Type :</strong>
+                                <t t-esc="dict(o._fields['bilan_type'].selection).get(o.bilan_type, '')"/>
+                                &#160;|&#160;
+                                <strong>Médecin :</strong> <t t-esc="o.physician_id.name or 'N/A'"/>
+                            </p>
+                        </div>
 
-                        <h3>Hématologie</h3>
-                        <table class="table table-sm table-bordered">
-                            <thead><tr><th>Paramètre</th><th>Résultat</th><th>Unité</th><th>Cible</th><th>Statut</th></tr></thead>
+                        <!-- Lookup tables for badge rendering -->
+                        <t t-set="STATUS_COLOR" t-value="{'ok': '#2e7d32', 'low': '#c62828', 'high': '#e65100'}"/>
+                        <t t-set="STATUS_BG"    t-value="{'ok': '#e8f5e9', 'low': '#ffebee', 'high': '#fff3e0'}"/>
+                        <t t-set="STATUS_LABEL" t-value="{'ok': 'OK', 'low': 'BAS', 'high': 'ÉLEVÉ'}"/>
+
+                        <!-- HÉMATOLOGIE -->
+                        <h3 style="background-color:#e3f2fd;padding:6px 10px;border-left:4px solid #1565c0;margin-top:20px;">
+                            Hématologie
+                        </h3>
+                        <table style="width:100%;border-collapse:collapse;margin-bottom:12px;font-size:12px;">
+                            <thead>
+                                <tr style="background-color:#e3f2fd;">
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:left;">Paramètre</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Résultat</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Unité</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Cible dialyse</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Statut</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <tr t-if="o.hemoglobin">
-                                    <td>Hémoglobine</td><td><t t-esc="o.hemoglobin"/></td>
-                                    <td>g/dL</td><td>10–12</td>
-                                    <td><t t-esc="dict(o._fields['hemoglobin_status'].selection).get(o.hemoglobin_status, '')"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;">Hémoglobine</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;font-weight:bold;"><t t-esc="o.hemoglobin"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">g/dL</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">10 – 12</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">
+                                        <t t-if="o.hemoglobin_status">
+                                            <span t-att-style="'background-color:' + STATUS_BG.get(o.hemoglobin_status,'#fff') + ';color:' + STATUS_COLOR.get(o.hemoglobin_status,'#000') + ';padding:2px 8px;border-radius:10px;font-weight:bold;font-size:11px;'">
+                                                <t t-esc="STATUS_LABEL.get(o.hemoglobin_status, o.hemoglobin_status)"/>
+                                            </span>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr t-if="o.hematocrit" style="background-color:#fafafa;">
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;">Hématocrite</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;"><t t-esc="o.hematocrit"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">%</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">30 – 36</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">—</td>
                                 </tr>
                                 <tr t-if="o.ferritin">
-                                    <td>Ferritine</td><td><t t-esc="o.ferritin"/></td>
-                                    <td>µg/L</td><td>200–500</td><td>—</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;">Ferritine</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;"><t t-esc="o.ferritin"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">µg/L</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">200 – 500</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">—</td>
                                 </tr>
                             </tbody>
                         </table>
 
-                        <h3>Électrolytes</h3>
-                        <table class="table table-sm table-bordered">
-                            <thead><tr><th>Paramètre</th><th>Résultat</th><th>Unité</th><th>Cible</th><th>Statut</th></tr></thead>
+                        <!-- ÉLECTROLYTES -->
+                        <h3 style="background-color:#e3f2fd;padding:6px 10px;border-left:4px solid #1565c0;margin-top:20px;">
+                            Électrolytes
+                        </h3>
+                        <table style="width:100%;border-collapse:collapse;margin-bottom:12px;font-size:12px;">
+                            <thead>
+                                <tr style="background-color:#e3f2fd;">
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:left;">Paramètre</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Résultat</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Unité</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Cible dialyse</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Statut</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <tr t-if="o.potassium">
-                                    <td>Potassium K</td><td><t t-esc="o.potassium"/></td>
-                                    <td>mmol/L</td><td>3.5–5.5</td>
-                                    <td><t t-esc="dict(o._fields['potassium_status'].selection).get(o.potassium_status, '')"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;">Potassium K</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;font-weight:bold;"><t t-esc="o.potassium"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">mmol/L</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">3.5 – 5.5</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">
+                                        <t t-if="o.potassium_status">
+                                            <span t-att-style="'background-color:' + STATUS_BG.get(o.potassium_status,'#fff') + ';color:' + STATUS_COLOR.get(o.potassium_status,'#000') + ';padding:2px 8px;border-radius:10px;font-weight:bold;font-size:11px;'">
+                                                <t t-esc="STATUS_LABEL.get(o.potassium_status, o.potassium_status)"/>
+                                            </span>
+                                        </t>
+                                    </td>
                                 </tr>
-                                <tr t-if="o.phosphorus">
-                                    <td>Phosphore P</td><td><t t-esc="o.phosphorus"/></td>
-                                    <td>mmol/L</td><td>1.1–1.8</td>
-                                    <td><t t-esc="dict(o._fields['phosphorus_status'].selection).get(o.phosphorus_status, '')"/></td>
+                                <tr t-if="o.phosphorus" style="background-color:#fafafa;">
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;">Phosphore P</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;font-weight:bold;"><t t-esc="o.phosphorus"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">mmol/L</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">1.1 – 1.8</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">
+                                        <t t-if="o.phosphorus_status">
+                                            <span t-att-style="'background-color:' + STATUS_BG.get(o.phosphorus_status,'#fff') + ';color:' + STATUS_COLOR.get(o.phosphorus_status,'#000') + ';padding:2px 8px;border-radius:10px;font-weight:bold;font-size:11px;'">
+                                                <t t-esc="STATUS_LABEL.get(o.phosphorus_status, o.phosphorus_status)"/>
+                                            </span>
+                                        </t>
+                                    </td>
                                 </tr>
                                 <tr t-if="o.caxp_product">
-                                    <td>Produit CaxP</td><td><t t-esc="o.caxp_product"/></td>
-                                    <td>mmol²/L²</td><td>&lt; 4.4</td>
-                                    <td><t t-esc="dict(o._fields['caxp_status'].selection).get(o.caxp_status, '')"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;">Produit CaxP</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;font-weight:bold;"><t t-esc="o.caxp_product"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">mmol²/L²</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">&lt; 4.4</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">
+                                        <t t-if="o.caxp_status">
+                                            <span t-att-style="'background-color:' + STATUS_BG.get(o.caxp_status,'#fff') + ';color:' + STATUS_COLOR.get(o.caxp_status,'#000') + ';padding:2px 8px;border-radius:10px;font-weight:bold;font-size:11px;'">
+                                                <t t-esc="STATUS_LABEL.get(o.caxp_status, o.caxp_status)"/>
+                                            </span>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <tr t-if="o.sodium" style="background-color:#fafafa;">
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;">Sodium Na</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;"><t t-esc="o.sodium"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">mmol/L</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">135 – 145</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">—</td>
                                 </tr>
                             </tbody>
                         </table>
 
-                        <h3>Nutrition / Inflammation</h3>
-                        <table class="table table-sm table-bordered">
-                            <thead><tr><th>Paramètre</th><th>Résultat</th><th>Unité</th><th>Cible</th><th>Statut</th></tr></thead>
+                        <!-- NUTRITION / INFLAMMATION -->
+                        <h3 style="background-color:#e3f2fd;padding:6px 10px;border-left:4px solid #1565c0;margin-top:20px;">
+                            Nutrition / Inflammation
+                        </h3>
+                        <table style="width:100%;border-collapse:collapse;margin-bottom:12px;font-size:12px;">
+                            <thead>
+                                <tr style="background-color:#e3f2fd;">
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:left;">Paramètre</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Résultat</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Unité</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Cible dialyse</th>
+                                    <th style="padding:6px 8px;border:1px solid #bbdefb;text-align:center;">Statut</th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <tr t-if="o.albumin">
-                                    <td>Albumine</td><td><t t-esc="o.albumin"/></td>
-                                    <td>g/L</td><td>&gt; 35</td>
-                                    <td><t t-esc="dict(o._fields['albumin_status'].selection).get(o.albumin_status, '')"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;">Albumine</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;font-weight:bold;"><t t-esc="o.albumin"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">g/L</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">&gt; 35</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">
+                                        <t t-if="o.albumin_status">
+                                            <span t-att-style="'background-color:' + STATUS_BG.get(o.albumin_status,'#fff') + ';color:' + STATUS_COLOR.get(o.albumin_status,'#000') + ';padding:2px 8px;border-radius:10px;font-weight:bold;font-size:11px;'">
+                                                <t t-esc="STATUS_LABEL.get(o.albumin_status, o.albumin_status)"/>
+                                            </span>
+                                        </t>
+                                    </td>
                                 </tr>
-                                <tr t-if="o.crp">
-                                    <td>CRP</td><td><t t-esc="o.crp"/></td>
-                                    <td>mg/L</td><td>&lt; 5</td><td>—</td>
+                                <tr t-if="o.crp" style="background-color:#fafafa;">
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;">CRP</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;"><t t-esc="o.crp"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">mg/L</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">&lt; 5</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">—</td>
+                                </tr>
+                                <tr t-if="o.pth">
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;">PTH</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;font-weight:bold;"><t t-esc="o.pth"/></td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">pg/mL</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">150 – 300</td>
+                                    <td style="padding:6px 8px;border:1px solid #e0e0e0;text-align:center;">
+                                        <t t-if="o.pth_status">
+                                            <span t-att-style="'background-color:' + STATUS_BG.get(o.pth_status,'#fff') + ';color:' + STATUS_COLOR.get(o.pth_status,'#000') + ';padding:2px 8px;border-radius:10px;font-weight:bold;font-size:11px;'">
+                                                <t t-esc="STATUS_LABEL.get(o.pth_status, o.pth_status)"/>
+                                            </span>
+                                        </t>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
 
                         <t t-if="o.notes">
-                            <h3>Notes cliniques</h3>
-                            <p><t t-esc="o.notes"/></p>
+                            <h3 style="background-color:#e3f2fd;padding:6px 10px;border-left:4px solid #1565c0;margin-top:20px;">
+                                Notes cliniques
+                            </h3>
+                            <p style="padding:8px;background-color:#fafafa;border:1px solid #e0e0e0;border-radius:4px;">
+                                <t t-esc="o.notes"/>
+                            </p>
                         </t>
                     </div>
                 </t>
