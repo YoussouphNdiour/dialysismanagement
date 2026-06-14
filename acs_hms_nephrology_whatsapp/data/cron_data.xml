@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Cron quotidien alertes WhatsApp bilans critiques -->
+        <record id="cron_whatsapp_bilans_alerts" model="ir.cron">
+            <field name="name">Dialyse : Alertes WhatsApp bilans critiques (Hb/K/P)</field>
+            <field name="model_id" ref="acs_hms_nephrology_bilans.model_acs_nephro_bilan"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_whatsapp_bilans_alerts()</field>
+            <field name="nextcall">2026-06-15 07:00:00</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>
