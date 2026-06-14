@@ -3,6 +3,7 @@ from datetime import timedelta
 import logging
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ class ACSNephroBilanWhatsapp(models.Model):
             )
             return 0
 
-        nephro_patients = self.env['hms.patient'].search([
+        nephro_patients = self.env['hms.patient'].sudo().search([
             ('nephrology_care', '=', True),
             ('active', '=', True),
         ])
@@ -53,6 +54,7 @@ class ACSNephroBilanWhatsapp(models.Model):
         _logger.info('_cron_whatsapp_bilans_alerts : %d alertes envoyées', count)
         return count
 
+    @api.model
     def _whatsapp_already_sent(self, patient, tag):
         """Retourne True si un WhatsApp avec ce tag a été envoyé dans les 7 derniers jours."""
         cutoff = fields.Datetime.now() - timedelta(days=7)
@@ -64,6 +66,7 @@ class ACSNephroBilanWhatsapp(models.Model):
             ('create_date', '>=', cutoff),
         ], limit=1))
 
+    @api.model
     def _send_whatsapp(self, patient, phone, text):
         """Crée et envoie un whatsapp.message. Retourne 1 si succès, 0 sinon."""
         msg = self.env['whatsapp.message'].sudo().create({
@@ -76,19 +79,26 @@ class ACSNephroBilanWhatsapp(models.Model):
         try:
             msg.action_send_message()
             return 1
-        except Exception as e:
+        except UserError as e:
             _logger.warning(
-                'WhatsApp alerte patient %s : échec envoi — %s',
+                'WhatsApp alerte patient %s : échec envoi (UserError) — %s',
+                patient.name, e,
+            )
+            return 0
+        except Exception as e:
+            _logger.error(
+                'WhatsApp alerte patient %s : erreur inattendue — %s',
                 patient.name, e,
             )
             return 0
 
+    @api.model
     def _check_and_send_k_alert(self, patient, physician, phone):
         """Alerte K > 5.5 — 1 seul bilan."""
         tag = '[ALERTE_K]'
         if self._whatsapp_already_sent(patient, tag):
             return 0
-        last = self.search(
+        last = self.sudo().search(
             [('patient_id', '=', patient.id), ('potassium', '>', 0)],
             order='exam_date desc', limit=1,
         )
@@ -107,12 +117,13 @@ class ACSNephroBilanWhatsapp(models.Model):
         )
         return self._send_whatsapp(patient, phone, text)
 
+    @api.model
     def _check_and_send_hb_alert(self, patient, physician, phone):
         """Alerte Hb < 10 — 2 bilans consécutifs."""
         tag = '[ALERTE_Hb]'
         if self._whatsapp_already_sent(patient, tag):
             return 0
-        last_two = self.search(
+        last_two = self.sudo().search(
             [('patient_id', '=', patient.id), ('hemoglobin', '>', 0)],
             order='exam_date desc', limit=2,
         )
@@ -136,12 +147,13 @@ class ACSNephroBilanWhatsapp(models.Model):
         )
         return self._send_whatsapp(patient, phone, text)
 
+    @api.model
     def _check_and_send_p_alert(self, patient, physician, phone):
         """Alerte P > 1.8 — 2 bilans consécutifs."""
         tag = '[ALERTE_P]'
         if self._whatsapp_already_sent(patient, tag):
             return 0
-        last_two = self.search(
+        last_two = self.sudo().search(
             [('patient_id', '=', patient.id), ('phosphorus', '>', 0)],
             order='exam_date desc', limit=2,
         )
