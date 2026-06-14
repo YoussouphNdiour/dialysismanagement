@@ -14,7 +14,6 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/default_thresholds.xml',
-        'data/mail_template_hb_alert.xml',
         'data/cron_data.xml',
         'report/bilan_report.xml',
         'views/bilan_threshold_view.xml',

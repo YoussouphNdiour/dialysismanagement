@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
-import logging
-_logger = logging.getLogger(__name__)
 
 
 class ACSNephroBilan(models.Model):
@@ -210,7 +208,7 @@ class ACSNephroBilan(models.Model):
                 'mail.mail_activity_data_todo',
                 summary='Bilan biologique en retard (> 30 jours)',
                 note=f'Le patient {patient.name} n\'a pas eu de bilan depuis plus de 30 jours.',
-                user_id=patient.primary_physician_id.user_id.id if patient.primary_physician_id else self.env.uid,
+                user_id=patient.physician_id.user_id.id if patient.physician_id else self.env.uid,
             )
 
     @api.model
@@ -245,8 +243,8 @@ class ACSNephroBilan(models.Model):
                     continue
 
                 physician_user_id = (
-                    patient.primary_physician_id.user_id.id
-                    if patient.primary_physician_id and patient.primary_physician_id.user_id
+                    patient.physician_id.user_id.id
+                    if patient.physician_id and patient.physician_id.user_id
                     else self.env.uid
                 )
                 hb_values = ', '.join(
@@ -272,53 +270,6 @@ class ACSNephroBilan(models.Model):
                 alerted_count += 1
 
         return alerted_count
-
-    @api.model
-    def _cron_alert_hb_consecutive(self):
-        """
-        Cron hebdomadaire : détecte les patients avec Hb bas sur les 2 derniers
-        bilans consécutifs et envoie un email au médecin référent (hms.patient.physician_id).
-        """
-        template = self.env.ref(
-            'acs_hms_nephrology_bilans.mail_template_hb_alert_consecutive',
-            raise_if_not_found=False,
-        )
-        if not template:
-            _logger.warning('_cron_alert_hb_consecutive : template email introuvable')
-            return
-
-        nephro_patients = self.env['hms.patient'].search([('active', '=', True)])
-
-        for patient in nephro_patients:
-            last_two = self.search(
-                [('patient_id', '=', patient.id), ('hemoglobin', '>', 0)],
-                order='exam_date desc',
-                limit=2,
-            )
-            if len(last_two) < 2:
-                continue
-            if not all(b.hemoglobin_status == 'low' for b in last_two):
-                continue
-            physician = patient.primary_physician_id
-            if not physician or not physician.partner_id.email:
-                continue
-            try:
-                bilan_recent = last_two[0]
-                bilan_prev = last_two[1]
-                template.with_context(
-                    patient_name=patient.name,
-                    bilan_recent_name=bilan_recent.name,
-                    bilan_recent_date=bilan_recent.exam_date.strftime('%d/%m/%Y') if bilan_recent.exam_date else '',
-                    bilan_recent_hb=bilan_recent.hemoglobin,
-                    bilan_prev_name=bilan_prev.name,
-                    bilan_prev_date=bilan_prev.exam_date.strftime('%d/%m/%Y') if bilan_prev.exam_date else '',
-                    bilan_prev_hb=bilan_prev.hemoglobin,
-                ).send_mail(physician.partner_id.id, force_send=True)
-            except Exception as e:
-                _logger.warning(
-                    'Alerte Hb : échec envoi email pour patient %s — %s',
-                    patient.name, str(e)
-                )
 
 
 class ACSPatientBilanRelation(models.Model):
