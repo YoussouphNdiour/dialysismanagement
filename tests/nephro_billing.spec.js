@@ -93,7 +93,7 @@ test.describe('Facturation Dialyse', () => {
 
     // \u2500\u2500\u2500 \u00c9tape 4 : Ouvrir la facture dans l\u2019UI \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
     await page.goto(`/odoo/accounting/customer-invoices/${invoiceId}`, { waitUntil: 'domcontentloaded' }).catch(() => {});
-    await page.waitForTimeout(1500);
+    await page.waitForSelector('.o_form_view, .o_form_sheet', { timeout: 15000 }).catch(() => {});
     await snap(page, 'nephro_billing_invoice_form');
 
     console.log('[billing] Test termin\u00e9 avec succ\u00e8s');
