@@ -64,3 +64,4 @@ class TestBuildChartData(TransactionCase):
 
         self.assertEqual(result['hemoglobin'], [0.0])
         self.assertEqual(result['potassium'], [0.0])
+        self.assertEqual(result['phosphorus'], [0.0])
