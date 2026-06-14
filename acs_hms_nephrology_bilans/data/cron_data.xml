@@ -36,7 +36,7 @@
 <p>Veuillez consulter le dossier du patient dès que possible.</p>
 <p>Cordialement,<br/>Système As-Shafi HMS</p>
             ]]></field>
-            <field name="email_to">{{object.physician_id.user_id.email or ''}}</field>
+            <field name="email_to">{{object.primary_physician_id.user_id.email or ''}}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -50,6 +50,19 @@
             <field name="nextcall">2026-06-16 07:00:00</field>
             <field name="interval_number">1</field>
             <field name="interval_type">weeks</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- ── Cron 3 : Alerte Hb bas consécutif (hebdomadaire, lundi 07h00) ── -->
+        <record id="cron_alert_hb_consecutive" model="ir.cron">
+            <field name="name">Dialyse : Alertes Hb bas — 2 bilans consécutifs</field>
+            <field name="model_id" ref="acs_hms_nephrology_bilans.model_acs_nephro_bilan"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_alert_hb_consecutive()</field>
+            <field name="nextcall">2026-06-16 07:00:00</field>
+            <field name="interval_number">7</field>
+            <field name="interval_type">days</field>
             <field name="active" eval="True"/>
         </record>
 
