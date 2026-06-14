@@ -151,3 +151,62 @@
 .dsc-metric { background: #111827; border-radius: 8px; padding: 12px 16px; }
 .dsc-metric-value { font-size: 22px; font-weight: 700; color: #4e9af1; }
 .dsc-metric-label { font-size: 11px; color: #6b7280; margin-top: 2px; }
+
+/* ── KPI Stats Tab ───────────────────────────────────────────── */
+.dd-kpi-stats { padding: 24px; color: #e5e7eb; }
+
+.dd-kpi-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.dd-kpi-period { font-size: 1.1rem; font-weight: 600; color: #9ca3af; }
+.dd-kpi-badge {
+    background: #374151;
+    color: #9ca3af;
+    font-size: 0.75rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+.dd-kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+.dd-kpi-card {
+    background: #1f2937;
+    border-radius: 10px;
+    padding: 20px 24px;
+    border-left: 4px solid transparent;
+}
+.dd-kpi-blue   { border-left-color: #4e73df; }
+.dd-kpi-green  { border-left-color: #1cc88a; }
+.dd-kpi-red    { border-left-color: #e74a3b; }
+.dd-kpi-yellow { border-left-color: #f6c23e; }
+
+.dd-kpi-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+.dd-kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #f3f4f6;
+    line-height: 1;
+    margin-bottom: 6px;
+}
+.dd-kpi-detail { font-size: 0.8rem; color: #6b7280; }
+.dd-kpi-delta  { font-size: 0.85rem; font-weight: 600; margin-top: 4px; }
+.dd-kpi-delta-up      { color: #1cc88a; }
+.dd-kpi-delta-down    { color: #e74a3b; }
+.dd-kpi-delta-neutral { color: #9ca3af; }
+.dd-kpi-loading {
+    text-align: center;
+    color: #6b7280;
+    padding: 60px 0;
+    font-size: 0.9rem;
+}

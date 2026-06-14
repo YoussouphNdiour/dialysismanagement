@@ -21,6 +21,8 @@
                   t-on-click="setTab" data-tab="list">☰ Liste</button>
           <button t-att-class="'dd-tab ' + (state.tab === 'stats' ? 'active' : '')"
                   t-on-click="setTab" data-tab="stats">📊 Stats</button>
+          <button t-att-class="'dd-tab ' + (state.tab === 'kpis' ? 'active' : '')"
+                  t-on-click="setTab" data-tab="kpis">📈 KPIs</button>
         </div>
 
         <div class="dd-content">
@@ -60,6 +62,10 @@
 
           <t t-elif="state.tab === 'stats'">
             <DoctorStatsChart/>
+          </t>
+
+          <t t-elif="state.tab === 'kpis'">
+            <DoctorKpiStats/>
           </t>
         </div>
       </div>

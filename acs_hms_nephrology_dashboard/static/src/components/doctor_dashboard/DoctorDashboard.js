@@ -6,10 +6,11 @@ import { DoctorAlertsSidebar } from "./DoctorAlertsSidebar";
 import { DoctorStationGrid } from "./DoctorStationGrid";
 import { DoctorPatientPanel } from "./DoctorPatientPanel";
 import { DoctorStatsChart } from "./DoctorStatsChart";
+import { DoctorKpiStats } from "./DoctorKpiStats";
 
 export class DoctorDashboard extends Component {
     static template = "acs_hms_nephrology_dashboard.DoctorDashboard";
-    static components = { DoctorAlertsSidebar, DoctorStationGrid, DoctorPatientPanel, DoctorStatsChart };
+    static components = { DoctorAlertsSidebar, DoctorStationGrid, DoctorPatientPanel, DoctorStatsChart, DoctorKpiStats };
 
     setup() {
         this.orm = useService("orm");
