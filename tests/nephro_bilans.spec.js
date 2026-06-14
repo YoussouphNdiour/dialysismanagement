@@ -71,7 +71,7 @@ test.describe('Bilans Biologiques \u2014 N\u00e9phropathie', () => {
     ).first();
     if (await bilanTab.isVisible({ timeout: 5000 }).catch(() => false)) {
       await bilanTab.click();
-      await page.waitForTimeout(800);
+      await page.waitForSelector('.o_data_row, .o_nocontent_help', { timeout: 8000 }).catch(() => {});
       console.log('[bilans] onglet Bilans Biologiques ouvert');
     }
 
@@ -79,7 +79,8 @@ test.describe('Bilans Biologiques \u2014 N\u00e9phropathie', () => {
 
     // \u2500\u2500\u2500 \u00c9tape 4 : V\u00e9rifier bouton Imprimer sur le formulaire du bilan \u2500\u2500\u2500\u2500\u2500\u2500
     await page.goto(`/odoo/action-573/${bilanId}`, { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1200);
+    // Wait for the form sheet to be visible before checking the print button
+    await page.waitForSelector('.o_form_view .o_form_sheet, .o_form_view', { timeout: 15000 }).catch(() => {});
 
     const printBtn = page.locator(
       'button:has-text("Imprimer"), button:has-text("Print"), .o_form_button_print'
@@ -108,7 +109,7 @@ test.describe('Bilans Biologiques \u2014 N\u00e9phropathie', () => {
     await page.goto('/odoo/action-573', { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('.o_data_row', { timeout: 15000 });
 
-    const badges = page.locator('.o_field_badge, .badge, [class*="badge"]');
+    const badges = page.locator('.o_data_row .o_field_badge');
     const badgeCount = await badges.count();
     console.log('[bilans] badges trouv\u00e9s :', badgeCount);
     await snap(page, 'nephro_bilans_liste_badges');
