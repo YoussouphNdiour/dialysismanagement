@@ -26,14 +26,18 @@ export class DoctorKpiStats extends Component {
     }
 
     get deltaLabel() {
-        const d = this.state.data && this.state.data.sessions_delta;
-        if (!d) return "";
-        return d > 0 ? `▲ +${d} vs mois précédent` : `▼ ${d} vs mois précédent`;
+        const delta = this.state.data?.sessions_delta;
+        if (delta == null) return "";
+        return delta > 0
+            ? `▲ +${delta} vs mois précédent`
+            : delta < 0
+            ? `▼ ${delta} vs mois précédent`
+            : `= ${delta} vs mois précédent`;
     }
 
     get deltaClass() {
-        const d = this.state.data && this.state.data.sessions_delta;
-        if (!d) return "";
-        return d > 0 ? "dd-kpi-delta-up" : "dd-kpi-delta-down";
+        const delta = this.state.data?.sessions_delta;
+        if (delta == null) return "";
+        return delta > 0 ? "dd-kpi-delta-up" : delta < 0 ? "dd-kpi-delta-down" : "dd-kpi-delta-neutral";
     }
 }
