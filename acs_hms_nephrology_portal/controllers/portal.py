@@ -191,7 +191,8 @@ class NephrologyPortal(CustomerPortal):
             domain, limit=10, offset=pager['offset'], order='exam_date desc'
         )
         # Données Chart.js — 6 derniers mois (sans pagination)
-        bilans_chart = Bilan.search(domain, order='exam_date asc', limit=6)
+        all_bilans = Bilan.search(domain, order='exam_date desc', limit=6)
+        bilans_chart = all_bilans.sorted('exam_date')
         chart_data = self._build_chart_data(bilans_chart)
 
         return request.render('acs_hms_nephrology_portal.portal_bilans', {
