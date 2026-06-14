@@ -2,6 +2,12 @@
 # -*- coding: utf-8 -*-
 from odoo import api, fields, models
 from datetime import datetime, timedelta
+import calendar as _cal
+
+_MONTH_NAMES = [
+    'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+    'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+]
 
 
 class ACSDialysisStationDashboard(models.Model):
@@ -268,8 +274,6 @@ class ACSDialysisStationDashboard(models.Model):
     def get_kpi_stats_data(self):
         """KPIs mensuels pour l'onglet KPIs du dashboard médecin.
         Périmètre : group_hms_manager → tous ; médecin standard → ses patients."""
-        import calendar as _cal
-
         today = fields.Datetime.now().date()
 
         # Bornes du mois courant
@@ -290,7 +294,7 @@ class ACSDialysisStationDashboard(models.Model):
         is_manager = self.env.user.has_group('acs_hms_base.group_hms_manager')
         patient_domain = [('nephrology_care', '=', True), ('active', '=', True)]
         if not is_manager:
-            physician = self.env['hms.physician'].search(
+            physician = self.env['hms.physician'].sudo().search(
                 [('user_id', '=', self.env.uid)], limit=1)
             if not physician:
                 return self._kpi_empty_result(is_manager, today)
@@ -347,8 +351,6 @@ class ACSDialysisStationDashboard(models.Model):
         ktv_ok = ktv_sessions.filtered(lambda p: p.ktv_status == 'adequate')
         ktv_pct = round(len(ktv_ok) / len(ktv_sessions) * 100, 1) if ktv_sessions else 0.0
 
-        _MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-                   'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
         return {
             'sessions_count': sessions_count,
             'sessions_delta': sessions_delta,
@@ -358,19 +360,17 @@ class ACSDialysisStationDashboard(models.Model):
             'complication_detail': f'{comp_total}/{sessions_count}',
             'ktv_adequate_pct': ktv_pct,
             'ktv_adequate_detail': f'{len(ktv_ok)}/{len(ktv_sessions)}',
-            'period_label': f'{_MONTHS[today.month - 1]} {today.year}',
+            'period_label': f'{_MONTH_NAMES[today.month - 1]} {today.year}',
             'is_manager': is_manager,
         }
 
     @api.model
     def _kpi_empty_result(self, is_manager, today):
-        _MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-                   'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
         return {
             'sessions_count': 0, 'sessions_delta': 0,
             'hb_in_range_pct': 0.0, 'hb_in_range_detail': '0/0',
             'complication_rate': 0.0, 'complication_detail': '0/0',
             'ktv_adequate_pct': 0.0, 'ktv_adequate_detail': '0/0',
-            'period_label': f'{_MONTHS[today.month - 1]} {today.year}',
+            'period_label': f'{_MONTH_NAMES[today.month - 1]} {today.year}',
             'is_manager': is_manager,
         }
