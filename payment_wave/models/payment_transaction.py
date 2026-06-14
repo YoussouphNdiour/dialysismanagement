@@ -5,7 +5,6 @@ import math
 import uuid
 from datetime import timedelta
 from werkzeug.urls import url_encode
-from twilio.rest import Client
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
