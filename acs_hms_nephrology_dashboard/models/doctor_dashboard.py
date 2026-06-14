@@ -263,3 +263,114 @@ class ACSDialysisStationDashboard(models.Model):
             'labels': sorted_days,
             'values': [round(sum(daily[d]) / len(daily[d]), 2) for d in sorted_days],
         }
+
+    @api.model
+    def get_kpi_stats_data(self):
+        """KPIs mensuels pour l'onglet KPIs du dashboard médecin.
+        Périmètre : group_hms_manager → tous ; médecin standard → ses patients."""
+        import calendar as _cal
+
+        today = fields.Datetime.now().date()
+
+        # Bornes du mois courant
+        month_start = today.replace(day=1)
+        last_day = _cal.monthrange(today.year, today.month)[1]
+        month_start_dt = datetime.combine(month_start, datetime.min.time())
+        month_end_dt = datetime.combine(
+            today.replace(day=last_day) + timedelta(days=1), datetime.min.time())
+
+        # Mois précédent (pour delta séances)
+        if month_start.month == 1:
+            prev_start = month_start.replace(year=month_start.year - 1, month=12)
+        else:
+            prev_start = month_start.replace(month=month_start.month - 1)
+        prev_start_dt = datetime.combine(prev_start, datetime.min.time())
+
+        # Périmètre patients
+        is_manager = self.env.user.has_group('acs_hms_base.group_hms_manager')
+        patient_domain = [('nephrology_care', '=', True), ('active', '=', True)]
+        if not is_manager:
+            physician = self.env['hms.physician'].search(
+                [('user_id', '=', self.env.uid)], limit=1)
+            if not physician:
+                return self._kpi_empty_result(is_manager, today)
+            patient_domain += [('primary_physician_id', '=', physician.id)]
+
+        patients = self.env['hms.patient'].sudo().search(patient_domain)
+        if not patients:
+            return self._kpi_empty_result(is_manager, today)
+
+        patient_ids = patients.ids
+        Procedure = self.env['acs.patient.procedure'].sudo()
+        dt = fields.Datetime.to_string
+
+        # Séances done ce mois
+        sessions = Procedure.search([
+            ('patient_id', 'in', patient_ids),
+            ('state', '=', 'done'),
+            ('department_id.department_type', '=', 'nephrology'),
+            ('date', '>=', dt(month_start_dt)),
+            ('date', '<', dt(month_end_dt)),
+        ])
+        sessions_count = len(sessions)
+
+        # Delta vs mois précédent
+        prev_count = Procedure.search_count([
+            ('patient_id', 'in', patient_ids),
+            ('state', '=', 'done'),
+            ('department_id.department_type', '=', 'nephrology'),
+            ('date', '>=', dt(prev_start_dt)),
+            ('date', '<', dt(month_start_dt)),
+        ])
+        sessions_delta = sessions_count - prev_count
+
+        # % Hb dans cible — dernier bilan par patient avec hemoglobin > 0
+        Bilan = self.env['acs.nephro.bilan'].sudo()
+        hb_ok = hb_total = 0
+        for patient in patients:
+            last = Bilan.search([
+                ('patient_id', '=', patient.id),
+                ('hemoglobin', '>', 0),
+            ], order='exam_date desc', limit=1)
+            if last:
+                hb_total += 1
+                if last.hemoglobin_status == 'ok':
+                    hb_ok += 1
+        hb_pct = round(hb_ok / hb_total * 100, 1) if hb_total else 0.0
+
+        # Taux complications
+        comp_total = sum(p.complication_count for p in sessions)
+        comp_rate = round(comp_total / sessions_count * 100, 1) if sessions_count else 0.0
+
+        # % KT/V adéquat
+        ktv_sessions = sessions.filtered(lambda p: p.ktv_calculated > 0)
+        ktv_ok = ktv_sessions.filtered(lambda p: p.ktv_status == 'adequate')
+        ktv_pct = round(len(ktv_ok) / len(ktv_sessions) * 100, 1) if ktv_sessions else 0.0
+
+        _MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                   'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+        return {
+            'sessions_count': sessions_count,
+            'sessions_delta': sessions_delta,
+            'hb_in_range_pct': hb_pct,
+            'hb_in_range_detail': f'{hb_ok}/{hb_total}',
+            'complication_rate': comp_rate,
+            'complication_detail': f'{comp_total}/{sessions_count}',
+            'ktv_adequate_pct': ktv_pct,
+            'ktv_adequate_detail': f'{len(ktv_ok)}/{len(ktv_sessions)}',
+            'period_label': f'{_MONTHS[today.month - 1]} {today.year}',
+            'is_manager': is_manager,
+        }
+
+    @api.model
+    def _kpi_empty_result(self, is_manager, today):
+        _MONTHS = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                   'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+        return {
+            'sessions_count': 0, 'sessions_delta': 0,
+            'hb_in_range_pct': 0.0, 'hb_in_range_detail': '0/0',
+            'complication_rate': 0.0, 'complication_detail': '0/0',
+            'ktv_adequate_pct': 0.0, 'ktv_adequate_detail': '0/0',
+            'period_label': f'{_MONTHS[today.month - 1]} {today.year}',
+            'is_manager': is_manager,
+        }
