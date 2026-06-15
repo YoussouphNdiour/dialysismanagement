@@ -3,7 +3,7 @@
     <template id="portal_home" name="Portail patient — Accueil">
         <t t-call="portal.portal_layout">
             <t t-set="page_name" t-value="'home'"/>
-            <t t-call-assets="acs_hms_nephrology_portal.assets_home" t-js="true" t-css="false"/>
+            <script src="/acs_hms_nephrology_portal/static/src/lib/chart.umd.min.js" type="text/javascript"/>
             <div class="container py-4">
                     <h2 class="mb-4">
                         Bonjour, <t t-esc="patient.name"/>
