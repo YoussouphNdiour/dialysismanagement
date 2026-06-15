@@ -9,53 +9,101 @@
 
                     <!-- Graphiques évolution 6 mois -->
                     <t t-if="bilans">
-                        <t t-call-assets="acs_hms_nephrology_portal.assets_bilans" t-js="true" t-css="false"/>
+                        <script src="/acs_hms_nephrology_portal/static/src/lib/chart.umd.min.js" type="text/javascript"/>
                         <div class="nephro-card mb-4">
-                            <h5 class="mb-3">Évolution — 6 derniers mois</h5>
+                            <h5 class="mb-3">Évolution — 6 derniers bilans</h5>
                             <div class="row g-3">
                                 <div class="col-12 col-md-4">
-                                    <canvas id="chartHemoglobin" height="120"/>
+                                    <p class="text-center small text-muted mb-1">Hémoglobine (g/dL)</p>
+                                    <canvas id="chartHemoglobin" height="140"/>
                                 </div>
                                 <div class="col-12 col-md-4">
-                                    <canvas id="chartPotassium" height="120"/>
+                                    <p class="text-center small text-muted mb-1">Potassium (mmol/L)</p>
+                                    <canvas id="chartPotassium" height="140"/>
                                 </div>
                                 <div class="col-12 col-md-4">
-                                    <canvas id="chartPhosphorus" height="120"/>
+                                    <p class="text-center small text-muted mb-1">Phosphore (mmol/L)</p>
+                                    <canvas id="chartPhosphorus" height="140"/>
                                 </div>
                             </div>
+                            <p class="text-muted small mt-2 mb-0">
+                                <span style="border-bottom:2px dashed #aaa; display:inline-block; width:20px; vertical-align:middle;"/>
+                                Lignes pointillées = zones cibles KDIGO
+                            </p>
                         </div>
                         <div id="nephroChartData" t-att-data-chart="chart_data" style="display:none"/>
                         <script type="text/javascript">
                             (function() {
-                                var data = JSON.parse(document.getElementById('nephroChartData').dataset.chart);
+                                var raw = document.getElementById('nephroChartData');
+                                if (!raw) return;
+                                var data = JSON.parse(raw.dataset.chart);
                                 if (!data || !data.labels || !data.labels.length) return;
-                                function makeChart(id, label, key, color) {
+
+                                var n = data.labels.length;
+
+                                /* Ligne KDIGO horizontale (pointillés) */
+                                function refLine(value, color, label) {
+                                    return {
+                                        label: label,
+                                        data: Array(n).fill(value),
+                                        borderColor: color,
+                                        borderDash: [6, 4],
+                                        borderWidth: 1.5,
+                                        pointRadius: 0,
+                                        fill: false,
+                                        tension: 0,
+                                    };
+                                }
+
+                                function makeChart(id, key, color, refs) {
                                     var ctx = document.getElementById(id);
                                     if (!ctx) return;
+                                    var datasets = [{
+                                        label: key,
+                                        data: data[key],
+                                        borderColor: color,
+                                        backgroundColor: color + '22',
+                                        tension: 0.3,
+                                        fill: true,
+                                        pointRadius: 4,
+                                        borderWidth: 2,
+                                    }];
+                                    refs.forEach(function(r) { datasets.push(r); });
                                     new Chart(ctx, {
                                         type: 'line',
-                                        data: {
-                                            labels: data.labels,
-                                            datasets: [{
-                                                label: label,
-                                                data: data[key],
-                                                borderColor: color,
-                                                backgroundColor: color + '22',
-                                                tension: 0.3,
-                                                fill: true,
-                                                pointRadius: 4,
-                                            }]
-                                        },
+                                        data: { labels: data.labels, datasets: datasets },
                                         options: {
                                             responsive: true,
-                                            plugins: { legend: { display: true } },
+                                            plugins: {
+                                                legend: { display: false },
+                                                tooltip: {
+                                                    callbacks: {
+                                                        label: function(ctx) {
+                                                            return ctx.dataset.label + ': ' + ctx.parsed.y;
+                                                        }
+                                                    }
+                                                }
+                                            },
                                             scales: { y: { beginAtZero: false } }
                                         }
                                     });
                                 }
-                                makeChart('chartHemoglobin', 'Hémoglobine (g/dL)', 'hemoglobin', '#e74c3c');
-                                makeChart('chartPotassium',  'Potassium (mmol/L)',  'potassium',  '#3498db');
-                                makeChart('chartPhosphorus', 'Phosphore (mmol/L)',  'phosphorus', '#2ecc71');
+
+                                /* Hb : cible KDIGO 10–12 g/dL */
+                                makeChart('chartHemoglobin', 'hemoglobin', '#e74c3c', [
+                                    refLine(10, '#e74c3c88', 'Min 10'),
+                                    refLine(12, '#e74c3c88', 'Max 12'),
+                                ]);
+                                /* K : cible 3.5–5.5 mmol/L */
+                                makeChart('chartPotassium', 'potassium', '#3498db', [
+                                    refLine(3.5, '#3498db88', 'Min 3.5'),
+                                    refLine(5.5, '#3498db88', 'Max 5.5'),
+                                ]);
+                                /* P : cible 1.1–1.8 mmol/L */
+                                makeChart('chartPhosphorus', 'phosphorus', '#2ecc71', [
+                                    refLine(1.1, '#2ecc7188', 'Min 1.1'),
+                                    refLine(1.8, '#2ecc7188', 'Max 1.8'),
+                                ]);
                             })();
                         </script>
                     </t>
