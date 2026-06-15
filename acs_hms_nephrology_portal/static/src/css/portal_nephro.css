@@ -113,3 +113,42 @@
 .nephro-dialog::backdrop {
     background: rgba(0, 0, 0, 0.5);
 }
+
+/* Sparkline cards */
+.nephro-sparkcard {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-height: 110px;
+}
+
+.nephro-sparkcard-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.nephro-sparkcard-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1.2;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.nephro-sparkcard-unit {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: #666;
+}
+
+.nephro-spark-canvas {
+    flex: 1;
+    width: 100% !important;
+    min-height: 45px;
+    max-height: 55px;
+}

@@ -3,14 +3,16 @@
     <template id="portal_home" name="Portail patient — Accueil">
         <t t-call="portal.portal_layout">
             <t t-set="page_name" t-value="'home'"/>
+            <t t-call-assets="acs_hms_nephrology_portal.assets_home" t-js="true" t-css="false"/>
             <div class="container py-4">
                     <h2 class="mb-4">
                         Bonjour, <t t-esc="patient.name"/>
                     </h2>
 
+                    <!-- Rangée 1 : 3 cartes principales -->
                     <div class="row g-3">
                         <!-- Prochain RDV -->
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             <a href="/my/rdv" class="text-decoration-none">
                                 <div class="nephro-card">
                                     <div class="text-muted small mb-1">Prochain RDV</div>
@@ -27,28 +29,8 @@
                             </a>
                         </div>
 
-                        <!-- Dernier bilan -->
-                        <div class="col-6 col-md-3">
-                            <a href="/my/bilans" class="text-decoration-none">
-                                <div class="nephro-card">
-                                    <div class="text-muted small mb-1">Dernier bilan</div>
-                                    <t t-if="last_bilan">
-                                        <strong>
-                                            Hb: <t t-esc="'%.1f' % (last_bilan.hemoglobin or 0)"/> g/dL
-                                        </strong>
-                                        <div class="text-muted small">
-                                            <t t-esc="last_bilan.exam_date and last_bilan.exam_date.strftime('%d/%m/%Y')"/>
-                                        </div>
-                                    </t>
-                                    <t t-else="">
-                                        <span class="text-muted">Aucun bilan</span>
-                                    </t>
-                                </div>
-                            </a>
-                        </div>
-
                         <!-- Solde -->
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             <a href="/my/factures" class="text-decoration-none">
                                 <div class="nephro-card">
                                     <div class="text-muted small mb-1">Solde</div>
@@ -71,7 +53,7 @@
                         </div>
 
                         <!-- Ordonnances actives -->
-                        <div class="col-6 col-md-3">
+                        <div class="col-6 col-md-4">
                             <a href="/my/ordonnances" class="text-decoration-none">
                                 <div class="nephro-card">
                                     <div class="text-muted small mb-1">Ordonnances</div>
@@ -88,6 +70,37 @@
                         </div>
                     </div>
 
+                    <!-- Rangée 2 : cartes sparkline Hb et KT/V -->
+                    <div class="row g-3 mt-0">
+                        <div class="col-6 col-md-6" t-if="hb_trend and hb_trend != '{}'">
+                            <div class="nephro-card nephro-sparkcard">
+                                <div class="nephro-sparkcard-header text-danger">Hémoglobine</div>
+                                <div class="nephro-sparkcard-value">
+                                    <span t-esc="'%.1f' % (last_bilan.hemoglobin if last_bilan else 0)"/>
+                                    <span class="nephro-sparkcard-unit">g/dL</span>
+                                </div>
+                                <canvas class="nephro-spark-canvas"
+                                        t-att-data-trend="hb_trend"
+                                        t-att-data-color="'#e74c3c'"/>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-6" t-if="ktv_trend and ktv_trend != '{}'">
+                            <div class="nephro-card nephro-sparkcard">
+                                <div class="nephro-sparkcard-header text-primary">KT/V efficacité</div>
+                                <div class="nephro-sparkcard-value">
+                                    <span t-esc="'%.2f' % (last_procedure.ktv_calculated if last_procedure else 0.0)"/>
+                                    <span t-if="ktv_status == 'adequate'"
+                                          class="badge bg-success ms-1" style="font-size:0.6rem;">✓</span>
+                                    <span t-elif="ktv_status == 'insufficient'"
+                                          class="badge bg-warning ms-1" style="font-size:0.6rem;">⚠</span>
+                                </div>
+                                <canvas class="nephro-spark-canvas"
+                                        t-att-data-trend="ktv_trend"
+                                        t-att-data-color="'#3498db'"/>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Navigation secondaire (desktop) -->
                     <div class="d-none d-md-flex gap-2 mt-4">
                         <a href="/my/seances" class="btn btn-outline-primary">Mes séances</a>
@@ -97,6 +110,38 @@
                         <a href="/my/factures" class="btn btn-outline-primary">Mes factures</a>
                     </div>
                 </div>
+
+            <t t-if="hb_trend != '{}' or ktv_trend != '{}'">
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        document.querySelectorAll('.nephro-spark-canvas').forEach(function(canvas) {
+                            var trend = JSON.parse(canvas.dataset.trend || '{}');
+                            if (!trend.labels || !trend.labels.length) return;
+                            new Chart(canvas, {
+                                type: 'line',
+                                data: {
+                                    labels: trend.labels,
+                                    datasets: [{
+                                        data: trend.values,
+                                        borderColor: canvas.dataset.color,
+                                        borderWidth: 2,
+                                        pointRadius: 2,
+                                        fill: false,
+                                        tension: 0.3,
+                                    }]
+                                },
+                                options: {
+                                    responsive: true,
+                                    maintainAspectRatio: false,
+                                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                                    scales: { x: { display: false }, y: { display: false } },
+                                    animation: false,
+                                }
+                            });
+                        });
+                    });
+                </script>
+            </t>
         </t>
     </template>
 </odoo>

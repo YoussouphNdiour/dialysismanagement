@@ -35,6 +35,9 @@
         'acs_hms_nephrology_portal.assets_bilans': [
             'acs_hms_nephrology_portal/static/src/lib/chart.umd.min.js',
         ],
+        'acs_hms_nephrology_portal.assets_home': [
+            'acs_hms_nephrology_portal/static/src/lib/chart.umd.min.js',
+        ],
     },
     'installable': True,
     'application': False,
