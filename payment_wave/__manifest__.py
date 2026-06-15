@@ -32,7 +32,7 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment_wave/static/src/js/payment_form.js',
+            'payment_wave/static/src/interactions/payment_form.js',
             'payment_wave/static/src/scss/payment_wave.scss',
         ],
     },

@@ -34,7 +34,7 @@ API Documentation: https://developers.orange-sonatel.com
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment_orange_money/static/src/js/payment_form.js',
+            'payment_orange_money/static/src/interactions/payment_form.js',
         ],
     },
     'post_init_hook': 'post_init_hook',
