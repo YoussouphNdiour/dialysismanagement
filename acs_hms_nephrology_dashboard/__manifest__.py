@@ -19,6 +19,7 @@
         'views/dialysis_waitlist_views.xml',
         'views/dialysis_reschedule_views.xml',
         'views/procedure_views_ext.xml',
+        'views/secretary_widget_action.xml',
     ],
     'assets': {
         'web.assets_backend': [
