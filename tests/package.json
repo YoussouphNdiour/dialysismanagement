@@ -1,0 +1,21 @@
+{
+  "name": "nephro-e2e-tests",
+  "version": "1.0.0",
+  "description": "Tests E2E Playwright — Modules Néphro Odoo 19",
+  "scripts": {
+    "setup": "npx playwright test setup/00_setup.spec.js --reporter=list",
+    "test:process": "npx playwright test setup/ process/ --reporter=html",
+    "test:roles": "npx playwright test roles/ --reporter=html",
+    "test:all": "npx playwright test setup/ process/ roles/ --reporter=html",
+    "test:secretaire": "npx playwright test roles/secretaire.spec.js --reporter=list",
+    "test:medecin": "npx playwright test roles/medecin.spec.js --reporter=list",
+    "test:infirmiere": "npx playwright test roles/infirmiere.spec.js --reporter=list",
+    "test:facturation": "npx playwright test roles/facturation.spec.js --reporter=list",
+    "test:portail": "npx playwright test roles/patient_portail.spec.js --reporter=list",
+    "report": "npx playwright show-report ../playwright-report",
+    "reset": "node -e \"require('fs').writeFileSync('state.json', JSON.stringify(require('./helpers/state').readState.__defaults || {}, null, 2))\""
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.44.0"
+  }
+}

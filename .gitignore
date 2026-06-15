@@ -12,6 +12,15 @@ __pycache__/
 playwright-report/
 test-results/
 
+# Tests — dépendances et état local
+tests/node_modules/
+tests/state.json
+tests/playwright-report/
+tests/test-results/
+
+# Fichiers de base de données locaux
+odoo.db
+
 # Screenshots générées automatiquement (sauf dossier tests/screenshots/)
 *.png
 !**/tests/screenshots/**/*.png
