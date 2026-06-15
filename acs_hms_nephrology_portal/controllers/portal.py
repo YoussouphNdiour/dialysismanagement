@@ -45,6 +45,30 @@ class NephrologyPortal(CustomerPortal):
         }
         return json.dumps(chart_data)
 
+    def _build_hb_trend(self, bilans):
+        """
+        Construit le JSON sparkline Hb depuis un recordset acs.nephro.bilan trié.
+        Labels au format dd/mm (sans année). Retourne '{}' si la liste est vide.
+        """
+        if not bilans:
+            return '{}'
+        return json.dumps({
+            'labels': [b.exam_date.strftime('%d/%m') for b in bilans if b.exam_date],
+            'values': [round(b.hemoglobin or 0, 2) for b in bilans if b.exam_date],
+        })
+
+    def _build_ktv_trend(self, seances):
+        """
+        Construit le JSON sparkline KT/V depuis un recordset acs.patient.procedure trié.
+        Labels au format dd/mm (sans année). Retourne '{}' si la liste est vide.
+        """
+        if not seances:
+            return '{}'
+        return json.dumps({
+            'labels': [p.date.strftime('%d/%m') for p in seances if p.date],
+            'values': [round(p.ktv_calculated or 0, 2) for p in seances if p.date],
+        })
+
     # ------------------------------------------------------------------ #
     #  /my — page résumé                                                   #
     # ------------------------------------------------------------------ #
@@ -103,6 +127,27 @@ class NephrologyPortal(CustomerPortal):
         balance_due = getattr(patient, 'balance_due', 0.0)
         payment_status = getattr(patient, 'payment_status', False)
 
+        # Trend Hb — 6 derniers bilans avec hemoglobin > 0, triés asc
+        bilans_trend = request.env['acs.nephro.bilan'].sudo().search(
+            [('patient_id', '=', patient.id), ('hemoglobin', '>', 0)],
+            order='exam_date desc', limit=6,
+        ).sorted('exam_date')
+        hb_trend = self._build_hb_trend(bilans_trend)
+
+        # Trend KT/V — 6 dernières séances done avec ktv > 0, triées asc
+        seances_trend = request.env['acs.patient.procedure'].sudo().search(
+            [
+                ('patient_id', '=', patient.id),
+                ('state', '=', 'done'),
+                ('department_id.department_type', '=', 'nephrology'),
+                ('ktv_calculated', '>', 0),
+            ],
+            order='date desc', limit=6,
+        ).sorted('date')
+        ktv_trend = self._build_ktv_trend(seances_trend)
+
+        ktv_status = last_procedure.ktv_status if last_procedure else False
+
         return request.render('acs_hms_nephrology_portal.portal_home', {
             'patient': patient,
             'next_rdv': next_rdv,
@@ -111,6 +156,9 @@ class NephrologyPortal(CustomerPortal):
             'active_rx': active_rx,
             'balance_due': balance_due,
             'payment_status': payment_status,
+            'hb_trend': hb_trend,
+            'ktv_trend': ktv_trend,
+            'ktv_status': ktv_status,
         })
 
     # ------------------------------------------------------------------ #

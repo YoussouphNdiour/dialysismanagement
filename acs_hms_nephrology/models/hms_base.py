@@ -259,7 +259,9 @@ class AcsPatientProcedure(models.Model):
     ktv_calculated = fields.Float(
         string='KT/V calculé',
         compute='_compute_ktv',
+        inverse='_inverse_ktv_calculated',
         store=True,
+        readonly=False,
         digits=(4, 2),
         help='Formule Daugirdas II'
     )
@@ -338,6 +340,11 @@ class AcsPatientProcedure(models.Model):
                 rec.ktv_status = 'adequate' if ktv >= 1.2 else 'insufficient'
             except (ValueError, ZeroDivisionError):
                 pass
+
+    def _inverse_ktv_calculated(self):
+        """Inverse no-op: ktv_calculated is store=True so the value is already persisted.
+        Defined so the field accepts direct writes (e.g. in tests or manual overrides)."""
+        pass
 
     def acs_consumable_line_data(self):
         data = {} 
