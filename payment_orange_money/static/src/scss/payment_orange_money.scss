@@ -1,0 +1,56 @@
+// Orange Money Payment Provider Styles
+
+.orange-money-payment-form {
+    max-width: 600px;
+    margin: 20px auto;
+
+    .card {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border: none;
+
+        .card-title {
+            color: #FF6600;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+    }
+
+    .qr-code-display {
+        background-color: #f8f9fa;
+        margin: 20px auto;
+        max-width: 400px;
+
+        h3 {
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            color: #FF6600;
+            word-break: break-all;
+        }
+    }
+
+    .alert-info {
+        background-color: #fff3e0;
+        border-color: #FF6600;
+        color: #333;
+    }
+
+    .btn-primary {
+        background-color: #FF6600;
+        border-color: #FF6600;
+
+        &:hover {
+            background-color: #E55A00;
+            border-color: #E55A00;
+        }
+    }
+}
+
+// Payment icon
+.o_payment_form {
+    .o_payment_option_card {
+        img[src*="orange_money"] {
+            max-height: 40px;
+        }
+    }
+}

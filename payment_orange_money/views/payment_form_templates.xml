@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Orange Money Redirect Form (required for payment flow) -->
+    <template id="redirect_form">
+        <form t-att-action="orange_money_qr_url" method="get"/>
+    </template>
+
+    <!-- Orange Money Payment Form Template -->
+    <template id="payment_form" name="Orange Money Payment Form">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center mb-4">
+                            <h4>Orange Money Payment</h4>
+                            <p class="text-muted">Scan the QR code with your Orange Money app</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" t-if="qr_code">
+                    <div class="col-12 text-center">
+                        <div class="mb-3">
+                            <img t-att-src="qr_code_url or qr_code"
+                                 alt="Orange Money QR Code"
+                                 class="img-fluid"
+                                 style="max-width: 300px;"/>
+                        </div>
+                        <p class="text-muted small">
+                            This QR code will expire in 15 minutes
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row" t-else="">
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="fa fa-spinner fa-spin"/> Generating payment QR code...
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="alert alert-warning">
+                            <strong>Instructions:</strong>
+                            <ol class="mb-0 mt-2">
+                                <li>Open your Orange Money app</li>
+                                <li>Go to "Scan QR Code" or "Pay Merchant"</li>
+                                <li>Scan the QR code above</li>
+                                <li>Confirm the payment with your PIN</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Inline Payment Form (embedded in checkout) -->
+    <template id="inline_form" name="Orange Money Inline Form">
+        <t t-call="payment.inline_form">
+            <xpath expr="//t[@t-set='provider_icon']" position="after">
+                <t t-set="provider_icon">/payment_orange_money/static/src/img/orange_money_icon.png</t>
+            </xpath>
+            <xpath expr="//t[@t-set='method_name']" position="after">
+                <t t-set="method_name">Orange Money</t>
+            </xpath>
+        </t>
+    </template>
+
+    <!-- Direct Payment Form (with phone input) -->
+    <template id="direct_payment_form" name="Orange Money Direct Payment Form">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="text-center mb-4">
+                            <h4>Orange Money Direct Payment</h4>
+                            <p class="text-muted">Enter your Orange Money number</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <form id="orange_money_direct_form" class="o_payment_form">
+                            <div class="mb-3">
+                                <label for="orange_money_msisdn" class="form-label">
+                                    Orange Money Number *
+                                </label>
+                                <input type="tel"
+                                       class="form-control"
+                                       id="orange_money_msisdn"
+                                       name="orange_money_msisdn"
+                                       placeholder="7XXXXXXXX"
+                                       pattern="[7][0-9]{8}"
+                                       required="required"/>
+                                <small class="form-text text-muted">
+                                    Enter your 9-digit Orange Money number (starting with 7)
+                                </small>
+                            </div>
+
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle"/> You will receive a notification on your phone to confirm the payment
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Payment Status Messages -->
+    <template id="payment_status_pending" name="Orange Money Payment Pending">
+        <div class="alert alert-warning">
+            <h4 class="alert-heading">
+                <i class="fa fa-clock-o"/> Payment Pending
+            </h4>
+            <p>Your Orange Money payment is being processed.</p>
+            <p class="mb-0">You will receive a confirmation once the payment is complete.</p>
+        </div>
+    </template>
+
+    <template id="payment_status_success" name="Orange Money Payment Success">
+        <div class="alert alert-success">
+            <h4 class="alert-heading">
+                <i class="fa fa-check-circle"/> Payment Successful
+            </h4>
+            <p>Your Orange Money payment has been processed successfully.</p>
+            <p class="mb-0">Thank you for your payment!</p>
+        </div>
+    </template>
+
+    <template id="payment_status_failed" name="Orange Money Payment Failed">
+        <div class="alert alert-danger">
+            <h4 class="alert-heading">
+                <i class="fa fa-times-circle"/> Payment Failed
+            </h4>
+            <p>Your Orange Money payment could not be processed.</p>
+            <p class="mb-0">Please try again or use a different payment method.</p>
+        </div>
+    </template>
+
+</odoo>

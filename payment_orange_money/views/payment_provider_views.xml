@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Orange Money Payment Provider Form View -->
+    <record id="payment_provider_form" model="ir.ui.view">
+        <field name="name">payment.provider.form.orange_money</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='provider_credentials']" position="after">
+                <group invisible="code != 'orange_money'" name="orange_money_credentials">
+                    <group>
+                        <field name="orange_money_api_url" required="code == 'orange_money'"/>
+                        <field name="orange_money_client_id" required="code == 'orange_money'" password="True"/>
+                        <field name="orange_money_client_secret" required="code == 'orange_money'" password="True"/>
+                    </group>
+                    <group>
+                        <field name="orange_money_merchant_code" required="code == 'orange_money'"/>
+                        <field name="orange_money_merchant_msisdn" required="code == 'orange_money'" placeholder="7XXXXXXXX"/>
+                        <field name="orange_money_pin_code" required="code == 'orange_money'" password="True"/>
+                    </group>
+                </group>
+
+                <group invisible="code != 'orange_money'" name="orange_money_info">
+                    <group>
+                        <label for="orange_money_access_token" string="API Status"/>
+                        <div>
+                            <field name="orange_money_access_token" invisible="1"/>
+                            <field name="orange_money_token_expiry" invisible="1"/>
+                            <span invisible="not orange_money_access_token" class="text-success">
+                                <i class="fa fa-check-circle"/> Connected
+                            </span>
+                            <span invisible="orange_money_access_token" class="text-muted">
+                                <i class="fa fa-times-circle"/> Not Connected
+                            </span>
+                            <button name="action_test_connection"
+                                    type="object"
+                                    string="Test Connection"
+                                    class="btn-link ms-2"
+                                    icon="fa-plug"/>
+                        </div>
+                    </group>
+                    <group>
+                        <field name="orange_money_public_key" readonly="1" widget="text"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Orange Money specific view for transactions -->
+    <record id="payment_transaction_form" model="ir.ui.view">
+        <field name="name">payment.transaction.form.orange_money</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.payment_transaction_form"/>
+        <field name="arch" type="xml">
+            <field name="provider_reference" position="after">
+                <field name="orange_money_transaction_id"
+                       readonly="1"
+                       invisible="provider_code != 'orange_money'"/>
+                <field name="orange_money_payment_method"
+                       invisible="provider_code != 'orange_money'"/>
+                <field name="orange_money_customer_msisdn"
+                       invisible="provider_code != 'orange_money' or orange_money_payment_method != 'direct'"
+                       placeholder="7XXXXXXXX"/>
+                <field name="orange_money_qr_code"
+                       readonly="1"
+                       invisible="provider_code != 'orange_money' or orange_money_payment_method != 'qrcode'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

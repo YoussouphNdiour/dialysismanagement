@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Orange Money Payment Provider -->
+    <record id="payment_provider_orange_money" model="payment.provider">
+        <field name="name">Orange Money</field>
+        <field name="code">orange_money</field>
+        <field name="sequence">50</field>
+        <field name="state">disabled</field>
+        <field name="is_published">False</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="redirect_form_view_id" ref="payment_orange_money.redirect_form"/>
+        <field name="orange_money_api_url">https://api.sandbox.orange-sonatel.com</field>
+        <field name="pre_msg"><![CDATA[
+            <p>Vous allez être redirigé vers Orange Money pour compléter votre paiement.</p>
+            <p>Un QR code sera généré pour que vous puissiez scanner avec votre application Orange Money.</p>
+        ]]></field>
+        <field name="pending_msg"><![CDATA[
+            <p>Votre paiement est en cours de traitement par Orange Money.</p>
+            <p>Vous recevrez une confirmation une fois le paiement terminé.</p>
+        ]]></field>
+        <field name="done_msg"><![CDATA[
+            <p>Votre paiement a été traité avec succès.</p>
+            <p>Merci pour votre paiement!</p>
+        ]]></field>
+        <field name="cancel_msg"><![CDATA[
+            <p>Votre paiement a été annulé ou a échoué.</p>
+            <p>Veuillez réessayer ou contacter le support si le problème persiste.</p>
+        ]]></field>
+    </record>
+
+    <!-- Cron job to check pending transactions -->
+    <record id="ir_cron_check_orange_money_transactions" model="ir.cron">
+        <field name="name">Orange Money: Check Pending Transactions</field>
+        <field name="model_id" ref="payment.model_payment_transaction"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_check_orange_money_pending_transactions()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="False"/>
+    </record>
+
+</odoo>

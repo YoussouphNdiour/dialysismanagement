@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Template de redirection simple (comme Wave) -->
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="get">
+        </form>
+    </template>
+
+    <!-- Page de paiement avec QR Code -->
+    <template id="orange_money_payment_page" name="Orange Money Payment Page">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class="s_text_block pt-5 pb-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 offset-lg-2">
+                                <div class="card shadow">
+                                    <div class="card-body text-center p-5">
+                                        <!-- Logo Orange Money -->
+                                        <div class="mb-4">
+                                            <h2 class="text-orange">
+                                                <i class="fa fa-mobile fa-2x text-warning"></i>
+                                                Orange Money
+                                            </h2>
+                                        </div>
+
+                                        <!-- Informations de paiement -->
+                                        <div class="alert alert-info mb-4">
+                                            <h4>Montant à payer</h4>
+                                            <h2 class="mb-0">
+                                                <strong><t t-esc="int(amount)"/> <t t-esc="currency"/></strong>
+                                            </h2>
+                                            <small class="text-muted">Référence: <t t-esc="reference"/></small>
+                                        </div>
+
+                                        <!-- QR Code -->
+                                        <t if="qr_code_image">
+                                            <div class="mb-4">
+                                                <h5 class="mb-3">Scannez ce QR Code</h5>
+                                                <div class="qr-code-container p-4 bg-light rounded">
+                                                    <img t-att-src="'data:image/png;base64,' + qr_code_image"
+                                                         alt="QR Code Orange Money"
+                                                         class="img-fluid"
+                                                         style="max-width: 300px;"/>
+                                                </div>
+                                            </div>
+                                        </t>
+
+                                        <!-- Instructions -->
+                                        <div class="alert alert-warning">
+                                            <h6><strong>Instructions:</strong></h6>
+                                            <ol class="text-left mb-0">
+                                                <li>Ouvrez votre application <strong>Orange Money</strong></li>
+                                                <li>Sélectionnez <strong>"Scanner un QR Code"</strong></li>
+                                                <li>Scannez le code ci-dessus</li>
+                                                <li>Confirmez le paiement de <strong><t t-esc="int(amount)"/> XOF</strong></li>
+                                            </ol>
+                                        </div>
+
+                                        <!-- Statut en attente -->
+                                        <div class="mt-4">
+                                            <p class="text-muted">
+                                                <i class="fa fa-spinner fa-spin"></i>
+                                                En attente du paiement...
+                                            </p>
+                                            <p class="small text-muted">
+                                                Cette page se mettra automatiquement à jour après le paiement.
+                                            </p>
+                                        </div>
+
+                                        <!-- Bouton annuler -->
+                                        <div class="mt-4">
+                                            <a href="/shop/payment" class="btn btn-secondary">
+                                                <i class="fa fa-times"></i> Annuler
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Auto-refresh pour vérifier le statut -->
+                                <script type="text/javascript">
+                                    // Vérifier le statut toutes les 5 secondes
+                                    setTimeout(function() {
+                                        window.location.href = '/payment/status';
+                                    }, 5000);
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+</odoo>

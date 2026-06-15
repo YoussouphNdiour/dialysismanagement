@@ -1,0 +1,4 @@
+Place the module icon here (PNG format, 128x128px recommended)
+This icon will appear in the Odoo Apps menu.
+
+Suggested: Orange Money logo or related payment icon.

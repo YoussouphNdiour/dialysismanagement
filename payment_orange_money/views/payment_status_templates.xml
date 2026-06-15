@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Orange Money Payment Status Page -->
+    <template id="orange_money_payment_status" name="Orange Money Payment Status">
+        <t t-call="web.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <div class="container mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header bg-warning text-white">
+                                    <h4>
+                                        <i class="fa fa-clock-o"/> Paiement Orange Money en attente
+                                    </h4>
+                                </div>
+                                <div class="card-body text-center">
+                                    <div t-if="qr_code" class="mb-4">
+                                        <h5>Scannez le QR code avec votre application Orange Money</h5>
+                                        <div class="my-4">
+                                            <img t-attf-src="data:image/png;base64,{{qr_code}}" alt="QR Code Orange Money" class="img-fluid" style="max-width: 300px;"/>
+                                        </div>
+                                    </div>
+                                    <div t-else="" class="mb-4">
+                                        <div class="spinner-border text-warning" role="status">
+                                            <span class="sr-only">Chargement...</span>
+                                        </div>
+                                        <p class="mt-3">Génération du code de paiement...</p>
+                                    </div>
+
+                                    <div class="alert alert-info">
+                                        <h6><strong>Instructions:</strong></h6>
+                                        <ol class="text-start mb-0">
+                                            <li>Ouvrez votre application Orange Money</li>
+                                            <li>Allez dans "Scanner QR Code" ou "Payer Marchand"</li>
+                                            <li>Scannez le QR code ci-dessus</li>
+                                            <li>Confirmez le paiement avec votre code PIN</li>
+                                        </ol>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <p class="text-muted">Cette page se mettra à jour automatiquement une fois le paiement confirmé.</p>
+                                        <a t-attf-href="/payment/status?tx_ref={{tx.reference}}" class="btn btn-primary">
+                                            <i class="fa fa-refresh"/> Vérifier le statut
+                                        </a>
+                                    </div>
+
+                                    <!-- Auto-refresh script to check payment status -->
+                                    <script type="text/javascript">
+                                        (function() {
+                                            var checkCount = 0;
+                                            var maxChecks = 60; // Check for 5 minutes (60 * 5 seconds)
+
+                                            function checkPaymentStatus() {
+                                                checkCount++;
+
+                                                if (checkCount > maxChecks) {
+                                                    console.log('Max check attempts reached');
+                                                    return;
+                                                }
+
+                                                // Redirect to status page to check current state
+                                                var currentState = '<t t-esc="tx.state"/>';
+                                                if (currentState === 'pending' || currentState === 'draft') {
+                                                    setTimeout(function() {
+                                                        window.location.href = '/payment/status?tx_ref=<t t-esc="tx.reference"/>';
+                                                    }, 10000); // Check every 5 seconds
+                                                }
+                                            }
+
+                                            // Start checking after 3 seconds
+                                            setTimeout(checkPaymentStatus, 30000);
+                                        })();
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

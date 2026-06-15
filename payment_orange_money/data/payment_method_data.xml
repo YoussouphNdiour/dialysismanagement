@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_method_orange_money" model="payment.method">
+        <field name="name">Orange Money</field>
+        <field name="code">orange_money</field>
+        <field name="sequence">10</field>
+        <field name="active" eval="False"/>
+        <field name="supported_country_ids" eval="[(6, 0, [ref('base.sn'), ref('base.ci'), ref('base.bf'), ref('base.ml'), ref('base.gn'), ref('base.ne')])]"/>
+        <field name="supported_currency_ids" eval="[(6, 0, [ref('base.XOF')])]"/>
+        <field name="primary_payment_method_id" ref="payment.payment_method_unknown"/>
+    </record>
+
+</odoo>
