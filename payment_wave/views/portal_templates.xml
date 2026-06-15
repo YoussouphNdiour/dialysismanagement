@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extension du template portail pour les factures -->
+    <!-- Ajouter un bouton "Payer avec Wave" sur chaque facture dans /my/invoices -->
+    <template id="portal_my_invoices_wave_button" name="Wave Payment Button in Portal" inherit_id="account.portal_my_invoices">
+        <xpath expr="//t[@t-foreach='invoices']//div[hasclass('col-12', 'col-md-6')]" position="after">
+            <div class="col-12 col-md-auto mt-2 mt-md-0">
+                <t t-set="invoice_obj" t-value="invoice.get('invoice')"/>
+                <t t-if="invoice_obj.payment_state not in ('paid', 'in_payment', 'reversed') and invoice_obj.state == 'posted'">
+                    <a t-attf-href="/my/invoices/#{invoice_obj.id}/send_wave_whatsapp?access_token=#{invoice.get('access_token')}"
+                       class="btn btn-primary btn-sm">
+                        <i class="fa fa-whatsapp"/> Payer avec Wave (WhatsApp)
+                    </a>
+                </t>
+                <t t-if="invoice_obj.wave_payment_link_sent">
+                    <span class="badge badge-success">
+                        <i class="fa fa-check"/> Lien envoyé
+                    </span>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Extension du template de détail de facture -->
+    <!-- Ajouter un bouton "Payer avec Wave" sur la page de détail -->
+    <template id="portal_invoice_page_wave_button" name="Wave Payment Button in Invoice Detail" inherit_id="account.portal_invoice_page">
+        <xpath expr="//div[@id='invoice_content']//t[@t-if='invoice.state == \"posted\"']" position="before">
+            <t t-if="invoice.payment_state not in ('paid', 'in_payment', 'reversed') and invoice.state == 'posted'">
+                <div class="alert alert-info text-center mb-3" role="alert">
+                    <h4 class="alert-heading">
+                        <i class="fa fa-mobile fa-2x"/> Payer avec Wave Mobile Money
+                    </h4>
+                    <p class="mb-3">
+                        Recevez le lien de paiement directement sur votre téléphone via WhatsApp !
+                    </p>
+                    <a t-attf-href="/my/invoices/#{invoice.id}/send_wave_whatsapp?access_token=#{access_token}"
+                       class="btn btn-success btn-lg">
+                        <i class="fa fa-whatsapp"/> Envoyer le Lien de Paiement
+                    </a>
+                    <p class="text-muted mt-2 mb-0">
+                        <small>Le lien sera envoyé au numéro : <t t-esc="invoice.partner_id.mobile or invoice.partner_id.phone or 'Non renseigné'"/></small>
+                    </p>
+                </div>
+            </t>
+            <t t-if="invoice.wave_payment_link_sent">
+                <div class="alert alert-success text-center mb-3" role="alert">
+                    <i class="fa fa-check-circle fa-2x"/>
+                    <strong>Lien de paiement envoyé</strong><br/>
+                    <small>Le <t t-esc="invoice.wave_payment_link_sent_date" t-options='{"widget": "datetime"}'/></small>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

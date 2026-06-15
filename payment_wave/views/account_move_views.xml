@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Ajouter un bouton "Envoyer Lien Wave WhatsApp" dans le formulaire de facture -->
+    <record id="view_move_form_wave_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.wave.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Ajouter le bouton dans le header, après les boutons existants -->
+            <xpath expr="//header" position="inside">
+                <button name="action_send_wave_payment_link_whatsapp"
+                        string="Envoyer Lien Wave (WhatsApp)"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="move_type not in ('out_invoice', 'out_refund') or state != 'posted' or payment_state in ('paid', 'in_payment', 'reversed')"
+                        help="Envoie le lien de paiement Wave par WhatsApp au client"/>
+            </xpath>
+
+            <!-- Ajouter un champ pour indiquer si le lien a été envoyé -->
+            <xpath expr="//field[@name='invoice_date_due']" position="after">
+                <field name="wave_payment_link_sent" readonly="1" invisible="not wave_payment_link_sent"/>
+                <field name="wave_payment_link_sent_date" readonly="1" invisible="not wave_payment_link_sent"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Ajouter une colonne dans la liste des factures -->
+    <record id="view_invoice_tree_wave_inherit" model="ir.ui.view">
+        <field name="name">account.move.tree.wave.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">account_move_tree</attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_state']" position="after">
+                <field name="wave_payment_link_sent" optional="hide" string="Lien Wave Envoyé"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

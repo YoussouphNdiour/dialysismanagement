@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_method_wave_mobile" model="payment.method">
+        <field name="name">Wave Mobile Money</field>
+        <field name="code">wave_mobile</field>
+        <field name="sequence">10</field>
+        <field name="active" eval="False"/>
+        <!-- <field name="image_payment_form" type="base64" file="payment_wave/static/src/img/wave_icon.png"/> -->
+        <field name="supported_country_ids" eval="[(6, 0, [ref('base.sn'), ref('base.ci'), ref('base.bf'), ref('base.ml')])]"/>
+        <field name="supported_currency_ids" eval="[(6, 0, [ref('base.XOF')])]"/>
+        <field name="primary_payment_method_id" ref="payment.payment_method_unknown"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,30 @@
+// Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+.o_payment_form {
+    .o_payment_option_card[name="wave"] {
+        .o_payment_icon {
+            background-color: #00A3E0;
+            border-radius: 4px;
+            padding: 4px;
+        }
+    }
+}
+
+.wave_payment_info {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    border-left: 4px solid #00A3E0;
+
+    .wave_info_text {
+        color: #6c757d;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .wave_info_highlight {
+        color: #00A3E0;
+        font-weight: 600;
+    }
+}

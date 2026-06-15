@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_provider_wave" model="payment.provider">
+        <field name="name">Wave</field>
+        <field name="code">wave</field>
+        <field name="sequence">50</field>
+        <field name="state">disabled</field>
+        <field name="is_published">False</field>
+        <field name="redirect_form_view_id" ref="payment_wave.redirect_form"/>
+        <!-- <field name="image_128" type="base64" file="payment_wave/static/description/icon.png"/> -->
+        <field name="pre_msg"><![CDATA[
+            <p>You will be redirected to the Wave mobile app to complete your payment.</p>
+            <p>Make sure you have the Wave app installed on your device.</p>
+        ]]></field>
+        <field name="pending_msg"><![CDATA[
+            <p>Your payment is being processed by Wave.</p>
+            <p>You will receive a confirmation once the payment is complete.</p>
+        ]]></field>
+        <field name="done_msg"><![CDATA[
+            <p>Your payment has been successfully processed.</p>
+            <p>Thank you for your payment!</p>
+        ]]></field>
+        <field name="cancel_msg"><![CDATA[
+            <p>Your payment was cancelled or failed.</p>
+            <p>Please try again or contact support if you continue experiencing issues.</p>
+        ]]></field>
+    </record>
+
+</odoo>
