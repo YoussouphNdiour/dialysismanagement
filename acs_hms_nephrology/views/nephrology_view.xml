@@ -296,8 +296,8 @@
                     </span>
                 </div>
             </group>
-            <!-- Statut arrivée — avant le bloc poids -->
-            <field name="arrival_weight" position="before">
+            <!-- Statut arrivée — AVANT group_poids (pleine largeur, même pattern que bannière) -->
+            <group name="group_poids" position="before">
                 <group string="Statut à l'arrivée">
                     <group>
                         <field name="arrival_status"/>
@@ -309,9 +309,9 @@
                                placeholder="Raison du changement de paramètres..."/>
                     </group>
                 </group>
-            </field>
-            <!-- Poids sortie et UF réelle — après le bloc UF -->
-            <field name="uf_max" position="after">
+            </group>
+            <!-- Fin de séance — APRÈS group_poids (pleine largeur) -->
+            <group name="group_poids" position="after">
                 <separator string="Fin de séance"/>
                 <group>
                     <group>
@@ -333,7 +333,7 @@
                     </group>
                 </group>
                 <field name="end_notes" placeholder="Notes de fin de séance..."/>
-            </field>
+            </group>
         </field>
     </record>
 </odoo>
