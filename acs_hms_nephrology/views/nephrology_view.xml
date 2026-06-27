@@ -299,10 +299,15 @@
             <!-- Statut arrivée — avant le bloc poids -->
             <field name="arrival_weight" position="before">
                 <group string="Statut à l'arrivée">
-                    <field name="arrival_status"/>
-                    <field name="pre_dialysis_bp" required="True"/>
-                    <field name="pre_dialysis_temp"/>
-                    <field name="parameter_change_reason"/>
+                    <group>
+                        <field name="arrival_status"/>
+                        <field name="pre_dialysis_bp" required="True"/>
+                        <field name="pre_dialysis_temp"/>
+                    </group>
+                    <group>
+                        <field name="parameter_change_reason"
+                               placeholder="Raison du changement de paramètres..."/>
+                    </group>
                 </group>
             </field>
             <!-- Poids sortie et UF réelle — après le bloc UF -->

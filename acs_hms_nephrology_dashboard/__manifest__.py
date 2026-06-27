@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Nephrology Dashboard',
-    'version': '1.0.1',
+    'version': '1.0.2',
     'category': 'Medical',
     'summary': 'Interface infirmier tablette + dashboard médecin + gestion absences (OWL)',
     'depends': [
