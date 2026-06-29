@@ -25,13 +25,13 @@
         action="action_nephrology_procedure"
         sequence="20"/>
 
-    <!-- Générer séances en masse (accès rapide secrétaire) -->
+    <!-- Générer séances en masse (réservé aux managers) -->
     <menuitem id="menu_nephrology_generate_sessions"
         name="Générer séances en masse"
         parent="menu_acs_main_nephrology"
         action="action_nephrology_session_generator"
         sequence="25"
-        groups="acs_hms_base.group_hms_user"/>
+        groups="acs_hms_base.group_hms_manager"/>
 
     <!-- 3. Séances de Dialyse (traitements) -->
     <menuitem id="menu_acs_treatment"

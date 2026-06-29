@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!--
+    ════════════════════════════════════════════════════════════════
+    TRADUCTION / FRANCISATION DES MENUS ACS HMS
+    Module : acs_hms_nephrology_fr_custom
+    ────────────────────────────────────────────────────────────────
+    Ce fichier renomme directement les enregistrements ir.ui.menu
+    (champ name) pour tous les menus qui restent en anglais dans les
+    modules acs_hms_base et acs_hms.
+
+    Organisation par type d'utilisateur :
+    ─ Patients     → group_hms_user     (tous les utilisateurs cliniques)
+    ─ Médecins     → group_hms_user     (consultation des médecins)
+    ─ Médicaments  → group_manage_medicines
+    ─ Services     → group_manage_services
+    ─ Clinique     → group_hms_manager  (accès admin complet)
+    ─ Néphrologie  → group_hms_nephrology_user (flux principal)
+    ─ Facturation  → group_nephrology_billing
+    ════════════════════════════════════════════════════════════════
+    -->
+
+    <!-- ============================================================
+         APPLICATION "PATIENTS" (acs_hms_base.main_menu_patient)
+         Visible : tous les utilisateurs HMS
+    ============================================================ -->
+    <record id="acs_hms_base.main_menu_patient" model="ir.ui.menu">
+        <field name="name">Patients</field>
+    </record>
+    <record id="acs_hms_base.action_main_menu_patient" model="ir.ui.menu">
+        <field name="name">Patients</field>
+    </record>
+
+    <!-- Configuration Patients -->
+    <record id="acs_hms_base.menu_patient_tag" model="ir.ui.menu">
+        <field name="name">Étiquettes patients</field>
+    </record>
+    <record id="acs_hms_base.menu_document" model="ir.ui.menu">
+        <field name="name">Types de documents</field>
+    </record>
+
+    <!-- Éléments ajoutés par acs_hms dans la config Patients -->
+    <record id="acs_hms.menu_medical_alerts" model="ir.ui.menu">
+        <field name="name">Alertes médicales</field>
+    </record>
+    <record id="acs_hms.menu_family_relation" model="ir.ui.menu">
+        <field name="name">Relations familiales</field>
+    </record>
+    <record id="acs_hms.menu_surgical_history" model="ir.ui.menu">
+        <field name="name">Antécédents chirurgicaux</field>
+    </record>
+    <record id="acs_hms.menu_fav_location" model="ir.ui.menu">
+        <field name="name">Accès vasculaire (FAV)</field>
+    </record>
+    <record id="acs_hms.menu_lifestyle" model="ir.ui.menu">
+        <field name="name">Mode de vie</field>
+    </record>
+    <record id="acs_hms.menu_family_relation_type" model="ir.ui.menu">
+        <field name="name">Types de lien familial</field>
+    </record>
+    <record id="acs_hms.menu_ethnicity" model="ir.ui.menu">
+        <field name="name">Ethnicité</field>
+    </record>
+    <record id="acs_hms.diseases_menu" model="ir.ui.menu">
+        <field name="name">Pathologies</field>
+    </record>
+    <record id="acs_hms.hms_diseases" model="ir.ui.menu">
+        <field name="name">Pathologies</field>
+    </record>
+    <record id="acs_hms.menu_disease_category" model="ir.ui.menu">
+        <field name="name">Catégories de pathologies</field>
+    </record>
+    <record id="acs_hms.menu_hms_genetic_disease" model="ir.ui.menu">
+        <field name="name">Pathologies génétiques</field>
+    </record>
+
+    <!-- ============================================================
+         APPLICATION "MÉDECINS" (acs_hms_base.main_menu_physician)
+         Visible : tous les utilisateurs HMS (gestion des médecins)
+    ============================================================ -->
+    <record id="acs_hms_base.main_menu_physician" model="ir.ui.menu">
+        <field name="name">Médecins</field>
+    </record>
+
+    <!-- ============================================================
+         APPLICATION "MÉDICAMENTS" (acs_hms_base.acs_medicine_root)
+         Visible : group_manage_medicines
+    ============================================================ -->
+    <record id="acs_hms_base.acs_medicine_root" model="ir.ui.menu">
+        <field name="name">Médicaments</field>
+    </record>
+    <record id="acs_hms_base.menu_acs_medicine" model="ir.ui.menu">
+        <field name="name">Médicaments</field>
+    </record>
+    <record id="acs_hms_base.menu_medicine_drug" model="ir.ui.menu">
+        <field name="name">Formes galéniques</field>
+    </record>
+    <record id="acs_hms_base.menu_medicine_product_active_component" model="ir.ui.menu">
+        <field name="name">Composants actifs</field>
+    </record>
+    <record id="acs_hms_base.menu_medicine_drug_company" model="ir.ui.menu">
+        <field name="name">Laboratoires</field>
+    </record>
+    <record id="acs_hms_base.menu_therapeutic_effect" model="ir.ui.menu">
+        <field name="name">Effets thérapeutiques</field>
+    </record>
+    <record id="acs_hms_base.menu_medicine_medicament_flavour" model="ir.ui.menu">
+        <field name="name">Saveurs médicamenteuses</field>
+    </record>
+    <record id="acs_hms_base.menu_medicine_medicament_route" model="ir.ui.menu">
+        <field name="name">Voies d'administration</field>
+    </record>
+
+    <!-- Ajouts acs_hms dans Médicaments -->
+    <record id="acs_hms.menu_medicine_medicament_dosage" model="ir.ui.menu">
+        <field name="name">Posologies</field>
+    </record>
+    <record id="acs_hms.menu_medicine_hms_medicament_group" model="ir.ui.menu">
+        <field name="name">Groupes médicamenteux</field>
+    </record>
+    <record id="acs_hms.menu_acs_product_kit" model="ir.ui.menu">
+        <field name="name">Kits de produits</field>
+    </record>
+
+    <!-- ============================================================
+         APPLICATION "SERVICES" (acs_hms_base.acs_services_root)
+         Visible : group_manage_services
+    ============================================================ -->
+    <record id="acs_hms_base.acs_services_root" model="ir.ui.menu">
+        <field name="name">Services</field>
+    </record>
+    <record id="acs_hms_base.menu_acs_services" model="ir.ui.menu">
+        <field name="name">Services médicaux</field>
+    </record>
+
+    <!-- ============================================================
+         APPLICATION "CLINIQUE" (acs_hms.menu_hms)
+         Visible : group_hms_manager — accès administrateur complet
+         Nom "Clinique" déjà défini dans acs_hms/views/menu_item.xml
+    ============================================================ -->
+
+    <!-- Sous-menus principaux -->
+    <record id="acs_hms.action_menu_doctors" model="ir.ui.menu">
+        <field name="name">Médecins</field>
+    </record>
+    <record id="acs_hms.action_menu_treatment" model="ir.ui.menu">
+        <field name="name">Traitements</field>
+    </record>
+    <record id="acs_hms.menu_acs_patient_procedure" model="ir.ui.menu">
+        <field name="name">Séances d'hémodialyse</field>
+    </record>
+    <record id="acs_hms.hos_prescription" model="ir.ui.menu">
+        <field name="name">Ordonnances</field>
+    </record>
+    <record id="acs_hms.menu_product_pricelist_main" model="ir.ui.menu">
+        <field name="name">Tarifs</field>
+    </record>
+
+    <!-- Configuration Clinique -->
+    <record id="acs_hms.menu_hms_configuration_settings" model="ir.ui.menu">
+        <field name="name">Paramètres</field>
+    </record>
+    <record id="acs_hms.menu_procedure_group" model="ir.ui.menu">
+        <field name="name">Groupes de procédures</field>
+    </record>
+    <record id="acs_hms.menu_invoice_exempt_request" model="ir.ui.menu">
+        <field name="name">Demandes d'exemption</field>
+    </record>
+    <record id="acs_hms.menu_patient_appointment" model="ir.ui.menu">
+        <field name="name">Motifs de rendez-vous</field>
+    </record>
+    <record id="acs_hms.menu_open_appointment_cabin" model="ir.ui.menu">
+        <field name="name">Cabines de consultation</field>
+    </record>
+    <record id="acs_hms.menu_acs_cancel_reason" model="ir.ui.menu">
+        <field name="name">Motifs d'annulation</field>
+    </record>
+    <record id="acs_hms.menu_medicament_group" model="ir.ui.menu">
+        <field name="name">Groupes médicamenteux</field>
+    </record>
+
+</odoo>
