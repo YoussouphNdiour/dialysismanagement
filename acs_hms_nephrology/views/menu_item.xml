@@ -53,7 +53,7 @@
         name="Ordonnances"
         parent="menu_acs_main_nephrology"
         action="acs_hms.act_open_hms_prescription_order_view"
-        groups="acs_hms.group_hms_jr_doctor"
+        groups="acs_hms.group_hms_doctor,acs_hms.group_hms_jr_doctor,acs_hms_base.group_hms_manager"
         sequence="60"/>
 
     <!-- ── Phase 5 : Administration ── -->

@@ -48,7 +48,7 @@ Phase 5 — Administration (managers uniquement)
   • Générer séances en masse                         seq=70
   • Configuration                                    seq=100
     """,
-    'version': '1.1.0',
+    'version': '1.1.1',
     'author': 'Almighty Consulting Solutions Pvt. Ltd.',
     'support': 'info@almightycs.com',
     'website': 'www.almightycs.com',

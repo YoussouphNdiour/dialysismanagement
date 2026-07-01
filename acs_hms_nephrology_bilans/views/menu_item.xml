@@ -6,7 +6,8 @@
         name="Bilans Biologiques"
         parent="acs_hms_nephrology.menu_acs_main_nephrology"
         action="action_acs_nephro_bilan"
-        sequence="55"/>
+        sequence="55"
+        groups="acs_hms.group_hms_nurse,acs_hms.group_hms_doctor,acs_hms.group_hms_jr_doctor,acs_hms_base.group_hms_manager"/>
 
     <!-- Seuils biologiques under Configuration -->
     <menuitem id="menu_acs_bilan_thresholds"

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Nephrology Dashboard',
-    'version': '1.0.3',
+    'version': '1.0.4',
     'category': 'Medical',
     'summary': 'Dashboards OWL (infirmier, médecin, secrétaire) + planning + absences + liste d\'attente',
     'depends': [
