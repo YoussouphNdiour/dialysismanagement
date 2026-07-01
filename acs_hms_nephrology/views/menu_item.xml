@@ -13,12 +13,13 @@
 
     <!-- ── Phase 1 : Organisation du jour ── -->
 
-    <!-- 1. Rendez-vous — gestion des créneaux (secrétaire/réceptionniste) -->
+    <!-- 1. Rendez-vous — gestion des créneaux (pas les infirmiers) -->
     <menuitem id="menu_acs_appointment"
         name="Rendez-vous"
         parent="menu_acs_main_nephrology"
         action="action_appointment"
-        sequence="10"/>
+        sequence="10"
+        groups="acs_hms.group_hms_receptionist,acs_hms.group_hms_doctor,acs_hms.group_hms_jr_doctor,acs_hms_base.group_hms_manager"/>
 
     <!-- ── Phase 2 : Gestion patients ── -->
 
