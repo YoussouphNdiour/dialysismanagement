@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Nephrology Dashboard',
-    'version': '1.0.2',
+    'version': '1.0.3',
     'category': 'Medical',
-    'summary': 'Interface infirmier tablette + dashboard médecin + gestion absences (OWL)',
+    'summary': 'Dashboards OWL (infirmier, médecin, secrétaire) + planning + absences + liste d\'attente',
     'depends': [
         'acs_hms_nephrology',
         'acs_hms_nephrology_complications',

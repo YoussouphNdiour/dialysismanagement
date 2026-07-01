@@ -46,6 +46,6 @@
         parent="acs_hms_nephrology.menu_acs_main_nephrology"
         action="action_dialysis_waitlist"
         groups="acs_hms.group_hms_receptionist,acs_hms.group_hms_doctor"
-        sequence="21"/>
+        sequence="20"/>
 
 </odoo>

@@ -11,49 +11,59 @@
         web_icon="acs_hms_nephrology,static/description/icon.png"
         groups="acs_hms_nephrology.group_hms_nephrology_user"/>
 
-    <!-- 1. Patients -->
-    <menuitem id="menu_acs_patient"
-        name="Patients"
-        parent="menu_acs_main_nephrology"
-        action="action_acs_hms_patient"
-        sequence="10"/>
+    <!-- ── Phase 1 : Organisation du jour ── -->
 
-    <!-- 2. Hémodialyses (liste complète) -->
-    <menuitem id="menu_acs_nephrology_procedures"
-        name="Hémodialyses"
-        parent="menu_acs_main_nephrology"
-        action="action_nephrology_procedure"
-        sequence="20"/>
-
-    <!-- Générer séances en masse (réservé aux managers) -->
-    <menuitem id="menu_nephrology_generate_sessions"
-        name="Générer séances en masse"
-        parent="menu_acs_main_nephrology"
-        action="action_nephrology_session_generator"
-        sequence="25"
-        groups="acs_hms_base.group_hms_manager"/>
-
-    <!-- 3. Séances de Dialyse (traitements) -->
-    <menuitem id="menu_acs_treatment"
-        name="Séances de Dialyse"
-        parent="menu_acs_main_nephrology"
-        action="action_acs_treatment"
-        sequence="30"/>
-
-    <!-- 4. Rendez-vous -->
+    <!-- 1. Rendez-vous — gestion des créneaux (secrétaire/réceptionniste) -->
     <menuitem id="menu_acs_appointment"
         name="Rendez-vous"
         parent="menu_acs_main_nephrology"
         action="action_appointment"
+        sequence="10"/>
+
+    <!-- ── Phase 2 : Gestion patients ── -->
+
+    <!-- 2. Patients — dossiers patients -->
+    <menuitem id="menu_acs_patient"
+        name="Patients"
+        parent="menu_acs_main_nephrology"
+        action="action_acs_hms_patient"
+        sequence="30"/>
+
+    <!-- ── Phase 3 : Sessions de dialyse ── -->
+
+    <!-- 3. Hémodialyses — liste des procédures -->
+    <menuitem id="menu_acs_nephrology_procedures"
+        name="Hémodialyses"
+        parent="menu_acs_main_nephrology"
+        action="action_nephrology_procedure"
         sequence="40"/>
 
-    <!-- 6. Ordonnances -->
+    <!-- 4. Séances de Dialyse — traitements en cours -->
+    <menuitem id="menu_acs_treatment"
+        name="Séances de Dialyse"
+        parent="menu_acs_main_nephrology"
+        action="action_acs_treatment"
+        sequence="45"/>
+
+    <!-- ── Phase 4 : Prescriptions médicales ── -->
+
+    <!-- 5. Ordonnances (médecins uniquement) -->
     <menuitem id="menu_acs_ordonnances"
         name="Ordonnances"
         parent="menu_acs_main_nephrology"
         action="acs_hms.act_open_hms_prescription_order_view"
         groups="acs_hms.group_hms_jr_doctor"
         sequence="60"/>
+
+    <!-- ── Phase 5 : Administration ── -->
+
+    <!-- 6. Générer séances en masse (managers uniquement) -->
+    <menuitem id="menu_nephrology_generate_sessions"
+        name="Générer séances en masse"
+        parent="menu_acs_main_nephrology"
+        action="action_nephrology_session_generator"
+        sequence="70"
+        groups="acs_hms_base.group_hms_manager"/>
 
     <!-- ============================================================
          CONFIGURATION (admins uniquement)

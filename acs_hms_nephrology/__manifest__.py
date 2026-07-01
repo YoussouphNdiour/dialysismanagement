@@ -18,11 +18,37 @@
 {
     'name': 'Nephrology Hospital Management System',
     'category': 'Medical',
-    'summary': 'Manage your Nephrology related in your Hospital',
+    'summary': 'Gestion des soins de néphrologie et hémodialyse en clinique',
     'description': """
-        Manage your Nephrology related in your Hospital By Almighty Consulting Solutions Pvt. Ltd.
+Module de gestion de la néphrologie pour clinique de dialyse.
+
+Menus Néphrologie (par étape du processus clinique) :
+═══════════════════════════════════════════════════
+Phase 1 — Organisation du jour (secrétaire / réceptionniste)
+  • Résumé du jour      (secrétaire, manager)       seq=5
+  • Rendez-vous         (tous)                       seq=10
+  • Planning Dialyse    (médecin, réceptionniste)    seq=15
+  • Liste d'attente     (réceptionniste, médecin)    seq=20
+  • Absences patients   (réceptionniste, médecin)    seq=25
+
+Phase 2 — Gestion patients (tous les rôles)
+  • Patients                                         seq=30
+
+Phase 3 — Sessions de dialyse (infirmier)
+  • Interface Infirmier  (infirmier, manager)        seq=35
+  • Hémodialyses         (tous)                      seq=40
+  • Séances de Dialyse   (tous)                      seq=45
+
+Phase 4 — Suivi médical (médecin)
+  • Tableau de bord médecin (médecin, manager)       seq=50
+  • Bilans Biologiques      (tous)                   seq=55
+  • Ordonnances             (médecin)                seq=60
+
+Phase 5 — Administration (managers uniquement)
+  • Générer séances en masse                         seq=70
+  • Configuration                                    seq=100
     """,
-    'version': '1.0.8',
+    'version': '1.0.9',
     'author': 'Almighty Consulting Solutions Pvt. Ltd.',
     'support': 'info@almightycs.com',
     'website': 'www.almightycs.com',

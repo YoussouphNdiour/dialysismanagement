@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Traductions françaises personnalisées - Néphrologie',
-    'version': '1.1.0',
+    'version': '1.2.0',
     'category': 'Localization',
     'summary': 'Francisation complète des menus ACS HMS + organisation par rôle utilisateur',
     'description': """

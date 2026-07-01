@@ -12,4 +12,5 @@
         action="action_dialysis_calendar"
         groups="acs_hms.group_hms_doctor,acs_hms.group_hms_receptionist"
         sequence="15"/>
+
 </odoo>
