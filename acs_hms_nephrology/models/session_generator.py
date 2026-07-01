@@ -22,11 +22,17 @@ class NephrologySessionGenerator(models.TransientModel):
     _name = 'nephrology.session.generator'
     _description = 'Générateur de séances — Étape 1'
 
+    department_id = fields.Many2one(
+        'hr.department',
+        string='Département',
+        domain=[('department_type', '=', 'nephrology')],
+        help="Filtrer les patients par département de néphrologie",
+    )
     patient_ids = fields.Many2many(
         'hms.patient',
         'session_gen_patient_rel', 'generator_id', 'patient_id',
         string='Patients',
-        domain=[('nephrology_care', '=', True)],
+        domain="[('nephrology_care', '=', True)]",
     )
     date_start = fields.Date(string='Date de début', required=True, default=fields.Date.today)
     date_end = fields.Date(string='Date de fin', required=True)
@@ -142,12 +148,14 @@ class NephrologySessionGenerator(models.TransientModel):
 
     def _detect_conflict(self, patient, station):
         """Retourne (conflict_status, conflict_details) pour un patient."""
-        # Erreur bloquante : procédure existante pour ce patient sur la période
+        # Erreur bloquante : procédure existante pour ce patient sur la période demandée
+        date_start_dt = datetime.combine(self.date_start, datetime.min.time())
+        date_end_dt = datetime.combine(self.date_end, datetime.max.time())
         existing = self.env['acs.patient.procedure'].search([
             ('patient_id', '=', patient.id),
             ('nephrology_schedule_ids', '!=', False),
-            ('date', '>=', datetime.combine(self.date_start, datetime.min.time())),
-            ('date', '<=', datetime.combine(self.date_end, datetime.max.time())),
+            ('date', '>=', date_start_dt),
+            ('date', '<=', date_end_dt),
         ], limit=1)
         if existing:
             return ('error_duplicate',
@@ -157,8 +165,8 @@ class NephrologySessionGenerator(models.TransientModel):
         if station:
             station_used = self.env['acs.patient.procedure'].search([
                 ('nephrology_schedule_ids.station_id', '=', station.id),
-                ('date', '>=', datetime.combine(self.date_start, datetime.min.time())),
-                ('date', '<=', datetime.combine(self.date_end, datetime.max.time())),
+                ('date', '>=', date_start_dt),
+                ('date', '<=', date_end_dt),
             ], limit=1)
             if station_used:
                 return ('warning_station',
@@ -230,6 +238,7 @@ class NephrologySessionValidator(models.TransientModel):
                     'product_id': product.id,
                     'date': dt,
                     'physician_id': line.physician_id.id if line.physician_id else False,
+                    'department_id': generator.department_id.id if generator.department_id else False,
                     'nephrology_schedule_ids': [(4, line.schedule_id.id)],
                 })
                 appointment = self.env['hms.appointment'].create({
@@ -237,6 +246,7 @@ class NephrologySessionValidator(models.TransientModel):
                     'date': dt,
                     'product_id': product.id,
                     'physician_id': line.physician_id.id if line.physician_id else False,
+                    'department_id': generator.department_id.id if generator.department_id else False,
                 })
                 procedure.write({'appointment_ids': [(4, appointment.id)]})
                 created_count += 1

@@ -148,9 +148,6 @@
                             <field name="type_of_vascular_access"/>
                             <field name="dialyzer_type"/>
                             <field name="dialysis_number"/>
-                            <field name="aiguille_arterielle"/>
-                            <field name="aiguille_veineuse"/>
-                            <field name="ponction"/>
                         </group>
 
                         <group>
@@ -160,6 +157,15 @@
                             <field name="last_ktv_dp"/>
                             <field name="last_pru_percent"/>
                             <field name="type_of_dialysate"/>
+                        </group>
+                    </group>
+
+                    <!-- Accès vasculaire -->
+                    <group string="Accès vasculaire" invisible="department_type!='nephrology'">
+                        <group>
+                            <field name="aiguille_arterielle"/>
+                            <field name="aiguille_veineuse"/>
+                            <field name="ponction"/>
                         </group>
                     </group>
 
@@ -301,7 +307,7 @@
                 <group string="Statut à l'arrivée">
                     <group>
                         <field name="arrival_status"/>
-                        <field name="pre_dialysis_bp" required="True"/>
+                        <field name="pre_dialysis_bp" required="department_type == 'nephrology'"/>
                         <field name="pre_dialysis_temp"/>
                     </group>
                     <group>

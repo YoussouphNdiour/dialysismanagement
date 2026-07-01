@@ -14,7 +14,10 @@
                         <h1>Générer des séances d'hémodialyse</h1>
                     </div>
 
-                    <group string="1. Sélection des patients">
+                    <group string="1. Département et patients">
+                        <field name="department_id"
+                               options="{'no_create': True}"
+                               placeholder="Tous les départements (optionnel)"/>
                         <field name="patient_ids"
                                widget="many2many_tags"
                                domain="[('nephrology_care', '=', True)]"
