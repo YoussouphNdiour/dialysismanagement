@@ -48,6 +48,14 @@
                                     <field name="hba1c" readonly="state in ['cancel','done']"/>
                                 </group>
                             </group>
+                            <group string="Bilan Martial">
+                                <group>
+                                    <field name="cst" readonly="state in ['cancel','done']"/>
+                                </group>
+                                <group>
+                                    <field name="serum_iron" readonly="state in ['cancel','done']"/>
+                                </group>
+                            </group>
                         </page>
                         <page name="kidney_function" string="Fonction Rénale" groups="acs_hms.group_hms_jr_doctor">
                             <group>

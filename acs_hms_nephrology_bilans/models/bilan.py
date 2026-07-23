@@ -39,6 +39,13 @@ class ACSNephroBilan(models.Model):
     platelets = fields.Float(string='Plaquettes (G/L)', digits=(6, 0))
     ferritin = fields.Float(string='Ferritine (µg/L)', digits=(7, 1))
     transferrin_saturation = fields.Float(string='Saturation transferrine (%)', digits=(5, 1))
+    gb = fields.Float(string='GB (Globules Blancs)')
+    vgm = fields.Float(string='VGM')
+    ccmh = fields.Float(string='CCMH')
+    leu = fields.Float(string='LEU (Leucocytes)')
+    uricemie = fields.Float(string='Uricémie')
+    gaj = fields.Float(string='GAJ')
+    hba1c = fields.Float(string='HbA1c')
 
     # ===== BIOCHIMIE RÉNALE =====
     creatinine = fields.Float(string='Créatinine (µmol/L)', digits=(7, 1))
@@ -47,13 +54,16 @@ class ACSNephroBilan(models.Model):
     uric_acid = fields.Float(string='Acide urique (µmol/L)', digits=(7, 1))
     urr_calculated = fields.Float(
         string='URR (%)', compute='_compute_urr', store=True, digits=(5, 1))
+    dfg_mdrd = fields.Float(string='DFG(MDRD)(ml/min/1,73m2)')
 
     # ===== ÉLECTROLYTES =====
     sodium = fields.Float(string='Sodium Na (mmol/L)', digits=(5, 1))
     potassium = fields.Float(string='Potassium K (mmol/L)', digits=(5, 2))
+    chlore = fields.Char(string='Chlore (mmol/L)')
     calcium = fields.Float(string='Calcium Ca (mmol/L)', digits=(5, 2))
     phosphorus = fields.Float(string='Phosphore P (mmol/L)', digits=(5, 2))
     bicarbonate = fields.Float(string='Bicarbonate HCO3 (mmol/L)', digits=(5, 1))
+    reserve_alcaline = fields.Float(string='Réserve Alcaline')
     caxp_product = fields.Float(
         string='Produit CaxP', compute='_compute_caxp', store=True, digits=(5, 2),
         help='Calcium × Phosphore. Alerte si > 4.4 mmol²/L²')
@@ -63,11 +73,50 @@ class ACSNephroBilan(models.Model):
     vitamin_d = fields.Float(string='Vitamine D (ng/mL)', digits=(6, 1))
     alkaline_phosphatase = fields.Float(string='PAL (UI/L)', digits=(6, 1))
 
+    # ===== BILAN LIPIDIQUE =====
+    hdl = fields.Float(string='HDL')
+    ldl = fields.Float(string='LDL')
+    ct = fields.Float(string='CT (Cholestérol Total)')
+    tg = fields.Float(string='TG (Triglycérides)')
+    albuminemie = fields.Float(string='Albuminémie')
+    proteidemie = fields.Float(string='Protidémie')
+    pal = fields.Float(string='PAL')
+    bilirubine_t = fields.Float(string='Bilirubine T')
+    bilirubine_i = fields.Float(string='Bilirubine I')
+    epps = fields.Char(string='EPPS')
+
+    # ===== BILAN HÉPATIQUE =====
+    alat = fields.Float(string='ALAT')
+    asat = fields.Float(string='ASAT')
+    gamma_gt = fields.Float(string='γ-GT')
+    ldh_bilan = fields.Float(string='LDH')
+    cpk = fields.Float(string='CPK')
+    haptoglobine = fields.Float(string='Haptoglobine')
+    schizocytes = fields.Char(string='Schizocytes')
+    rac = fields.Char(string='RAC')
+
     # ===== NUTRITION & INFLAMMATION =====
     albumin = fields.Float(string='Albumine (g/L)', digits=(5, 1))
     total_proteins = fields.Float(string='Protéines totales (g/L)', digits=(5, 1))
     crp = fields.Float(string='CRP (mg/L)', digits=(6, 1))
     prealbumin = fields.Float(string='Pré-albumine (mg/L)', digits=(6, 1))
+
+    # ===== BILAN MARTIAL =====
+    cst = fields.Float(string='CST (Coefficient de Saturation de la Transferrine)')
+    serum_iron = fields.Float(string='Fer Sérique')
+
+    # ===== URINE =====
+    pu_24h = fields.Char(string='Pu 24 heures')
+    eppu = fields.Char(string='EPPU')
+    ecbu = fields.Char(string='ECBU')
+    nau = fields.Float(string='NaU')
+    ku = fields.Float(string='KU')
+    rapport_na_k = fields.Float(string='Rapport Na/K')
+    uree_urinaire = fields.Float(string='Urée urinaire')
+    creat_urinaire = fields.Float(string='Créat urinaire')
+
+    # ===== PBR =====
+    pbr_resultat = fields.Text(string='Résultat PBR')
 
     # ===== SÉROLOGIES =====
     hbs_ag = fields.Selection([

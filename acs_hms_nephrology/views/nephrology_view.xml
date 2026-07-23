@@ -217,6 +217,15 @@
 
                     <separator string="Traitement En Cours" invisible="department_type!='nephrology'"/>
                     <field name="interdialysis_medication" placeholder="Traitement en cours..." invisible="department_type!='nephrology'"/>
+                    <group invisible="department_type!='nephrology'">
+                        <group>
+                            <field name="pression_arterielle"/>
+                            <field name="pression_veineuse"/>
+                        </group>
+                        <group>
+                            <field name="ptm"/>
+                        </group>
+                    </group>
 
                     <separator string="Transfusion" invisible="department_type!='nephrology'"/>
                     <field name="transfusion" placeholder="Transfusion..." invisible="department_type!='nephrology'"/>
@@ -309,6 +318,8 @@
                         <field name="arrival_status"/>
                         <field name="pre_dialysis_bp" required="department_type == 'nephrology'"/>
                         <field name="pre_dialysis_temp"/>
+                        <field name="pression_arterielle_debout"/>
+                        <field name="pression_arterielle_coucher"/>
                     </group>
                     <group>
                         <field name="parameter_change_reason"

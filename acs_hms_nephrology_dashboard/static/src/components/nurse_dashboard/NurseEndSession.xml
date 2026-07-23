@@ -21,7 +21,7 @@
                             <div class="fw-bold"><t t-esc="props.procedure.actual_duration or '—'"/> h</div>
                         </div>
                         <div class="col">
-                            <small class="text-muted">UF habituelle</small>
+                            <small class="text-muted">UF horaire</small>
                             <div class="fw-bold"><t t-esc="props.procedure.uf_habituelle or '—'"/> ml</div>
                         </div>
                         <div class="col">

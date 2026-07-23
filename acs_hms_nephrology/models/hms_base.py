@@ -151,7 +151,7 @@ class AcsPatientProcedure(models.Model):
         compute='_compute_weight_fields',
         store=True,
     )
-    uf_habituelle = fields.Float(string="UF habituelle /ml")
+    uf_habituelle = fields.Float(string="UF horaire /ml")
     uf_max = fields.Float(string="UF Max /ml")
 
     # 2. Débits
@@ -170,6 +170,9 @@ class AcsPatientProcedure(models.Model):
 
     # 5. Traitement en cours
     interdialysis_medication = fields.Text(string="Traitement En Cours", help="occurring or carried out during hemodialysis")
+    pression_arterielle = fields.Char(string="Pression artérielle")
+    pression_veineuse = fields.Char(string="Pression veineuse")
+    ptm = fields.Char(string="PTM")
 
     # Autres champs
     aiguille_arterielle = fields.Char(string="Aiguille Artérielle")
@@ -217,6 +220,8 @@ class AcsPatientProcedure(models.Model):
     ], string="Statut à l'arrivée")
     pre_dialysis_bp = fields.Char(string='TA pré-dialyse', help='Ex: 140/90')
     pre_dialysis_temp = fields.Float(string='Température pré-dialyse (°C)', digits=(4, 1))
+    pression_arterielle_debout = fields.Char(string='Pression artérielle debout')
+    pression_arterielle_coucher = fields.Char(string='Pression artérielle coucher')
     parameter_change_reason = fields.Text(
         string='Motif de changement de paramètres',
         help='Si les paramètres diffèrent du protocole habituel'

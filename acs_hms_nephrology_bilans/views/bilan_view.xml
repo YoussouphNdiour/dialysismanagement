@@ -74,18 +74,28 @@
                         <page string="Hématologie" name="hematology">
                             <group>
                                 <group string="NFS">
+                                    <field name="gb"/>
                                     <field name="hemoglobin"/>
                                     <field name="hemoglobin_status" widget="badge"
                                            decoration-danger="hemoglobin_status == 'low'"
                                            decoration-success="hemoglobin_status == 'ok'"
                                            decoration-warning="hemoglobin_status == 'high'"/>
+                                    <field name="vgm"/>
+                                    <field name="ccmh"/>
                                     <field name="hematocrit"/>
                                     <field name="white_blood_cells"/>
                                     <field name="platelets"/>
+                                    <field name="leu"/>
                                 </group>
-                                <group string="Bilan martial">
+                                <group>
+                                    <field name="uricemie"/>
+                                    <field name="gaj"/>
+                                    <field name="hba1c"/>
+                                    <separator string="Bilan martial"/>
                                     <field name="ferritin"/>
                                     <field name="transferrin_saturation"/>
+                                    <field name="cst"/>
+                                    <field name="serum_iron"/>
                                 </group>
                             </group>
                         </page>
@@ -95,12 +105,14 @@
                             <group>
                                 <group>
                                     <field name="creatinine"/>
+                                    <field name="dfg_mdrd"/>
                                     <field name="urea_pre"/>
                                     <field name="urea_post"/>
                                     <field name="urr_calculated"/>
                                 </group>
                                 <group>
                                     <field name="uric_acid"/>
+                                    <field name="crp"/>
                                 </group>
                             </group>
                         </page>
@@ -115,7 +127,9 @@
                                            decoration-danger="potassium_status == 'high'"
                                            decoration-success="potassium_status == 'ok'"
                                            decoration-warning="potassium_status == 'low'"/>
+                                    <field name="chlore"/>
                                     <field name="bicarbonate"/>
+                                    <field name="reserve_alcaline"/>
                                 </group>
                                 <group>
                                     <field name="calcium"/>
@@ -132,8 +146,46 @@
                             </group>
                         </page>
 
+                        <!-- Bilan Lipidique -->
+                        <page string="Bilan Lipidique" name="lipid_profile">
+                            <group>
+                                <group>
+                                    <field name="hdl"/>
+                                    <field name="ldl"/>
+                                    <field name="ct"/>
+                                    <field name="tg"/>
+                                </group>
+                                <group>
+                                    <field name="albuminemie"/>
+                                    <field name="proteidemie"/>
+                                    <field name="pal"/>
+                                    <field name="bilirubine_t"/>
+                                    <field name="bilirubine_i"/>
+                                    <field name="epps"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- Bilan Hépatique -->
+                        <page string="Bilan Hépatique" name="liver_function">
+                            <group string="Transaminases">
+                                <group>
+                                    <field name="alat"/>
+                                    <field name="asat"/>
+                                    <field name="gamma_gt"/>
+                                    <field name="ldh_bilan"/>
+                                </group>
+                                <group>
+                                    <field name="cpk"/>
+                                    <field name="haptoglobine"/>
+                                    <field name="schizocytes"/>
+                                    <field name="rac"/>
+                                </group>
+                            </group>
+                        </page>
+
                         <!-- Minéraux - Os -->
-                        <page string="Minéraux - Os" name="minerals_bone">
+                        <page string="Minéraux et Vitamines" name="minerals_bone">
                             <group>
                                 <group>
                                     <field name="pth"/>
@@ -178,6 +230,31 @@
                                     <field name="anti_hcv"/>
                                     <field name="anti_hiv"/>
                                 </group>
+                            </group>
+                        </page>
+
+                        <!-- Urine -->
+                        <page string="Urine" name="urine">
+                            <group>
+                                <group>
+                                    <field name="pu_24h"/>
+                                    <field name="eppu"/>
+                                    <field name="ecbu"/>
+                                    <field name="nau"/>
+                                </group>
+                                <group>
+                                    <field name="ku"/>
+                                    <field name="rapport_na_k"/>
+                                    <field name="uree_urinaire"/>
+                                    <field name="creat_urinaire"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <!-- PBR -->
+                        <page string="PBR" name="pbr">
+                            <group>
+                                <field name="pbr_resultat" nolabel="1" placeholder="Résultat de la PBR..."/>
                             </group>
                         </page>
 
