@@ -86,6 +86,12 @@
                                     <field name="white_blood_cells"/>
                                     <field name="platelets"/>
                                     <field name="leu"/>
+                                    <separator string="Formule leucocytaire"/>
+                                    <field name="neutrophiles"/>
+                                    <field name="eosinophiles"/>
+                                    <field name="basophiles"/>
+                                    <field name="lymphocytes"/>
+                                    <field name="monocytes"/>
                                 </group>
                                 <group>
                                     <field name="uricemie"/>
@@ -229,6 +235,10 @@
                                 <group string="Autres">
                                     <field name="anti_hcv"/>
                                     <field name="anti_hiv"/>
+                                </group>
+                                <group string="Syphilis">
+                                    <field name="tpha"/>
+                                    <field name="vdrl"/>
                                 </group>
                             </group>
                         </page>

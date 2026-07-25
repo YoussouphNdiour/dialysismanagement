@@ -37,6 +37,11 @@ class ACSNephroBilan(models.Model):
     hematocrit = fields.Float(string='Hématocrite (%)', digits=(5, 1))
     white_blood_cells = fields.Float(string='Globules blancs (G/L)', digits=(5, 2))
     platelets = fields.Float(string='Plaquettes (G/L)', digits=(6, 0))
+    neutrophiles = fields.Float(string='Neutrophiles (G/L)', digits=(5, 2))
+    eosinophiles = fields.Float(string='Éosinophiles (G/L)', digits=(5, 2))
+    basophiles = fields.Float(string='Basophiles (G/L)', digits=(5, 2))
+    lymphocytes = fields.Float(string='Lymphocytes (G/L)', digits=(5, 2))
+    monocytes = fields.Float(string='Monocytes (G/L)', digits=(5, 2))
     ferritin = fields.Float(string='Ferritine (µg/L)', digits=(7, 1))
     transferrin_saturation = fields.Float(string='Saturation transferrine (%)', digits=(5, 1))
     gb = fields.Float(string='GB (Globules Blancs)')
@@ -134,6 +139,12 @@ class ACSNephroBilan(models.Model):
     anti_hiv = fields.Selection([
         ('positive', 'Positif'), ('negative', 'Négatif'), ('not_done', 'Non fait'),
     ], string='Anti-VIH', default='not_done')
+    tpha = fields.Selection([
+        ('positive', 'Positif'), ('negative', 'Négatif'), ('not_done', 'Non fait'),
+    ], string='TPHA', default='not_done')
+    vdrl = fields.Selection([
+        ('positive', 'Positif'), ('negative', 'Négatif'), ('not_done', 'Non fait'),
+    ], string='VDRL', default='not_done')
 
     # ===== STATUTS CALCULÉS =====
     hemoglobin_status = fields.Selection([
