@@ -28,6 +28,11 @@ class NephrologySessionGenerator(models.TransientModel):
         domain=[('department_type', '=', 'nephrology')],
         help="Filtrer les patients par département de néphrologie",
     )
+    schedule_id = fields.Many2one(
+        'acs.nephrology.schedule',
+        string='Planning de Néphrologie',
+        help="Planning à utiliser pour tous les patients sélectionnés. Si vide, le planning individuel de chaque patient sera utilisé.",
+    )
     patient_ids = fields.Many2many(
         'hms.patient',
         'session_gen_patient_rel', 'generator_id', 'patient_id',
@@ -48,7 +53,7 @@ class NephrologySessionGenerator(models.TransientModel):
         string='Lignes patients',
     )
 
-    @api.depends('patient_ids', 'date_start', 'date_end', 'exclude_holidays')
+    @api.depends('patient_ids', 'date_start', 'date_end', 'exclude_holidays', 'schedule_id')
     def _compute_preview_count(self):
         for rec in self:
             if not rec.date_start or not rec.date_end or not rec.patient_ids:
@@ -56,11 +61,13 @@ class NephrologySessionGenerator(models.TransientModel):
                 continue
             total = 0
             for patient in rec.patient_ids:
-                last_proc = self.env['acs.patient.procedure'].search([
-                    ('patient_id', '=', patient.id),
-                    ('nephrology_schedule_ids', '!=', False),
-                ], order='date desc', limit=1)
-                schedule = last_proc.nephrology_schedule_ids[0] if last_proc and last_proc.nephrology_schedule_ids else False
+                schedule = rec.schedule_id
+                if not schedule:
+                    last_proc = self.env['acs.patient.procedure'].search([
+                        ('patient_id', '=', patient.id),
+                        ('nephrology_schedule_ids', '!=', False),
+                    ], order='date desc', limit=1)
+                    schedule = last_proc.nephrology_schedule_ids[0] if last_proc and last_proc.nephrology_schedule_ids else False
                 if schedule:
                     total += len(rec._get_valid_dates(schedule, rec.date_start, rec.date_end, rec.exclude_holidays))
             rec.preview_count = total
@@ -102,20 +109,22 @@ class NephrologySessionGenerator(models.TransientModel):
         self.line_ids.unlink()
 
         for patient in self.patient_ids:
-            last_proc = self.env['acs.patient.procedure'].search([
-                ('patient_id', '=', patient.id),
-                ('nephrology_schedule_ids', '!=', False),
-            ], order='date desc', limit=1)
-
-            schedule = last_proc.nephrology_schedule_ids[0] if last_proc and last_proc.nephrology_schedule_ids else False
+            schedule = self.schedule_id
+            last_proc = False
+            if not schedule:
+                last_proc = self.env['acs.patient.procedure'].search([
+                    ('patient_id', '=', patient.id),
+                    ('nephrology_schedule_ids', '!=', False),
+                ], order='date desc', limit=1)
+                schedule = last_proc.nephrology_schedule_ids[0] if last_proc and last_proc.nephrology_schedule_ids else False
             if not schedule:
                 continue  # Patient sans planning — ignoré silencieusement
 
-            station = (last_proc.nephrology_schedule_ids[0].station_id
-                       if last_proc and last_proc.nephrology_schedule_ids
-                       else schedule.station_id)
-            physician = (last_proc.physician_id if last_proc and last_proc.physician_id
-                         else schedule.physician_id)
+            station = schedule.station_id
+            if last_proc and last_proc.physician_id:
+                physician = last_proc.physician_id
+            else:
+                physician = schedule.physician_id
 
             valid_dates = self._get_valid_dates(schedule, self.date_start, self.date_end, self.exclude_holidays)
             session_count = len(valid_dates)
