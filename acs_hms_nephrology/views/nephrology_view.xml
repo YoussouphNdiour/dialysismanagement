@@ -211,6 +211,19 @@
                         </group>
                     </group>
 
+                    <!-- Paramètres du bain -->
+                    <group string="Paramètres du bain de dialyse" invisible="department_type!='nephrology'">
+                        <group>
+                            <field name="conductivite"/>
+                            <field name="bain_calcium"/>
+                            <field name="bain_potassium"/>
+                        </group>
+                        <group>
+                            <field name="bain_glucose"/>
+                            <field name="temperature_bain"/>
+                        </group>
+                    </group>
+
                     <!-- Autres paramètres -->
                     <group invisible="department_type!='nephrology'">
                         <group>

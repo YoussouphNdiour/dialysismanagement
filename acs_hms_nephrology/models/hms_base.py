@@ -220,6 +220,13 @@ class AcsPatientProcedure(models.Model):
     restitution = fields.Char(string="Restitution")
     bicarbonate = fields.Text(string="Bicarbonate")
 
+    # Paramètres du bain de dialyse
+    conductivite = fields.Float(string='Conductivité (mS/cm)', digits=(4, 1))
+    bain_calcium = fields.Float(string='Ca+ du bain (mmol/L)', digits=(4, 2))
+    bain_potassium = fields.Float(string='K+ du bain (mmol/L)', digits=(4, 2))
+    bain_glucose = fields.Float(string='Glucose du bain (g/L)', digits=(4, 2))
+    temperature_bain = fields.Float(string='Température du bain (°C)', digits=(4, 1))
+
     # 3. Hémoculture
     blood_culture = fields.Text(string="Hémoculture")
 
