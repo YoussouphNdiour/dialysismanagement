@@ -55,6 +55,57 @@ class ACSPatient(models.Model):
     tdm_ids = fields.One2many('acs.nephro.tdm', 'patient_id', string='TDM')
     irm_ids = fields.One2many('acs.nephro.irm', 'patient_id', string='IRM')
 
+    # Informations sociales et cliniques
+    nombre_enfants = fields.Integer(string="Nombre d'enfants")
+    couverture_sociale = fields.Selection([
+        ('aucune', 'Aucune'),
+        ('cmu', 'CMU'),
+        ('ipm', 'IPM'),
+        ('assurance', 'Assurance'),
+        ('mutuelle', 'Mutuelle'),
+        ('autre', 'Autre'),
+    ], string='Couverture sociale')
+    couverture_sociale_detail = fields.Char(string='Détail couverture sociale',
+        help='Nom de l\'assurance, mutuelle, etc.')
+
+    # Paramètres de dialyse patient
+    mode_dialyse = fields.Selection([
+        ('hd', 'Hémodialyse (HD)'),
+        ('hdf', 'Hémodiafiltration (HDF)'),
+        ('dp', 'Dialyse péritonéale (DP)'),
+        ('hdfi', 'Hémodialyse à flux intermittent (HDFI)'),
+    ], string='Mode de dialyse')
+    diurese_residuelle = fields.Float(string='Diurèse résiduelle (ml/24h)', digits=(7, 0))
+    nb_seances_semaine = fields.Integer(string='Nombre de séances par semaine', default=3)
+
+    # Anthropométrie
+    taille_patient = fields.Float(string='Taille (cm)', digits=(5, 1),
+        help='Taille du patient en cm. Utilisée pour le calcul de la BSC et de l\'IMC.')
+    bsc = fields.Float(string='Surface corporelle (m²)', digits=(4, 2),
+        compute='_compute_bsc_imc', store=True, readonly=False,
+        help='Formule de Dubois : 0.007184 × Poids^0.425 × Taille^0.725')
+    imc_patient = fields.Float(string='IMC', digits=(4, 1),
+        compute='_compute_bsc_imc', store=True, readonly=False,
+        help='Indice de Masse Corporelle = Poids / Taille²')
+
+    @api.depends('dry_weight_history_ids.weight', 'taille_patient')
+    def _compute_bsc_imc(self):
+        for rec in self:
+            # Poids = dernier poids sec connu
+            last_dw = rec.dry_weight_history_ids[:1]
+            poids = last_dw.weight if last_dw else 0.0
+            taille_cm = rec.taille_patient or 0.0
+            taille_m = taille_cm / 100.0
+
+            if poids > 0 and taille_cm > 0:
+                # BSC Dubois
+                rec.bsc = round(0.007184 * (poids ** 0.425) * (taille_cm ** 0.725), 2)
+                # IMC
+                rec.imc_patient = round(poids / (taille_m ** 2), 1)
+            else:
+                rec.bsc = 0.0
+                rec.imc_patient = 0.0
+
 
 class HrDepartment(models.Model): 
     _inherit = "hr.department"

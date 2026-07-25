@@ -74,6 +74,31 @@
                         </field>
                     </group> -->
 
+                    <separator string="Informations sociales" colspan="4"/>
+                    <group>
+                        <group>
+                            <field name="nombre_enfants"/>
+                            <field name="couverture_sociale"/>
+                            <field name="couverture_sociale_detail" invisible="couverture_sociale not in ('assurance', 'mutuelle', 'autre')"/>
+                        </group>
+                        <group>
+                            <field name="mode_dialyse"/>
+                            <field name="diurese_residuelle"/>
+                            <field name="nb_seances_semaine"/>
+                        </group>
+                    </group>
+
+                    <separator string="Anthropométrie" colspan="4"/>
+                    <group>
+                        <group>
+                            <field name="taille_patient"/>
+                        </group>
+                        <group>
+                            <field name="bsc"/>
+                            <field name="imc_patient"/>
+                        </group>
+                    </group>
+
                     <separator string="Néphropathie initiale" colspan="4"/>
                     <group>
                         <group>
