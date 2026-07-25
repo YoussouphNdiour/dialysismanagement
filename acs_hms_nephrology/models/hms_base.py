@@ -88,6 +88,10 @@ class ACSPatient(models.Model):
         compute='_compute_bsc_imc', store=True, readonly=False, precompute=True,
         help='Indice de Masse Corporelle = Poids / Taille²')
 
+    # Bilan cardiovasculaire
+    ecg_ids = fields.One2many('acs.nephro.ecg', 'patient_id', string='ECG')
+    ett_ids = fields.One2many('acs.nephro.ett', 'patient_id', string='ETT')
+
     @api.depends('dry_weight_history_ids.weight', 'taille_patient')
     def _compute_bsc_imc(self):
         for rec in self:
@@ -741,6 +745,148 @@ class ACSNephroIRM(models.Model):
         for vals in vals_list:
             if vals.get('name', 'Nouveau') == 'Nouveau':
                 vals['name'] = self.env['ir.sequence'].next_by_code('acs.nephro.irm') or 'Nouveau'
+        return super().create(vals_list)
+
+
+# ==================== BILAN CARDIOVASCULAIRE ====================
+
+class ACSNephroECG(models.Model):
+    _name = 'acs.nephro.ecg'
+    _description = 'ECG'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'exam_date desc'
+
+    name = fields.Char(string="Référence", required=True, default='Nouveau', copy=False)
+    patient_id = fields.Many2one('hms.patient', string='Patient', required=True, ondelete='cascade', tracking=True)
+    exam_date = fields.Date(string="Date de l'examen", default=fields.Date.today, required=True, tracking=True)
+    physician_id = fields.Many2one('hms.physician', string='Médecin')
+
+    rythme = fields.Selection([
+        ('sinusal', 'Sinusal'),
+        ('fa', 'Fibrillation auriculaire'),
+        ('flutter', 'Flutter auriculaire'),
+        ('tv', 'Tachycardie ventriculaire'),
+        ('autre', 'Autre'),
+    ], string='Rythme cardiaque')
+    frequence_cardiaque = fields.Integer(string='Fréquence cardiaque (bpm)')
+    axe = fields.Char(string='Axe électrique')
+    pr_interval = fields.Char(string='Intervalle PR')
+    qrs_duration = fields.Char(string='Durée QRS')
+    qt_qtc = fields.Char(string='QT/QTc')
+
+    troubles_repolarisation = fields.Boolean(string='Troubles de la repolarisation')
+    troubles_repolarisation_detail = fields.Text(string='Détail troubles repolarisation')
+    hypertrophie = fields.Selection([
+        ('none', 'Aucune'),
+        ('hvg', 'HVG'),
+        ('hvd', 'HVD'),
+        ('bi', 'Bi-ventriculaire'),
+    ], string='Hypertrophie', default='none')
+    troubles_conduction = fields.Selection([
+        ('none', 'Aucun'),
+        ('bbg', 'Bloc de branche gauche'),
+        ('bbd', 'Bloc de branche droit'),
+        ('bav1', 'BAV 1er degré'),
+        ('bav2', 'BAV 2ème degré'),
+        ('bav3', 'BAV 3ème degré (complet)'),
+        ('autre', 'Autre'),
+    ], string='Troubles de conduction', default='none')
+
+    has_anomalies = fields.Boolean(string='Anomalies détectées', tracking=True)
+    conclusion = fields.Text(string='Conclusion')
+    attachment_ids = fields.Many2many('ir.attachment', 'nephro_ecg_attachment_rel', 'ecg_id', 'attachment_id',
+                                       string='Tracés ECG joints')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'Nouveau') == 'Nouveau':
+                vals['name'] = self.env['ir.sequence'].next_by_code('acs.nephro.ecg') or 'Nouveau'
+        return super().create(vals_list)
+
+
+class ACSNephroETT(models.Model):
+    _name = 'acs.nephro.ett'
+    _description = 'ETT (Échocardiographie Transthoracique)'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'exam_date desc'
+
+    name = fields.Char(string="Référence", required=True, default='Nouveau', copy=False)
+    patient_id = fields.Many2one('hms.patient', string='Patient', required=True, ondelete='cascade', tracking=True)
+    exam_date = fields.Date(string="Date de l'examen", default=fields.Date.today, required=True, tracking=True)
+    physician_id = fields.Many2one('hms.physician', string='Médecin')
+
+    # FEVG
+    fevg = fields.Float(string='FEVG (%)', digits=(5, 1))
+    fevg_status = fields.Selection([
+        ('normale', 'Normale (≥ 55%)'),
+        ('alteree', 'Altérée (35-54%)'),
+        ('severement_alteree', 'Sévèrement altérée (< 35%)'),
+    ], string='Statut FEVG', compute='_compute_fevg_status', store=True)
+
+    # Dimensions
+    diametre_vg_diast = fields.Float(string='Diamètre VG diastolique (mm)', digits=(5, 1))
+    diametre_vg_syst = fields.Float(string='Diamètre VG systolique (mm)', digits=(5, 1))
+    septum_iv = fields.Float(string='Septum IV (mm)', digits=(5, 1))
+    paroi_post = fields.Float(string='Paroi postérieure (mm)', digits=(5, 1))
+    diametre_og = fields.Float(string='Diamètre OG (mm)', digits=(5, 1))
+
+    # Pressions
+    paps = fields.Float(string='PAPS (mmHg)', digits=(5, 1))
+
+    # Valvulopathie
+    valvulopathie = fields.Selection([
+        ('none', 'Aucune'),
+        ('im', 'Insuffisance mitrale'),
+        ('ia', 'Insuffisance aortique'),
+        ('rm', 'Rétrécissement mitral'),
+        ('ra', 'Rétrécissement aortique'),
+        ('it', 'Insuffisance tricuspide'),
+        ('autre', 'Autre'),
+    ], string='Valvulopathie', default='none')
+    valvulopathie_grade = fields.Selection([
+        ('minime', 'Minime'),
+        ('moderee', 'Modérée'),
+        ('severe', 'Sévère'),
+    ], string='Grade valvulopathie')
+
+    # Péricarde
+    pericarde = fields.Selection([
+        ('normal', 'Normal'),
+        ('epanchement_minime', 'Épanchement minime'),
+        ('epanchement_modere', 'Épanchement modéré'),
+        ('epanchement_abondant', 'Épanchement abondant'),
+    ], string='Péricarde', default='normal')
+
+    # Cinétique
+    cinetique = fields.Selection([
+        ('normale', 'Normale'),
+        ('hypokinetique', 'Hypokinétique'),
+        ('akinetique', 'Akinétique'),
+    ], string='Cinétique segmentaire', default='normale')
+
+    hvg = fields.Boolean(string='HVG')
+    conclusion = fields.Text(string='Conclusion')
+    attachment_ids = fields.Many2many('ir.attachment', 'nephro_ett_attachment_rel', 'ett_id', 'attachment_id',
+                                       string='Images/vidéos jointes')
+
+    @api.depends('fevg')
+    def _compute_fevg_status(self):
+        for rec in self:
+            if not rec.fevg:
+                rec.fevg_status = False
+            elif rec.fevg >= 55:
+                rec.fevg_status = 'normale'
+            elif rec.fevg >= 35:
+                rec.fevg_status = 'alteree'
+            else:
+                rec.fevg_status = 'severement_alteree'
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('name', 'Nouveau') == 'Nouveau':
+                vals['name'] = self.env['ir.sequence'].next_by_code('acs.nephro.ett') or 'Nouveau'
         return super().create(vals_list)
 
 

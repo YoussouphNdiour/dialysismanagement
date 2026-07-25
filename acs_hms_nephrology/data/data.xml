@@ -50,5 +50,22 @@
             <field name="company_id" eval="False"/>
         </record>
 
+        <!-- Séquences ECG / ETT -->
+        <record id="seq_acs_nephro_ecg" model="ir.sequence">
+            <field name="name">ECG Sequence</field>
+            <field name="code">acs.nephro.ecg</field>
+            <field name="prefix">ECG/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_acs_nephro_ett" model="ir.sequence">
+            <field name="name">ETT Sequence</field>
+            <field name="code">acs.nephro.ett</field>
+            <field name="prefix">ETT/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
     </data>
 </odoo>

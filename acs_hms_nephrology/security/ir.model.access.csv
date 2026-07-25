@@ -87,3 +87,15 @@ access_nephrology_session_generator_line_manager,nephrology.session.generator.li
 access_nephrology_session_validator_user,nephrology.session.validator user,model_nephrology_session_validator,acs_hms_base.group_hms_user,1,1,1,1
 access_nephrology_session_validator_receptionist,nephrology.session.validator receptionist,model_nephrology_session_validator,acs_hms.group_hms_receptionist,1,1,1,1
 access_nephrology_session_validator_manager,nephrology.session.validator manager,model_nephrology_session_validator,acs_hms_base.group_hms_manager,1,1,1,1
+
+access_acs_nephro_ecg_user,ECG User,model_acs_nephro_ecg,acs_hms_base.group_hms_user,1,1,1,1
+access_acs_nephro_ecg_receptionist,ECG Receptionist,model_acs_nephro_ecg,acs_hms.group_hms_receptionist,1,1,1,1
+access_acs_nephro_ecg_nurse,ECG Nurse,model_acs_nephro_ecg,acs_hms.group_hms_nurse,1,1,1,1
+access_acs_nephro_ecg_jr_doctor,ECG Jr Doctor,model_acs_nephro_ecg,acs_hms.group_hms_jr_doctor,1,1,1,1
+access_acs_nephro_ecg_manager,ECG Manager,model_acs_nephro_ecg,acs_hms_base.group_hms_manager,1,1,1,1
+
+access_acs_nephro_ett_user,ETT User,model_acs_nephro_ett,acs_hms_base.group_hms_user,1,1,1,1
+access_acs_nephro_ett_receptionist,ETT Receptionist,model_acs_nephro_ett,acs_hms.group_hms_receptionist,1,1,1,1
+access_acs_nephro_ett_nurse,ETT Nurse,model_acs_nephro_ett,acs_hms.group_hms_nurse,1,1,1,1
+access_acs_nephro_ett_jr_doctor,ETT Jr Doctor,model_acs_nephro_ett,acs_hms.group_hms_jr_doctor,1,1,1,1
+access_acs_nephro_ett_manager,ETT Manager,model_acs_nephro_ett,acs_hms_base.group_hms_manager,1,1,1,1

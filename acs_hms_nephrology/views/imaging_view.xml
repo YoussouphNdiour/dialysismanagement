@@ -398,4 +398,182 @@
         <field name="view_mode">list,form</field>
     </record>
 
+
+    <!-- ==================== ECG ==================== -->
+
+    <!-- Liste ECG -->
+    <record id="view_acs_nephro_ecg_list" model="ir.ui.view">
+        <field name="name">acs.nephro.ecg.list</field>
+        <field name="model">acs.nephro.ecg</field>
+        <field name="arch" type="xml">
+            <list string="ECG">
+                <field name="name"/>
+                <field name="exam_date"/>
+                <field name="patient_id"/>
+                <field name="rythme"/>
+                <field name="frequence_cardiaque"/>
+                <field name="has_anomalies" widget="boolean_toggle"/>
+                <field name="physician_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Formulaire ECG -->
+    <record id="view_acs_nephro_ecg_form" model="ir.ui.view">
+        <field name="name">acs.nephro.ecg.form</field>
+        <field name="model">acs.nephro.ecg</field>
+        <field name="arch" type="xml">
+            <form string="ECG">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Référence" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="exam_date"/>
+                            <field name="physician_id"/>
+                        </group>
+                        <group>
+                            <field name="rythme"/>
+                            <field name="frequence_cardiaque"/>
+                            <field name="has_anomalies"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Paramètres" name="params">
+                            <group>
+                                <group string="Intervalles">
+                                    <field name="axe"/>
+                                    <field name="pr_interval"/>
+                                    <field name="qrs_duration"/>
+                                    <field name="qt_qtc"/>
+                                </group>
+                                <group string="Anomalies">
+                                    <field name="hypertrophie"/>
+                                    <field name="troubles_conduction"/>
+                                    <field name="troubles_repolarisation"/>
+                                    <field name="troubles_repolarisation_detail"
+                                           invisible="not troubles_repolarisation"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Conclusion" name="conclusion">
+                            <field name="conclusion" placeholder="Conclusion de l'ECG..."/>
+                        </page>
+                        <page string="Pièces jointes" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action ECG -->
+    <record id="action_nephro_ecg" model="ir.actions.act_window">
+        <field name="name">ECG</field>
+        <field name="res_model">acs.nephro.ecg</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- ==================== ETT ==================== -->
+
+    <!-- Liste ETT -->
+    <record id="view_acs_nephro_ett_list" model="ir.ui.view">
+        <field name="name">acs.nephro.ett.list</field>
+        <field name="model">acs.nephro.ett</field>
+        <field name="arch" type="xml">
+            <list string="ETT">
+                <field name="name"/>
+                <field name="exam_date"/>
+                <field name="patient_id"/>
+                <field name="fevg"/>
+                <field name="fevg_status" widget="badge"
+                       decoration-success="fevg_status == 'normale'"
+                       decoration-warning="fevg_status == 'alteree'"
+                       decoration-danger="fevg_status == 'severement_alteree'"/>
+                <field name="hvg" widget="boolean_toggle"/>
+                <field name="physician_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Formulaire ETT -->
+    <record id="view_acs_nephro_ett_form" model="ir.ui.view">
+        <field name="name">acs.nephro.ett.form</field>
+        <field name="model">acs.nephro.ett</field>
+        <field name="arch" type="xml">
+            <form string="ETT (Échocardiographie)">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Référence" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="patient_id"/>
+                            <field name="exam_date"/>
+                            <field name="physician_id"/>
+                        </group>
+                        <group>
+                            <field name="fevg"/>
+                            <field name="fevg_status" widget="badge"
+                                   decoration-success="fevg_status == 'normale'"
+                                   decoration-warning="fevg_status == 'alteree'"
+                                   decoration-danger="fevg_status == 'severement_alteree'"/>
+                            <field name="hvg"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Dimensions" name="dimensions">
+                            <group>
+                                <group string="Ventricule gauche">
+                                    <field name="diametre_vg_diast"/>
+                                    <field name="diametre_vg_syst"/>
+                                    <field name="septum_iv"/>
+                                    <field name="paroi_post"/>
+                                </group>
+                                <group string="Autres cavités">
+                                    <field name="diametre_og"/>
+                                    <field name="paps"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Valvulopathie / Péricarde" name="valves">
+                            <group>
+                                <group>
+                                    <field name="valvulopathie"/>
+                                    <field name="valvulopathie_grade"
+                                           invisible="valvulopathie == 'none'"/>
+                                </group>
+                                <group>
+                                    <field name="pericarde"/>
+                                    <field name="cinetique"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Conclusion" name="conclusion">
+                            <field name="conclusion" placeholder="Conclusion de l'ETT..."/>
+                        </page>
+                        <page string="Pièces jointes" name="attachments">
+                            <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action ETT -->
+    <record id="action_nephro_ett" model="ir.actions.act_window">
+        <field name="name">ETT</field>
+        <field name="res_model">acs.nephro.ett</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
 </odoo>

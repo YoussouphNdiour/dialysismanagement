@@ -167,6 +167,38 @@
                         </page>
                     </notebook>
                 </page>
+                <page name='nephrology_cardio' string="Bilan Cardiovasculaire" invisible="not nephrology_care">
+                    <notebook>
+                        <page string="ECG" name="ecg">
+                            <field name="ecg_ids" nolabel="1" context="{'default_patient_id': id}">
+                                <list string="ECG">
+                                    <field name="name"/>
+                                    <field name="exam_date"/>
+                                    <field name="rythme"/>
+                                    <field name="frequence_cardiaque"/>
+                                    <field name="has_anomalies" widget="boolean_toggle"/>
+                                    <field name="physician_id"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="ETT" name="ett">
+                            <field name="ett_ids" nolabel="1" context="{'default_patient_id': id}">
+                                <list string="ETT">
+                                    <field name="name"/>
+                                    <field name="exam_date"/>
+                                    <field name="fevg"/>
+                                    <field name="fevg_status" widget="badge"
+                                           decoration-success="fevg_status == 'normale'"
+                                           decoration-warning="fevg_status == 'alteree'"
+                                           decoration-danger="fevg_status == 'severement_alteree'"/>
+                                    <field name="hvg" widget="boolean_toggle"/>
+                                    <field name="physician_id"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </page>
             </page>
         </field>
     </record>
