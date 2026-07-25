@@ -873,7 +873,8 @@ class ACSNephroETT(models.Model):
     @api.depends('fevg')
     def _compute_fevg_status(self):
         for rec in self:
-            if not rec.fevg:
+            # FEVG ≤ 0 est cliniquement impossible → traiter comme non renseigné
+            if not rec.fevg or rec.fevg <= 0:
                 rec.fevg_status = False
             elif rec.fevg >= 55:
                 rec.fevg_status = 'normale'
