@@ -124,6 +124,21 @@
                     <field name="venous_pressure" readonly="state in ['cancel','done']"/>
                 </div>
             </xpath>
+            <!-- Examen clinique par appareil — après OGE dans le formulaire base -->
+            <xpath expr="//field[@name='traitement']" position="after">
+                <separator string="Examen clinique par appareil"/>
+                <group>
+                    <group>
+                        <field name="examen_nephrologique" placeholder="Examen néphrologique..." readonly="state in ['cancel','done']"/>
+                        <field name="examen_cardiologique" placeholder="Examen cardiologique..." readonly="state in ['cancel','done']"/>
+                        <field name="examen_respiratoire" placeholder="Examen respiratoire..." readonly="state in ['cancel','done']"/>
+                    </group>
+                    <group>
+                        <field name="examen_neurologique" placeholder="Examen neurologique..." readonly="state in ['cancel','done']"/>
+                        <field name="examen_dermatologique" placeholder="Examen dermatologique..." readonly="state in ['cancel','done']"/>
+                    </group>
+                </group>
+            </xpath>
         </field>
     </record>
 

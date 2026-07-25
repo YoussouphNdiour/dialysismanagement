@@ -119,6 +119,13 @@ class AcsPatientEvaluation(models.Model):
     blood_flow = fields.Float(string="Blood Flow")
     venous_pressure = fields.Float(string="Venous Pressure")
 
+    # Examen clinique par appareil
+    examen_nephrologique = fields.Text(string='Examen néphrologique')
+    examen_cardiologique = fields.Text(string='Examen cardiologique')
+    examen_respiratoire = fields.Text(string='Examen respiratoire')
+    examen_neurologique = fields.Text(string='Examen neurologique')
+    examen_dermatologique = fields.Text(string='Examen dermatologique')
+
 
 class ACSProduct(models.Model):
     _inherit = 'product.template'
