@@ -82,10 +82,10 @@ class ACSPatient(models.Model):
     taille_patient = fields.Float(string='Taille (cm)', digits=(5, 1),
         help='Taille du patient en cm. Utilisée pour le calcul de la BSC et de l\'IMC.')
     bsc = fields.Float(string='Surface corporelle (m²)', digits=(4, 2),
-        compute='_compute_bsc_imc', store=True, readonly=False,
+        compute='_compute_bsc_imc', store=True, readonly=False, precompute=True,
         help='Formule de Dubois : 0.007184 × Poids^0.425 × Taille^0.725')
     imc_patient = fields.Float(string='IMC', digits=(4, 1),
-        compute='_compute_bsc_imc', store=True, readonly=False,
+        compute='_compute_bsc_imc', store=True, readonly=False, precompute=True,
         help='Indice de Masse Corporelle = Poids / Taille²')
 
     @api.depends('dry_weight_history_ids.weight', 'taille_patient')
