@@ -324,6 +324,7 @@ class AcsPatientProcedure(models.Model):
         ('poor', 'Mauvaise'),
     ], string='Tolérance globale')
     end_notes = fields.Text(string='Notes de fin de séance')
+    aspect_rein = fields.Text(string='Aspect du rein')
 
     # --- Urée pour calcul KT/V ---
     urea_pre = fields.Float(string='Urée pré-dialyse (mmol/L)', digits=(6, 2))

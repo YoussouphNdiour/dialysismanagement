@@ -377,6 +377,7 @@
                                decoration-danger="ktv_status == 'insufficient'"/>
                     </group>
                 </group>
+                <field name="aspect_rein" placeholder="Aspect du rein..."/>
                 <field name="end_notes" placeholder="Notes de fin de séance..."/>
             </group>
         </field>
