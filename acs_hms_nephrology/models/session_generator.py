@@ -56,21 +56,11 @@ class NephrologySessionGenerator(models.TransientModel):
     @api.depends('patient_ids', 'date_start', 'date_end', 'exclude_holidays', 'schedule_id')
     def _compute_preview_count(self):
         for rec in self:
-            if not rec.date_start or not rec.date_end or not rec.patient_ids:
+            if not rec.date_start or not rec.date_end or not rec.patient_ids or not rec.schedule_id:
                 rec.preview_count = 0
                 continue
-            total = 0
-            for patient in rec.patient_ids:
-                schedule = rec.schedule_id
-                if not schedule:
-                    last_proc = self.env['acs.patient.procedure'].search([
-                        ('patient_id', '=', patient.id),
-                        ('nephrology_schedule_ids', '!=', False),
-                    ], order='date desc', limit=1)
-                    schedule = last_proc.nephrology_schedule_ids[0] if last_proc and last_proc.nephrology_schedule_ids else False
-                if schedule:
-                    total += len(rec._get_valid_dates(schedule, rec.date_start, rec.date_end, rec.exclude_holidays))
-            rec.preview_count = total
+            dates = rec._get_valid_dates(rec.schedule_id, rec.date_start, rec.date_end, rec.exclude_holidays)
+            rec.preview_count = len(dates) * len(rec.patient_ids)
 
     @api.model
     def _get_valid_dates(self, schedule, date_start, date_end, exclude_holidays=True):
@@ -104,23 +94,25 @@ class NephrologySessionGenerator(models.TransientModel):
             raise UserError(_('Définissez une période.'))
         if self.date_end < self.date_start:
             raise UserError(_('La date de fin doit être après la date de début.'))
+        if not self.schedule_id:
+            raise UserError(_(
+                'Veuillez sélectionner un Planning de Néphrologie.\n'
+                'Ce planning définit les jours de dialyse (ex: Lundi-Mercredi-Vendredi 07-11h).'
+            ))
 
         # Supprimer les lignes existantes (au cas où le wizard est réouvert)
         self.line_ids.unlink()
 
+        skipped_patients = []
         for patient in self.patient_ids:
             schedule = self.schedule_id
             last_proc = False
-            if not schedule:
-                last_proc = self.env['acs.patient.procedure'].search([
-                    ('patient_id', '=', patient.id),
-                    ('nephrology_schedule_ids', '!=', False),
-                ], order='date desc', limit=1)
-                schedule = last_proc.nephrology_schedule_ids[0] if last_proc and last_proc.nephrology_schedule_ids else False
-            if not schedule:
-                continue  # Patient sans planning — ignoré silencieusement
 
             station = schedule.station_id
+            # Chercher le médecin depuis la dernière procédure du patient
+            last_proc = self.env['acs.patient.procedure'].search([
+                ('patient_id', '=', patient.id),
+            ], order='date desc', limit=1)
             if last_proc and last_proc.physician_id:
                 physician = last_proc.physician_id
             else:
@@ -128,6 +120,10 @@ class NephrologySessionGenerator(models.TransientModel):
 
             valid_dates = self._get_valid_dates(schedule, self.date_start, self.date_end, self.exclude_holidays)
             session_count = len(valid_dates)
+
+            if session_count == 0:
+                skipped_patients.append(patient.name)
+                continue
 
             # Détection de conflits
             conflict_status, conflict_details = self._detect_conflict(patient, station)
@@ -142,6 +138,12 @@ class NephrologySessionGenerator(models.TransientModel):
                 'conflict_status': conflict_status,
                 'conflict_details': conflict_details,
             })
+
+        if not self.line_ids:
+            msg = _('Aucune séance à créer pour la période sélectionnée.')
+            if skipped_patients:
+                msg += '\n' + _('Patients sans séance planifiable : %s') % ', '.join(skipped_patients)
+            raise UserError(msg)
 
         validator = self.env['nephrology.session.validator'].create({
             'generator_id': self.id,
@@ -229,9 +231,18 @@ class NephrologySessionValidator(models.TransientModel):
         if not product:
             raise UserError(_('Aucun produit de type hémodialyse configuré.'))
 
+        eligible_lines = generator.line_ids.filtered(
+            lambda l: l.conflict_status != 'error_duplicate' and l.schedule_id)
+        skipped_count = len(generator.line_ids) - len(eligible_lines)
+
+        if not eligible_lines:
+            raise UserError(_(
+                'Aucune séance à créer.\n'
+                'Tous les patients sont déjà planifiés sur cette période (%d ignorés).'
+            ) % skipped_count)
+
         created_count = 0
-        for line in generator.line_ids.filtered(
-                lambda l: l.conflict_status != 'error_duplicate' and l.schedule_id):
+        for line in eligible_lines:
             valid_dates = generator._get_valid_dates(
                 line.schedule_id, generator.date_start, generator.date_end,
                 generator.exclude_holidays,
@@ -260,12 +271,16 @@ class NephrologySessionValidator(models.TransientModel):
                 procedure.write({'appointment_ids': [(4, appointment.id)]})
                 created_count += 1
 
+        msg = _('%d séances et rendez-vous créés avec succès.') % created_count
+        if skipped_count:
+            msg += ' ' + _('(%d patients ignorés — déjà planifiés)') % skipped_count
+
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
                 'title': _('Séances créées'),
-                'message': _('%d séances créées avec succès.') % created_count,
+                'message': msg,
                 'type': 'success',
                 'sticky': True,
             },

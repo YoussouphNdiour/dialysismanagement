@@ -19,8 +19,9 @@
                                options="{'no_create': True}"
                                placeholder="Tous les départements (optionnel)"/>
                         <field name="schedule_id"
+                               required="1"
                                options="{'no_create': True}"
-                               placeholder="Planning individuel de chaque patient (optionnel)"/>
+                               placeholder="Sélectionnez le planning de dialyse..."/>
                         <field name="patient_ids"
                                widget="many2many_tags"
                                domain="[('nephrology_care', '=', True)]"
