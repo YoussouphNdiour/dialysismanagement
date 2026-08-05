@@ -12,7 +12,13 @@ type ViewMode = 'grille' | 'calendrier' | 'liste';
 
 export default function PlanningPage() {
   const [view, setView] = useState<ViewMode>('grille');
-  const [weekStart, setWeekStart] = useState('');
+  const [weekStart, setWeekStart] = useState(() => {
+    const d = new Date();
+    const day = d.getDay();
+    const diff = day === 0 ? 1 : 8 - day;
+    d.setDate(d.getDate() + diff);
+    return d.toISOString().split('T')[0];
+  });
 
   const generateMutation = api.plannings.generateWeekSessions.useMutation();
 
@@ -21,14 +27,6 @@ export default function PlanningPage() {
     generateMutation.mutate({ weekStart });
   };
 
-  // Default weekStart to next Monday
-  const getNextMonday = () => {
-    const d = new Date();
-    const day = d.getDay();
-    const diff = day === 0 ? 1 : 8 - day;
-    d.setDate(d.getDate() + diff);
-    return d.toISOString().split('T')[0];
-  };
 
   return (
     <div>
@@ -73,7 +71,6 @@ export default function PlanningPage() {
           className="rounded border px-2 py-1 text-sm"
           value={weekStart}
           onChange={(e) => setWeekStart(e.target.value)}
-          defaultValue={getNextMonday()}
         />
         <Button
           size="sm"
