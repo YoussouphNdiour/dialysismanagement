@@ -35,13 +35,13 @@ test.describe('Patients CRUD', () => {
   test('recherche filtre les patients', async ({ page }) => {
     await loginAs(page, 'admin@nephro.test');
     await page.click('nav >> text=Patients');
-    await page.waitForTimeout(1000);
+    await expect(page.locator('table tbody tr').first()).toBeVisible({ timeout: 10000 });
 
     await page.fill('input[placeholder="Rechercher un patient..."]', 'Diop');
-    await page.waitForTimeout(500);
 
-    const rows = page.locator('table tbody tr');
-    await expect(rows.first()).toContainText('Diop');
+    // Wait for filtered results to appear
+    const firstRow = page.locator('table tbody tr').first();
+    await expect(firstRow).toContainText('Diop', { timeout: 5000 });
   });
 
   test('secretaire peut creer un patient', async ({ page }) => {
@@ -55,5 +55,6 @@ test.describe('Patients CRUD', () => {
     await page.click('button:has-text("Creer le patient")');
 
     await page.waitForURL('/patients', { timeout: 10000 });
+    await expect(page.locator('text=SecrTest')).toBeVisible({ timeout: 5000 });
   });
 });

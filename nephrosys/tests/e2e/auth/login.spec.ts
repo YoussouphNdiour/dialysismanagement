@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Authentification', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/web/session/logout').catch(() => {});
+  test.beforeEach(async ({ page, context }) => {
+    // Clear cookies to ensure clean session state
+    await context.clearCookies();
   });
 
   test('page de login affichee pour utilisateur non connecte', async ({ page }) => {
