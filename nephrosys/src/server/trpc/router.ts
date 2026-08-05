@@ -7,6 +7,7 @@ import { seuilsRouter } from './routers/seuils.router';
 import { planningsRouter } from './routers/plannings.router';
 import { sessionsRouter } from './routers/sessions.router';
 import { vitalSignsRouter } from './routers/vital-signs.router';
+import { bilansRouter } from './routers/bilans.router';
 
 export const appRouter = router({
   auth: authRouter,
@@ -17,6 +18,7 @@ export const appRouter = router({
   plannings: planningsRouter,
   sessions: sessionsRouter,
   vitalSigns: vitalSignsRouter,
+  bilans: bilansRouter,
 });
 
 export type AppRouter = typeof appRouter;
