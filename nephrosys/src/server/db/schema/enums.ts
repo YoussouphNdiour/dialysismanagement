@@ -17,3 +17,41 @@ export const patientStatutEnum = pgEnum('patient_statut', [
 ]);
 
 export const sexeEnum = pgEnum('sexe', ['M', 'F']);
+
+export const vacationEnum = pgEnum('vacation', ['matin', 'apres_midi']);
+
+export const recurrenceEnum = pgEnum('recurrence', ['hebdo', 'bihebdo', 'trihebdo']);
+
+export const statutSeanceEnum = pgEnum('statut_seance', [
+  'planifiee',
+  'en_cours',
+  'terminee',
+  'annulee',
+]);
+
+export const typeDialyseEnum = pgEnum('type_dialyse', [
+  'hemodialyse',
+  'hemodiafiltration',
+  'dialyse_peritoneale',
+]);
+
+export const arrivalStatusEnum = pgEnum('arrival_status', ['stable', 'malade', 'urgence']);
+
+export const toleranceEnum = pgEnum('tolerance', ['bonne', 'moyenne', 'mauvaise']);
+
+export const typeBilanEnum = pgEnum('type_bilan', [
+  'mensuel',
+  'trimestriel',
+  'semestriel',
+  'annuel',
+]);
+
+export const serologieResultEnum = pgEnum('serologie_result', [
+  'positif',
+  'negatif',
+  'non_fait',
+]);
+
+export const bioStatusEnum = pgEnum('bio_status', ['ok', 'low', 'high']);
+
+export const ktvStatusEnum = pgEnum('ktv_status', ['adequate', 'inadequate']);
