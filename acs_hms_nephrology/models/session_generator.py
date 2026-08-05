@@ -261,17 +261,9 @@ class NephrologySessionValidator(models.TransientModel):
                     'department_id': generator.department_id.id if generator.department_id else False,
                     'nephrology_schedule_ids': [(4, line.schedule_id.id)],
                 })
-                appointment = self.env['hms.appointment'].create({
-                    'patient_id': line.patient_id.id,
-                    'date': dt,
-                    'product_id': product.id,
-                    'physician_id': line.physician_id.id if line.physician_id else False,
-                    'department_id': generator.department_id.id if generator.department_id else False,
-                })
-                procedure.write({'appointment_ids': [(4, appointment.id)]})
                 created_count += 1
 
-        msg = _('%d séances et rendez-vous créés avec succès.') % created_count
+        msg = _('%d séances créées avec succès.') % created_count
         if skipped_count:
             msg += ' ' + _('(%d patients ignorés — déjà planifiés)') % skipped_count
 
