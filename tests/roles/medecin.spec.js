@@ -23,6 +23,78 @@ const LOGIN = 'medecin@nephro.test';
 const PASS  = 'Nephro2024!';
 
 // ---------------------------------------------------------------------------
+// Helper : ouvre le sélecteur d'applications dans la barre de navigation
+// et retourne le locator de l'item correspondant au nom d'application donné.
+//
+// En Odoo 19, quand un utilisateur a une action par défaut, il est redirigé
+// hors de la grille d'apps. Les apps restent accessibles via le bouton
+// hamburger (première icône dans la nav) qui ouvre un menu déroulant.
+// ---------------------------------------------------------------------------
+async function openAppSwitcherAndFind(page, appName) {
+  // Ouvrir le sélecteur d'applications (bouton hamburger en haut à gauche)
+  const switcher = page.locator('nav .o_menu_toggle, nav button.o_menu_toggle').first();
+  // Odoo 19 : le bouton peut être le premier button vide dans la nav
+  const switcherFallback = page.locator('nav > button:first-of-type, .o_main_navbar button').first();
+
+  if (await switcher.isVisible({ timeout: 2000 })) {
+    await switcher.click();
+  } else {
+    await switcherFallback.click();
+  }
+  await page.waitForTimeout(500);
+
+  // L'app cherchée peut être dans le menu déroulant ou déjà sur la page (grille)
+  return page.locator(
+    `.o_app:has-text("${appName}"), a.o_app:has-text("${appName}"), ` +
+    `.o_menu_sections a:has-text("${appName}"), ` +
+    `.dropdown-menu a:has-text("${appName}"), ` +
+    `.o_home_menu .o_app:has-text("${appName}")`
+  ).first();
+}
+
+// ---------------------------------------------------------------------------
+// Helper : navigue vers une application via la barre de navigation.
+// Clique sur le bouton hamburger puis sur le nom d'app dans le dropdown.
+// ---------------------------------------------------------------------------
+async function navigateToApp(page, appName) {
+  await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(1500);
+
+  // Essayer d'abord la grille d'apps (si visible directement)
+  const appOnGrid = page.locator(
+    `.o_app:has-text("${appName}"), a.o_app:has-text("${appName}")`
+  ).first();
+
+  if (await appOnGrid.isVisible({ timeout: 2000 })) {
+    await appOnGrid.click();
+    await page.waitForLoadState('domcontentloaded');
+    await page.waitForTimeout(1000);
+    return;
+  }
+
+  // Sinon, ouvrir le switcher
+  // Le premier bouton de la nav est le toggle app switcher
+  const navToggle = page.locator('.o_main_navbar .o_menu_toggle').first();
+  const navToggleFallback = page.locator('.o_main_navbar button').first();
+
+  if (await navToggle.isVisible({ timeout: 2000 })) {
+    await navToggle.click();
+  } else {
+    await navToggleFallback.click();
+  }
+  await page.waitForTimeout(1000);
+
+  // Chercher l'app dans le menu home qui s'ouvre
+  const appLink = page.locator(
+    `.o_app:has-text("${appName}"), a.o_app:has-text("${appName}"), ` +
+    `.o_home_menu .o_app:has-text("${appName}")`
+  ).first();
+  await appLink.click();
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(1000);
+}
+
+// ---------------------------------------------------------------------------
 // Suite de tests
 // ---------------------------------------------------------------------------
 
@@ -39,6 +111,28 @@ test.describe('Rôle Médecin', () => {
   test('voit le menu Néphrologie', async ({ page }) => {
     await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
+
+    // Odoo 19 : l'app grid est parfois remplacée par la vue par défaut.
+    // Vérifier d'abord la grille, sinon ouvrir le switcher d'apps.
+    const appOnGrid = page.locator(
+      '.o_app:has-text("Néphrologie"), a.o_app:has-text("Néphrologie")'
+    ).first();
+
+    if (await appOnGrid.isVisible({ timeout: 3000 })) {
+      await expect(appOnGrid).toBeVisible();
+      return;
+    }
+
+    // Ouvrir le switcher
+    const navToggle = page.locator('.o_main_navbar .o_menu_toggle').first();
+    const navToggleFallback = page.locator('.o_main_navbar button').first();
+    if (await navToggle.isVisible({ timeout: 2000 })) {
+      await navToggle.click();
+    } else {
+      await navToggleFallback.click();
+    }
+    await page.waitForTimeout(1000);
+
     const menu = page.locator(
       '.o_app:has-text("Néphrologie"), a.o_app:has-text("Néphrologie")'
     ).first();
@@ -48,6 +142,26 @@ test.describe('Rôle Médecin', () => {
   test('voit le menu Clinique', async ({ page }) => {
     await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
+
+    const appOnGrid = page.locator(
+      '.o_app:has-text("Clinique"), a.o_app:has-text("Clinique")'
+    ).first();
+
+    if (await appOnGrid.isVisible({ timeout: 3000 })) {
+      await expect(appOnGrid).toBeVisible();
+      return;
+    }
+
+    // Ouvrir le switcher
+    const navToggle = page.locator('.o_main_navbar .o_menu_toggle').first();
+    const navToggleFallback = page.locator('.o_main_navbar button').first();
+    if (await navToggle.isVisible({ timeout: 2000 })) {
+      await navToggle.click();
+    } else {
+      await navToggleFallback.click();
+    }
+    await page.waitForTimeout(1000);
+
     const menu = page.locator(
       '.o_app:has-text("Clinique"), a.o_app:has-text("Clinique")'
     ).first();
@@ -55,15 +169,8 @@ test.describe('Rôle Médecin', () => {
   });
 
   test('accède aux bilans biologiques', async ({ page }) => {
-    // Naviguer vers Néphrologie
-    await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1500);
-    const nephro = page.locator(
-      '.o_app:has-text("Néphrologie"), a.o_app:has-text("Néphrologie")'
-    ).first();
-    await nephro.click();
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(1000);
+    // Naviguer vers Néphrologie via helper (gère la redirection action_id)
+    await navigateToApp(page, 'Néphrologie');
 
     // Chercher le sous-menu Bilans
     const bilansMenu = page.locator(
@@ -84,6 +191,20 @@ test.describe('Rôle Médecin', () => {
   test('ne voit PAS le menu Configuration', async ({ page }) => {
     await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
+
+    // Ouvrir le switcher si nécessaire (pour voir tous les apps accessibles)
+    const appOnGrid = page.locator('.o_app:has-text("Configuration")').first();
+    if (!await appOnGrid.isVisible({ timeout: 2000 })) {
+      const navToggle = page.locator('.o_main_navbar .o_menu_toggle').first();
+      const navToggleFallback = page.locator('.o_main_navbar button').first();
+      if (await navToggle.isVisible({ timeout: 2000 })) {
+        await navToggle.click();
+      } else {
+        await navToggleFallback.click();
+      }
+      await page.waitForTimeout(1000);
+    }
+
     const menu = page.locator(
       '.o_app:has-text("Configuration"), a.o_app:has-text("Configuration")'
     ).first();
@@ -93,6 +214,20 @@ test.describe('Rôle Médecin', () => {
   test('ne voit PAS le menu Facturation Dialyse', async ({ page }) => {
     await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
+
+    // Ouvrir le switcher si nécessaire
+    const appOnGrid = page.locator('.o_app:has-text("Facturation")').first();
+    if (!await appOnGrid.isVisible({ timeout: 2000 })) {
+      const navToggle = page.locator('.o_main_navbar .o_menu_toggle').first();
+      const navToggleFallback = page.locator('.o_main_navbar button').first();
+      if (await navToggle.isVisible({ timeout: 2000 })) {
+        await navToggle.click();
+      } else {
+        await navToggleFallback.click();
+      }
+      await page.waitForTimeout(1000);
+    }
+
     const menu = page.locator(
       '.o_app:has-text("Facturation"), a.o_app:has-text("Facturation")'
     ).first();
@@ -188,17 +323,8 @@ test.describe('Rôle Médecin', () => {
   });
 
   test('consulte les bilans biologiques', async ({ page }) => {
-    // Naviguer vers le menu Néphrologie
-    await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1500);
-
-    const nephroMenu = page.locator(
-      '.o_app:has-text("Néphrologie"), a.o_app:has-text("Néphrologie")'
-    ).first();
-    await expect(nephroMenu).toBeVisible({ timeout: 10000 });
-    await nephroMenu.click();
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(1000);
+    // Naviguer vers le menu Néphrologie via helper (gère la redirection action_id)
+    await navigateToApp(page, 'Néphrologie');
 
     // Ouvrir le sous-menu Bilans
     const bilansMenu = page.locator(

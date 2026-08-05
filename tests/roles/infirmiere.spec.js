@@ -7,6 +7,42 @@ const { loginUI }      = require('../helpers/auth');
 const LOGIN = 'infirmiere@nephro.test';
 const PASS  = 'Nephro2024!';
 
+// ---------------------------------------------------------------------------
+// Helper : ouvre le sélecteur d'applications si la grille n'est pas visible.
+// En Odoo 19, les utilisateurs avec une action par défaut sont redirigés
+// hors de la grille. Les apps restent accessibles via le bouton hamburger.
+// ---------------------------------------------------------------------------
+async function openAppSwitcherIfNeeded(page) {
+  const anyApp = page.locator('.o_app').first();
+  if (await anyApp.isVisible({ timeout: 2000 })) {
+    return; // La grille d'apps est déjà visible
+  }
+  const navToggle = page.locator('.o_main_navbar .o_menu_toggle').first();
+  const navToggleFallback = page.locator('.o_main_navbar button').first();
+  if (await navToggle.isVisible({ timeout: 2000 })) {
+    await navToggle.click();
+  } else {
+    await navToggleFallback.click();
+  }
+  await page.waitForTimeout(1000);
+}
+
+// ---------------------------------------------------------------------------
+// Helper : navigue vers une application (grille ou switcher).
+// ---------------------------------------------------------------------------
+async function navigateToApp(page, appName) {
+  await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(1500);
+  await openAppSwitcherIfNeeded(page);
+
+  const appLink = page.locator(
+    `.o_app:has-text("${appName}"), a.o_app:has-text("${appName}")`
+  ).first();
+  await appLink.click();
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(1000);
+}
+
 test.describe('Rôle Infirmière', () => {
 
   test.beforeEach(async ({ page }) => {
@@ -24,17 +60,13 @@ test.describe('Rôle Infirmière', () => {
   });
 
   test('accède aux bilans biologiques', async ({ page }) => {
-    await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(1500);
-
-    // Aller dans Néphrologie
-    const nephro = page.locator('.o_app:has-text("Néphrologie")').first();
-    await nephro.click();
-    await page.waitForLoadState('domcontentloaded');
-    await page.waitForTimeout(1000);
+    // Naviguer vers Néphrologie via le helper (gère la redirection action_id)
+    await navigateToApp(page, 'Néphrologie');
 
     // Chercher le sous-menu Bilans
-    const bilansMenu = page.locator('.o_menu_sections a:has-text("Bilan"), .o_menu_sections a:has-text("bilan")').first();
+    const bilansMenu = page.locator(
+      '.o_menu_sections a:has-text("Bilan"), .o_menu_sections a:has-text("bilan")'
+    ).first();
     await expect(bilansMenu).toBeVisible({ timeout: 10000 });
   });
 
@@ -43,14 +75,20 @@ test.describe('Rôle Infirmière', () => {
   test('ne voit PAS le menu Facturation Dialyse', async ({ page }) => {
     await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
-    const menu = page.locator('.o_app:has-text("Facturation")').first();
+    await openAppSwitcherIfNeeded(page);
+    const menu = page.locator(
+      '.o_app:has-text("Facturation"), a.o_app:has-text("Facturation")'
+    ).first();
     await expect(menu).not.toBeVisible({ timeout: 3000 });
   });
 
   test('ne voit PAS le menu Configuration', async ({ page }) => {
     await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(2000);
-    const menu = page.locator('.o_app:has-text("Configuration")').first();
+    await openAppSwitcherIfNeeded(page);
+    const menu = page.locator(
+      '.o_app:has-text("Configuration"), a.o_app:has-text("Configuration")'
+    ).first();
     await expect(menu).not.toBeVisible({ timeout: 3000 });
   });
 

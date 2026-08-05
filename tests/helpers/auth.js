@@ -65,8 +65,8 @@ async function loginUI(page, login, password) {
   const loginForm = page.locator('form[action*="/web/login"]');
   await loginForm.locator('button.btn-primary[type="submit"]').click();
 
-  // Attendre la redirection : /odoo/ (backend) ou /my/ (portail)
-  await page.waitForURL(/\/(odoo|my)\//, { timeout: 30000 });
+  // Attendre la redirection : /odoo/ (backend), /my/ ou /my (portail sans slash final)
+  await page.waitForURL(/\/(odoo|my)(\/|$)/, { timeout: 30000 });
 
   console.log(`[auth] loginUI : "${login}" connecté → ${page.url()}`);
 }
