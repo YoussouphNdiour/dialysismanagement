@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const createPosteSchema = z.object({
   nom: z.string().min(1, 'Nom requis').max(100, 'Nom trop long'),
   numero: z.number().int('Numero entier requis').positive('Numero doit etre positif'),
-  isVip: z.boolean().optional().default(false),
+  isVip: z.boolean().default(false),
   equipement: z.string().optional(),
 });
 
