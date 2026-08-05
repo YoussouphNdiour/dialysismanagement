@@ -40,7 +40,7 @@ async function loginPortal(page, login, password) {
 
   // Attendre la redirection : portail (/my, /my/home), backend (/odoo) ou website (/)
   // On attend que l'URL ne soit plus /web/login
-  await page.waitForURL(url => !url.includes('/web/login'), { timeout: 30000 });
+  await page.waitForURL(url => !url.href.includes('/web/login'), { timeout: 30000 });
   await page.waitForTimeout(500);
 
   console.log(`[auth/portal] loginPortal : "${login}" connecté → ${page.url()}`);

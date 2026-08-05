@@ -109,7 +109,7 @@ test.describe('Bilans Biologiques — module acs_hms_nephrology_bilans', () => {
     await loginUI(page, MEDECIN_LOGIN, MEDECIN_PASS);
 
     // Navigation vers la liste via l'URL d'action
-    await page.goto('/odoo/acs-nephro-bilan', { waitUntil: 'domcontentloaded' }).catch(() => {});
+    await page.goto('/web#model=acs.nephro.bilan&view_type=list', { waitUntil: 'domcontentloaded' }).catch(() => {});
     await page.waitForLoadState('domcontentloaded');
 
     // Fallback : naviguer via le menu
@@ -141,7 +141,7 @@ test.describe('Bilans Biologiques — module acs_hms_nephrology_bilans', () => {
     await loginUI(page, MEDECIN_LOGIN, MEDECIN_PASS);
 
     // Naviguer vers la liste des bilans
-    await page.goto('/odoo/acs-nephro-bilan', { waitUntil: 'domcontentloaded' }).catch(() => {});
+    await page.goto('/web#model=acs.nephro.bilan&view_type=list', { waitUntil: 'domcontentloaded' }).catch(() => {});
     await page.waitForLoadState('domcontentloaded');
 
     // Chercher les badges de statut
@@ -168,7 +168,7 @@ test.describe('Bilans Biologiques — module acs_hms_nephrology_bilans', () => {
 
     if (bilanId) {
       // Navigation directe
-      await page.goto(`/odoo/acs-nephro-bilan/${bilanId}`, {
+      await page.goto(`/web#model=acs.nephro.bilan&view_type=list/${bilanId}`, {
         waitUntil: 'domcontentloaded',
       }).catch(() => {});
       await page.waitForLoadState('domcontentloaded');

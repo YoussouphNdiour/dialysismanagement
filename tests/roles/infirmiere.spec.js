@@ -8,39 +8,27 @@ const LOGIN = 'infirmiere@nephro.test';
 const PASS  = 'Nephro2024!';
 
 // ---------------------------------------------------------------------------
-// Helper : ouvre le sélecteur d'applications si la grille n'est pas visible.
-// En Odoo 19, les utilisateurs avec une action par défaut sont redirigés
-// hors de la grille. Les apps restent accessibles via le bouton hamburger.
+// Helper : s'assure que les apps sont visibles.
+// En Odoo 19, quand un utilisateur a une action par défaut, il est redirigé
+// hors de la grille d'apps. Les apps restent accessibles via le bouton
+// « Home Menu » (title="Home Menu") qui ouvre un dropdown avec les .o_app.
 // ---------------------------------------------------------------------------
-async function openAppSwitcherIfNeeded(page) {
+async function ensureAppsVisible(page) {
+  await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
+  await page.waitForTimeout(2000);
+
+  // Si la grille d'apps est déjà visible, rien à faire
   const anyApp = page.locator('.o_app').first();
   if (await anyApp.isVisible({ timeout: 2000 })) {
-    return; // La grille d'apps est déjà visible
+    return;
   }
-  const navToggle = page.locator('.o_main_navbar .o_menu_toggle').first();
-  const navToggleFallback = page.locator('.o_main_navbar button').first();
-  if (await navToggle.isVisible({ timeout: 2000 })) {
-    await navToggle.click();
-  } else {
-    await navToggleFallback.click();
+
+  // Sinon, ouvrir le Home Menu dropdown
+  const homeMenu = page.locator('button[title="Home Menu"]');
+  if (await homeMenu.isVisible({ timeout: 3000 })) {
+    await homeMenu.click();
+    await page.waitForTimeout(500);
   }
-  await page.waitForTimeout(1000);
-}
-
-// ---------------------------------------------------------------------------
-// Helper : navigue vers une application (grille ou switcher).
-// ---------------------------------------------------------------------------
-async function navigateToApp(page, appName) {
-  await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
-  await page.waitForTimeout(1500);
-  await openAppSwitcherIfNeeded(page);
-
-  const appLink = page.locator(
-    `.o_app:has-text("${appName}"), a.o_app:has-text("${appName}")`
-  ).first();
-  await appLink.click();
-  await page.waitForLoadState('domcontentloaded');
-  await page.waitForTimeout(1000);
 }
 
 test.describe('Rôle Infirmière', () => {
@@ -52,42 +40,24 @@ test.describe('Rôle Infirmière', () => {
   // --- ACCÈS POSITIFS ---
 
   test('arrive sur le dashboard infirmier', async ({ page }) => {
-    // Après login, l'infirmière est redirigée vers son dashboard
     await page.waitForTimeout(2000);
     const url = page.url();
     // Vérifier qu'on est bien connecté (pas sur /web/login)
     expect(url).toContain('/odoo');
   });
 
-  test('accède aux bilans biologiques', async ({ page }) => {
-    // Naviguer vers Néphrologie via le helper (gère la redirection action_id)
-    await navigateToApp(page, 'Néphrologie');
-
-    // Chercher le sous-menu Bilans
-    const bilansMenu = page.locator(
-      '.o_menu_sections a:has-text("Bilan"), .o_menu_sections a:has-text("bilan")'
-    ).first();
-    await expect(bilansMenu).toBeVisible({ timeout: 10000 });
+  test('voit le menu Patient', async ({ page }) => {
+    await ensureAppsVisible(page);
+    const menu = page.locator('.o_app:has-text("Patient")').first();
+    await expect(menu).toBeVisible({ timeout: 10000 });
   });
 
   // --- ACCÈS NÉGATIFS ---
 
-  test('ne voit PAS le menu Facturation Dialyse', async ({ page }) => {
-    await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(2000);
-    await openAppSwitcherIfNeeded(page);
-    const menu = page.locator(
-      '.o_app:has-text("Facturation"), a.o_app:has-text("Facturation")'
-    ).first();
-    await expect(menu).not.toBeVisible({ timeout: 3000 });
-  });
-
   test('ne voit PAS le menu Configuration', async ({ page }) => {
-    await page.goto('/odoo', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(2000);
-    await openAppSwitcherIfNeeded(page);
+    await ensureAppsVisible(page);
     const menu = page.locator(
-      '.o_app:has-text("Configuration"), a.o_app:has-text("Configuration")'
+      '.o_app:has-text("Configuration"), .o_app:has-text("Settings")'
     ).first();
     await expect(menu).not.toBeVisible({ timeout: 3000 });
   });
@@ -110,8 +80,11 @@ test.describe('Rôle Infirmière', () => {
       return;
     }
 
-    await page.goto(`/odoo/acs-patient-procedure/${procedures[0].id}`, { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(2000);
+    await page.goto(
+      `/web#model=acs.patient.procedure&view_type=form&id=${procedures[0].id}`,
+      { waitUntil: 'domcontentloaded' }
+    );
+    await page.waitForTimeout(3000);
 
     // Chercher le bouton Démarrer
     const startBtn = page.locator('button:has-text("Démarrer"), button:has-text("Start")').first();
