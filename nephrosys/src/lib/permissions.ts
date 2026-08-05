@@ -16,8 +16,11 @@ type RoutePermission = {
 
 const ROUTE_PERMISSIONS: RoutePermission[] = [
   { path: '/patients', roles: ['admin', 'medecin', 'infirmiere', 'secretaire', 'facturation'] },
+  { path: '/seances/nouvelle', roles: ['admin', 'medecin', 'secretaire'] },
   { path: '/seances', roles: ['admin', 'medecin', 'infirmiere', 'secretaire'] },
+  { path: '/bilans/nouveau', roles: ['admin', 'medecin'] },
   { path: '/bilans', roles: ['admin', 'medecin', 'infirmiere'] },
+  { path: '/planning/postes', roles: ['admin', 'medecin', 'secretaire'] },
   { path: '/planning', roles: ['admin', 'medecin', 'infirmiere', 'secretaire'] },
   { path: '/facturation', roles: ['admin', 'facturation'] },
   { path: '/admin', roles: ['admin'] },
