@@ -24,6 +24,7 @@ const ROLE_OPTIONS = [
 
 export default function UtilisateursPage() {
   const [showForm, setShowForm] = useState(false);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
   const { data: usersList, isLoading } = api.users.list.useQuery();
   const utils = api.useUtils();
 
@@ -125,8 +126,11 @@ export default function UtilisateursPage() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => toggleMutation.mutate({ id: user.id })}
-                    disabled={toggleMutation.isPending}
+                    onClick={() => {
+                      setTogglingId(user.id);
+                      toggleMutation.mutate({ id: user.id }, { onSettled: () => setTogglingId(null) });
+                    }}
+                    disabled={togglingId === user.id}
                   >
                     {user.isActive ? 'Desactiver' : 'Activer'}
                   </Button>

@@ -1,7 +1,7 @@
 import { router, roleProcedure } from '@/server/trpc';
 import { users } from '@/server/db/schema';
 import { createUserSchema, updateUserSchema } from '@/lib/validators/users';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import bcrypt from 'bcryptjs';
@@ -88,19 +88,9 @@ export const usersRouter = router({
   toggleActive: roleProcedure(['admin'])
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
-      const [existing] = await ctx.db
-        .select({ isActive: users.isActive })
-        .from(users)
-        .where(eq(users.id, input.id))
-        .limit(1);
-
-      if (!existing) {
-        throw new TRPCError({ code: 'NOT_FOUND', message: 'Utilisateur non trouve' });
-      }
-
-      const [user] = await ctx.db
+      const [updated] = await ctx.db
         .update(users)
-        .set({ isActive: !existing.isActive, updatedAt: new Date() })
+        .set({ isActive: sql`NOT ${users.isActive}`, updatedAt: new Date() })
         .where(eq(users.id, input.id))
         .returning({
           id: users.id,
@@ -108,6 +98,10 @@ export const usersRouter = router({
           isActive: users.isActive,
         });
 
-      return user;
+      if (!updated) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Utilisateur non trouve' });
+      }
+
+      return updated;
     }),
 });

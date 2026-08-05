@@ -181,4 +181,51 @@ describe('updateUserSchema', () => {
     });
     expect(result.success).toBe(false);
   });
+
+  it('includes French error message for invalid email in update', () => {
+    const result = updateUserSchema.safeParse({
+      id: '550e8400-e29b-41d4-a716-446655440000',
+      email: 'bad',
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const emailIssue = result.error.issues.find((i) => i.path.includes('email'));
+      expect(emailIssue?.message).toBe('Email invalide');
+    }
+  });
+
+  it('includes French error message for empty nom in update', () => {
+    const result = updateUserSchema.safeParse({
+      id: '550e8400-e29b-41d4-a716-446655440000',
+      nom: '',
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const nomIssue = result.error.issues.find((i) => i.path.includes('nom'));
+      expect(nomIssue?.message).toBe('Nom requis');
+    }
+  });
+
+  it('includes French error message for empty prenom in update', () => {
+    const result = updateUserSchema.safeParse({
+      id: '550e8400-e29b-41d4-a716-446655440000',
+      prenom: '',
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const prenomIssue = result.error.issues.find((i) => i.path.includes('prenom'));
+      expect(prenomIssue?.message).toBe('Prenom requis');
+    }
+  });
+
+  it('includes French error message for non-UUID id', () => {
+    const result = updateUserSchema.safeParse({
+      id: 'not-a-uuid',
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      const idIssue = result.error.issues.find((i) => i.path.includes('id'));
+      expect(idIssue?.message).toBe('Identifiant invalide');
+    }
+  });
 });
