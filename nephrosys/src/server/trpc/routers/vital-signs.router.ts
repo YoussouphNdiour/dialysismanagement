@@ -5,6 +5,16 @@ import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 
+/** Helper: check if session is locked (terminee > 24h ago or explicitly locked) */
+function isSessionLocked(session: { statut: string; lockedAt: Date | null; updatedAt: Date }) {
+  if (session.lockedAt) return true;
+  if (session.statut === 'terminee') {
+    const hoursAgo = (Date.now() - new Date(session.updatedAt).getTime()) / (1000 * 60 * 60);
+    return hoursAgo > 24;
+  }
+  return false;
+}
+
 export const vitalSignsRouter = router({
   listBySession: roleProcedure(['admin', 'medecin', 'infirmiere', 'secretaire'])
     .input(z.object({ sessionId: z.string().uuid() }))
@@ -60,6 +70,32 @@ export const vitalSignsRouter = router({
     .input(updateVitalSignSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, ...data } = input;
+
+      // Fetch the vital sign to get sessionId, then check if session is locked
+      const [existingSign] = await ctx.db
+        .select({ sessionId: vitalSigns.sessionId })
+        .from(vitalSigns)
+        .where(eq(vitalSigns.id, id))
+        .limit(1);
+
+      if (!existingSign) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Constante non trouvee' });
+      }
+
+      const [session] = await ctx.db
+        .select({
+          statut: dialysisSessions.statut,
+          lockedAt: dialysisSessions.lockedAt,
+          updatedAt: dialysisSessions.updatedAt,
+        })
+        .from(dialysisSessions)
+        .where(eq(dialysisSessions.id, existingSign.sessionId))
+        .limit(1);
+
+      if (session && isSessionLocked(session)) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Seance verrouillee' });
+      }
+
       const updateData: Record<string, unknown> = {};
 
       if (data.heureMesure !== undefined) updateData.heureMesure = new Date(data.heureMesure);
@@ -87,6 +123,31 @@ export const vitalSignsRouter = router({
   delete: roleProcedure(['admin', 'medecin'])
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
+      // Fetch the vital sign to get sessionId, then check if session is locked
+      const [existingSign] = await ctx.db
+        .select({ sessionId: vitalSigns.sessionId })
+        .from(vitalSigns)
+        .where(eq(vitalSigns.id, input.id))
+        .limit(1);
+
+      if (!existingSign) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Constante non trouvee' });
+      }
+
+      const [session] = await ctx.db
+        .select({
+          statut: dialysisSessions.statut,
+          lockedAt: dialysisSessions.lockedAt,
+          updatedAt: dialysisSessions.updatedAt,
+        })
+        .from(dialysisSessions)
+        .where(eq(dialysisSessions.id, existingSign.sessionId))
+        .limit(1);
+
+      if (session && isSessionLocked(session)) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Seance verrouillee' });
+      }
+
       const [sign] = await ctx.db
         .delete(vitalSigns)
         .where(eq(vitalSigns.id, input.id))

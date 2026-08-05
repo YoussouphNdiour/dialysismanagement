@@ -1,0 +1,1 @@
+ALTER TABLE "bilans" ADD CONSTRAINT "bilans_reference_unique" UNIQUE("reference");

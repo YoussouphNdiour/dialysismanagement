@@ -275,6 +275,8 @@ export const sessionsRouter = router({
           lockedAt: dialysisSessions.lockedAt,
           updatedAt: dialysisSessions.updatedAt,
           arrivalWeight: dialysisSessions.arrivalWeight,
+          ureePre: dialysisSessions.ureePre,
+          ureePost: dialysisSessions.ureePost,
         })
         .from(dialysisSessions)
         .where(eq(dialysisSessions.id, id))
@@ -300,9 +302,19 @@ export const sessionsRouter = router({
       if (data.erythropoietine !== undefined) updateData.erythropoietine = data.erythropoietine;
       if (data.observations !== undefined) updateData.observations = data.observations;
 
-      // Auto-calculate Kt/V, URR if uree values provided
-      const ureePre = data.ureePre ?? null;
-      const ureePost = data.ureePost ?? null;
+      // Auto-calculate Kt/V, URR — merge with existing values when only one uree is provided
+      const ureePre =
+        data.ureePre != null
+          ? data.ureePre
+          : existing.ureePre != null
+            ? parseFloat(existing.ureePre)
+            : null;
+      const ureePost =
+        data.ureePost != null
+          ? data.ureePost
+          : existing.ureePost != null
+            ? parseFloat(existing.ureePost)
+            : null;
       const arrivalWeight = existing.arrivalWeight ? parseFloat(existing.arrivalWeight) : null;
       const departureWeight = data.departureWeight ?? null;
 

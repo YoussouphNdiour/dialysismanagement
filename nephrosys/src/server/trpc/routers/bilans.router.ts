@@ -10,7 +10,7 @@ import type { TRPCContext } from '@/server/trpc';
 type Db = TRPCContext['db'];
 
 /** Generate reference: BIO-YYYYMMDD-NNN */
-async function generateReference(db: Db, dateBilan: Date): Promise<string> {
+async function generateReference(db: Db, dateBilan: Date, offset = 0): Promise<string> {
   const dateStr = dateBilan.toISOString().split('T')[0]!.replace(/-/g, '');
   const prefix = `BIO-${dateStr}-`;
 
@@ -25,8 +25,18 @@ async function generateReference(db: Db, dateBilan: Date): Promise<string> {
     .where(and(gte(bilans.dateBilan, startOfDay), lte(bilans.dateBilan, endOfDay)));
 
   const total = row?.total ?? 0;
-  const num = (total + 1).toString().padStart(3, '0');
+  const num = (total + 1 + offset).toString().padStart(3, '0');
   return `${prefix}${num}`;
+}
+
+/** Check if a Postgres error is a unique constraint violation */
+function isUniqueViolation(err: unknown): boolean {
+  return (
+    typeof err === 'object' &&
+    err !== null &&
+    'code' in err &&
+    (err as { code: string }).code === '23505'
+  );
 }
 
 /** Load seuils into a map for quick lookup */
@@ -122,21 +132,35 @@ export const bilansRouter = router({
     .input(createBilanSchema)
     .mutation(async ({ ctx, input }) => {
       const dateBilan = new Date(input.dateBilan);
-      const reference = await generateReference(ctx.db, dateBilan);
 
-      const [bilan] = await ctx.db
-        .insert(bilans)
-        .values({
-          reference,
-          patientId: input.patientId,
-          physicianId: input.physicianId,
-          dateBilan,
-          typeBilan: input.typeBilan,
-          notes: input.notes ?? null,
-        })
-        .returning();
+      // Retry up to 3 times on unique constraint violation (race condition on reference)
+      const MAX_RETRIES = 3;
+      for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+        const reference = await generateReference(ctx.db, dateBilan, attempt);
+        try {
+          const [bilan] = await ctx.db
+            .insert(bilans)
+            .values({
+              reference,
+              patientId: input.patientId,
+              physicianId: input.physicianId,
+              dateBilan,
+              typeBilan: input.typeBilan,
+              notes: input.notes ?? null,
+            })
+            .returning();
+          return bilan;
+        } catch (err) {
+          if (isUniqueViolation(err) && attempt < MAX_RETRIES - 1) {
+            // Concurrent insert grabbed the same reference — retry with incremented counter
+            continue;
+          }
+          throw err;
+        }
+      }
 
-      return bilan;
+      // Unreachable, but satisfies TypeScript
+      throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Impossible de generer une reference unique' });
     }),
 
   update: roleProcedure(['admin', 'medecin'])

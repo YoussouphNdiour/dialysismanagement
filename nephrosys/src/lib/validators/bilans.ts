@@ -1,10 +1,6 @@
 import { z } from 'zod';
 
-const serologieEnum = z
-  .enum(['positif', 'negatif', 'non_fait'])
-  .refine((v) => ['positif', 'negatif', 'non_fait'].includes(v), {
-    message: 'Valeur serologie invalide (positif, negatif, non_fait)',
-  });
+const serologieEnum = z.enum(['positif', 'negatif', 'non_fait']);
 
 const typeBilanValues = ['mensuel', 'trimestriel', 'semestriel', 'annuel'] as const;
 
@@ -124,8 +120,8 @@ export const bilanListSchema = z.object({
   perPage: z.number().int().positive().max(100).default(20),
   patientId: z.string().uuid().optional(),
   typeBilan: z.enum(typeBilanValues).optional(),
-  dateDebut: z.string().optional(),
-  dateFin: z.string().optional(),
+  dateDebut: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format date invalide').optional(),
+  dateFin: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Format date invalide').optional(),
 });
 
 export type BilanListInput = z.infer<typeof bilanListSchema>;

@@ -17,7 +17,7 @@ import { users } from './users';
 export const bilans = pgTable('bilans', {
   // === En-tete ===
   id: uuid('id').primaryKey().defaultRandom(),
-  reference: varchar('reference', { length: 50 }).notNull(),
+  reference: varchar('reference', { length: 50 }).notNull().unique(),
   patientId: uuid('patient_id')
     .notNull()
     .references(() => patients.id),

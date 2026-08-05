@@ -1,7 +1,7 @@
 import { router, roleProcedure } from '@/server/trpc';
 import { postesDialyse } from '@/server/db/schema';
 import { createPosteSchema, updatePosteSchema } from '@/lib/validators/postes';
-import { eq, count } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 
