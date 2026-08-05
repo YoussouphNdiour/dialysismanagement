@@ -1,4 +1,4 @@
-import { router, protectedProcedure, roleProcedure } from '@/server/trpc';
+import { router, roleProcedure } from '@/server/trpc';
 import { patients, users } from '@/server/db/schema';
 import {
   createPatientSchema,
@@ -10,7 +10,7 @@ import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 
 export const patientsRouter = router({
-  list: protectedProcedure
+  list: roleProcedure(['admin', 'medecin', 'infirmiere', 'secretaire', 'facturation'])
     .input(patientListSchema)
     .query(async ({ ctx, input }) => {
       const { page, perPage, search, statut } = input;
@@ -51,7 +51,7 @@ export const patientsRouter = router({
       return { data, total };
     }),
 
-  getById: protectedProcedure
+  getById: roleProcedure(['admin', 'medecin', 'infirmiere', 'secretaire', 'facturation'])
     .input(z.object({ id: z.string().uuid() }))
     .query(async ({ ctx, input }) => {
       const [patient] = await ctx.db

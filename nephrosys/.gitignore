@@ -17,9 +17,6 @@ dist/
 .env.test.local
 .env.production.local
 
-# Drizzle
-drizzle/
-
 # Testing
 playwright-report/
 test-results/
