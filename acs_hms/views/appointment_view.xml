@@ -157,7 +157,7 @@
         <field name="name">hms.appointment.list</field>
         <field name="model">hms.appointment</field>
         <field name="arch" type="xml">
-            <list decoration-info="state=='draft'" decoration-muted="state=='cancel'" decoration-danger="state=='waiting'" name="appointment_list">
+            <list decoration-info="state=='draft'" decoration-muted="state=='cancel'" decoration-success="state=='done'" name="appointment_list">
                 <field name="name"/>
                 <field name="purpose_id" optional="hide"/>
                 <field name="cabin_id" optional="hide"/>
@@ -170,13 +170,7 @@
                 <field name="consultation_type" optional="show"/>
                 <field name="activity_ids" widget="list_activity" optional="show"/>
                 <field name="invoice_exempt" string="Invoice Exempt" optional="hide"/>
-                <field name="state" optional="show" decoration-info="state=='draft'" decoration-muted="state=='cancel'" decoration-danger="state=='waiting'" decoration-success="state=='done'" decoration-primary="state=='in_consultation'" decoration-warning="state=='to_invoice'" decoration-it="state=='pause'" widget="badge"/>
-                <field name="waiting_date_start" column_invisible="1"/>
-                <field name="waiting_date_end" column_invisible="1"/>
-                <field name="date_start" column_invisible="1"/>
-                <field name="date_end" column_invisible="1"/>
-                <!-- This is options to load fast. Timer read records every-time and it takes more loading time So its optional -->
-                <field name="waiting_duration_timer" widget="AcsTimer" options="{'widget_start_field': 'waiting_date_start', 'widget_stop_field': 'waiting_date_end', 'duration_field': 'waiting_duration_timer'}" optional="hide"/>
+                <field name="state" optional="show" decoration-info="state=='draft'" decoration-muted="state=='cancel'" decoration-success="state=='done'" decoration-primary="state=='confirmed'" widget="badge"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
         </field>
@@ -188,14 +182,11 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="consultation_done" invisible="state != 'in_consultation'" groups="acs_hms.group_hms_jr_doctor" type="object" string="Consultation Done" class="oe_highlight"/>
                     <button name="appointment_confirm" invisible="state!='draft'" type="object" groups="acs_hms.group_hms_receptionist" string="Confirm" class="oe_highlight"/>
-                    <button name="appointment_waiting" invisible="state!='confirm'" type="object" groups="acs_hms.group_hms_receptionist" string="Waiting" class="oe_highlight"/>
-                    <button name="print_report" string="Print" type="object" invisible="state not in ('draft','confirm')"/>
-                    <button name="action_appointment_send" string="Send by Email" type="object" invisible="state not in ('draft','confirm')"/>
-                    <button name="appointment_consultation" invisible="state != 'waiting'" groups="acs_hms.group_hms_jr_doctor" type="object" string="In Consultation" class="oe_highlight"/>
-                    <button name="action_start_paused" invisible="state != 'pause'" groups="acs_hms.group_allow_consultation_pause" type="object" string="Start"/>
-                    <button name="button_pres_req" string="Create Prescription" groups="acs_hms.group_hms_jr_doctor" type="object" invisible="state not in ('in_consultation','invoiced')" class="oe_highlight"/>
+                    <button name="print_report" string="Print" type="object" invisible="state not in ('draft','confirmed')"/>
+                    <button name="action_appointment_send" string="Send by Email" type="object" invisible="state not in ('draft','confirmed')"/>
+                    <button name="consultation_done" invisible="state != 'confirmed'" groups="acs_hms.group_hms_jr_doctor" type="object" string="Terminer" class="oe_highlight"/>
+                    <button name="button_pres_req" string="Create Prescription" groups="acs_hms.group_hms_jr_doctor" type="object" invisible="state != 'confirmed'" class="oe_highlight"/>
                     <button name="create_invoice" string="Create Invoice" groups="account.group_account_invoice" invisible="not acs_show_create_invoice" type="object" class="oe_highlight"/>
                     <button name="create_consumed_prod_invoice" string="Create Consumable's Invoice" groups="account.group_account_invoice" invisible="not acs_show_consumable_create_invoice" type="object" class="oe_highlight"/>
                     <button name="action_reopen" string="Reopen" groups="acs_hms.group_hms_allow_update_done_appointment" type="object" invisible="state != 'done'" class="oe_highlight"/>
@@ -203,9 +194,8 @@
                     <button name="action_request_invoice_exempt" type="object" string="Request Invoice Exemption" groups="acs_hms_base.group_acs_invoice_exemption_request" invisible="acs_invoice_exempt_approval or invoice_exempt or invoice_id or state in ['done', 'cancel']"/>
                     <button name="action_approve_invoice_exempt" type="object" string="Approve Invoice Exempt" groups="acs_hms_base.group_acs_invoice_exemption" invisible="not acs_invoice_exempt_approval"/>
                     <button name="action_reject_invoice_exempt" type="object" string="Reject Invoice Exempt" groups="acs_hms_base.group_acs_invoice_exemption" invisible="not acs_invoice_exempt_approval"/>
-                    <button name="action_pause" invisible="state != 'in_consultation'" groups="acs_hms.group_allow_consultation_pause" type="object" string="Pause"/>
-                    <button name="%(action_acs_cancel_reason_wiz)d" string="Cancel" invisible="state not in ('draft','confirm','waiting','in_consultation')" type="action"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,waiting,in_consultation,done"/>
+                    <button name="%(action_acs_cancel_reason_wiz)d" string="Cancel" invisible="state not in ('draft','confirmed')" type="action"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                     <field name="appointment_invoice_policy" invisible="1"/>
                     <field name="consumable_invoice_id" invisible="1"/>
                     <field name="acs_invoice_exempt_approval" invisible="1"/>
@@ -221,7 +211,7 @@
                 </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box" groups="acs_hms.group_hms_receptionist">
-                        <button name="action_refer_doctor" string="Refer. To" type="object" invisible="state not in ('in_consultation','invoiced')" class="oe_stat_button" icon="fa-pencil-square-o"/>
+                        <button name="action_refer_doctor" string="Refer. To" type="object" invisible="state != 'confirmed'" class="oe_stat_button" icon="fa-pencil-square-o"/>
                         <button name="action_view_treatment" string="Treatment" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="state=='done' and not treatment_id"/>
                         <button name="action_prescription" string="Prescription" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="state=='done' and not prescription_ids"/>
                         <button class="oe_stat_button" type="object" name="view_invoice" icon="fa-pencil-square-o" invisible="invoice_count==0" groups="account.group_account_invoice">
@@ -267,7 +257,7 @@
                             <field name="department_id" groups="acs_hms.group_allow_multi_department" readonly="state in ['cancel','done']" options="{'no_open': True, 'no_create': True}"/>
                             <field name="department_type" invisible="1" readonly="state in ['cancel','done']"/>
                             <field name="physician_id" required="1" readonly="state in ['cancel','done']"/>
-                            <field name="follow_date" invisible="state not in ('in_consultation','done','to_invoice')" readonly="state in ['cancel','done']"/>
+                            <field name="follow_date" invisible="state not in ('confirmed','done')" readonly="state in ['cancel','done']"/>
                         </group>
                         <group>
                             <label for="date" string="Date"/>
@@ -395,7 +385,7 @@
                                     <field name="procedure_group_id" readonly="state in ['cancel','done']"/>
                                 </group>
                                 <group>
-                                    <button name="get_procedure_group_data" invisible="not procedure_group_id or state not in ['in_consultation']" title="Get Procedure Data" type="object" icon="fa-plus" width="0.1"/>
+                                    <button name="get_procedure_group_data" invisible="not procedure_group_id or state not in ['confirmed']" title="Get Procedure Data" type="object" icon="fa-plus" width="0.1"/>
                                 </group>                                
                             </group>
                             <field name="patient_procedure_ids" context="{'default_treatment_id': id, 'default_patient_id': patient_id, 'default_physician_id': physician_id, 'default_department_id': department_id}" readonly="state in ['cancel','done']">
@@ -479,13 +469,10 @@
                         <page name="other_info" string="Other Information" groups="acs_hms.group_hms_receptionist">
                             <group name="extra_info">
                                 <group>
-                                    <field name="waiting_duration_timer" widget="AcsTimer" invisible="state!='waiting'" options="{'widget_start_field': 'waiting_date_start', 'widget_stop_field': 'waiting_date_end', 'duration_field': 'waiting_duration_timer'}"/>
-                                    <field name="waiting_duration" invisible="state=='waiting'" widget="float_time"/>
-                                    <field name="pause_duration" widget="float_time" invisible="pause_duration==0"/>
+                                    <field name="waiting_duration" widget="float_time"/>
                                 </group>
                                 <group>
-                                    <field name="appointment_duration_timer" widget="AcsTimer" invisible="state!='in_consultation'" options="{'widget_start_field': 'date_start', 'widget_stop_field': 'date_end', 'duration_field': 'appointment_duration_timer'}"/>
-                                    <field name="appointment_duration" widget="float_time" invisible="state=='in_consultation'"/>
+                                    <field name="appointment_duration" widget="float_time"/>
                                 </group>
                                 <group>
                                     <field name="acs_calendar_event_id" readonly="state in ['done','cancel']"/>
