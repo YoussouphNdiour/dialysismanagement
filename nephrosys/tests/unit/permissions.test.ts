@@ -43,7 +43,7 @@ describe('canAccess', () => {
 describe('getMenuItemsForRole', () => {
   it('admin sees all menu items', () => {
     const items = getMenuItemsForRole('admin');
-    expect(items.length).toBe(8);
+    expect(items.length).toBe(10);
   });
 
   it('infirmiere sees 5 items', () => {

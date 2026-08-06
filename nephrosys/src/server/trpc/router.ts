@@ -9,6 +9,7 @@ import { sessionsRouter } from './routers/sessions.router';
 import { vitalSignsRouter } from './routers/vital-signs.router';
 import { bilansRouter } from './routers/bilans.router';
 import { articlesRouter } from './routers/articles.router';
+import { facturesRouter } from './routers/factures.router';
 
 export const appRouter = router({
   auth: authRouter,
@@ -21,6 +22,7 @@ export const appRouter = router({
   vitalSigns: vitalSignsRouter,
   bilans: bilansRouter,
   articles: articlesRouter,
+  factures: facturesRouter,
 });
 
 export type AppRouter = typeof appRouter;
