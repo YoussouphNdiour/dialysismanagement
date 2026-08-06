@@ -101,7 +101,46 @@ type PatientReportProps = {
   ktvHistory: { date: string; ktv: string }[];
 };
 
-function PatientReport({ patient, sessions, bilan: _bilan, seuils: _seuils, ktvHistory }: PatientReportProps) {
+// Numeric bilan fields with their display labels
+const BILAN_FIELDS: { key: string; label: string; unit: string }[] = [
+  { key: 'hemoglobine', label: 'Hemoglobine', unit: 'g/dL' },
+  { key: 'hematocrite', label: 'Hematocrite', unit: '%' },
+  { key: 'globulesBlancs', label: 'Globules blancs', unit: 'G/L' },
+  { key: 'plaquettes', label: 'Plaquettes', unit: 'G/L' },
+  { key: 'ferritine', label: 'Ferritine', unit: 'ng/mL' },
+  { key: 'saturationTransferrine', label: 'Saturation transferrine', unit: '%' },
+  { key: 'creatinine', label: 'Creatinine', unit: 'µmol/L' },
+  { key: 'ureePre', label: 'Uree pre', unit: 'mmol/L' },
+  { key: 'ureePost', label: 'Uree post', unit: 'mmol/L' },
+  { key: 'sodium', label: 'Sodium', unit: 'mmol/L' },
+  { key: 'potassium', label: 'Potassium', unit: 'mmol/L' },
+  { key: 'calcium', label: 'Calcium', unit: 'mmol/L' },
+  { key: 'phosphore', label: 'Phosphore', unit: 'mmol/L' },
+  { key: 'bicarbonateBilan', label: 'Bicarbonates', unit: 'mmol/L' },
+  { key: 'produitCaP', label: 'Produit Ca x P', unit: 'mmol²/L²' },
+  { key: 'pth', label: 'PTH', unit: 'pg/mL' },
+  { key: 'vitamineD', label: 'Vitamine D', unit: 'ng/mL' },
+  { key: 'albumine', label: 'Albumine', unit: 'g/L' },
+  { key: 'crp', label: 'CRP', unit: 'mg/L' },
+  { key: 'hdl', label: 'HDL', unit: 'mmol/L' },
+  { key: 'ldl', label: 'LDL', unit: 'mmol/L' },
+  { key: 'cholesterolTotal', label: 'Cholesterol total', unit: 'mmol/L' },
+  { key: 'triglycerides', label: 'Triglycerides', unit: 'mmol/L' },
+  { key: 'gaj', label: 'Glycemie a jeun', unit: 'mmol/L' },
+  { key: 'hba1c', label: 'HbA1c', unit: '%' },
+];
+
+function getBilanStatus(
+  value: number,
+  seuil: { seuilBas: number | null; seuilHaut: number | null } | undefined,
+): string {
+  if (!seuil) return '-';
+  if (seuil.seuilBas !== null && value < seuil.seuilBas) return 'Bas';
+  if (seuil.seuilHaut !== null && value > seuil.seuilHaut) return 'Haut';
+  return 'Normal';
+}
+
+function PatientReport({ patient, sessions, bilan, seuils, ktvHistory }: PatientReportProps) {
   const now = new Date().toLocaleDateString('fr-FR');
 
   return React.createElement(
@@ -201,6 +240,48 @@ function PatientReport({ patient, sessions, bilan: _bilan, seuils: _seuils, ktvH
             ),
           )
         : null,
+      // Dernier bilan biologique
+      React.createElement(
+        View,
+        { style: styles.section },
+        React.createElement(Text, { style: styles.sectionTitle }, 'Dernier bilan biologique'),
+        bilan === null || bilan === undefined
+          ? React.createElement(Text, { style: { fontSize: 9, color: '#888' } }, 'Aucun bilan disponible')
+          : React.createElement(
+              View,
+              null,
+              // Table header
+              React.createElement(
+                View,
+                { style: styles.tableHeader },
+                React.createElement(Text, { style: [styles.tableCell, { flex: 2 }] }, 'Parametre'),
+                React.createElement(Text, { style: styles.tableCell }, 'Valeur'),
+                React.createElement(Text, { style: [styles.tableCell, { flex: 2 }] }, 'Seuils'),
+                React.createElement(Text, { style: styles.tableCell }, 'Statut'),
+              ),
+              // Table rows — only fields that have a value in this bilan
+              ...BILAN_FIELDS.filter((f) => bilan[f.key] !== null && bilan[f.key] !== undefined).map((f, i) => {
+                const rawVal = bilan[f.key] as string | number;
+                const numVal = typeof rawVal === 'number' ? rawVal : parseFloat(rawVal as string);
+                const seuil = seuils.get(f.key);
+                const seuilLabel =
+                  seuil
+                    ? `${seuil.seuilBas !== null ? seuil.seuilBas : '?'} - ${seuil.seuilHaut !== null ? seuil.seuilHaut : '?'}`
+                    : '-';
+                const status = !isNaN(numVal) ? getBilanStatus(numVal, seuil) : '-';
+                const statusColor =
+                  status === 'Bas' ? '#c0392b' : status === 'Haut' ? '#e67e22' : '#27ae60';
+                return React.createElement(
+                  View,
+                  { key: i, style: styles.tableRow },
+                  React.createElement(Text, { style: [styles.tableCell, { flex: 2 }] }, `${f.label} (${f.unit})`),
+                  React.createElement(Text, { style: styles.tableCell }, isNaN(numVal) ? String(rawVal) : String(numVal)),
+                  React.createElement(Text, { style: [styles.tableCell, { flex: 2 }] }, seuilLabel),
+                  React.createElement(Text, { style: [styles.tableCell, { color: statusColor }] }, status),
+                );
+              }),
+            ),
+      ),
       // Footer
       React.createElement(
         View,
