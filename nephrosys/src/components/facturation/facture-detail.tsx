@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { api } from '@/lib/trpc/client';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -32,6 +33,11 @@ export function FactureDetail({ factureId }: Props) {
   const [selectedArticleId, setSelectedArticleId] = useState('');
   const [quantite, setQuantite] = useState('1');
   const [modePaiement, setModePaiement] = useState('especes');
+
+  const { data: sessionData } = useSession();
+  const userRole = sessionData?.user?.role ?? '';
+  const canWrite = userRole === 'admin' || userRole === 'facturation';
+  const canAnnuler = userRole === 'admin';
 
   const utils = api.useUtils();
 
@@ -116,7 +122,7 @@ export function FactureDetail({ factureId }: Props) {
         <div className="flex items-center gap-2">
           <Badge variant={badge.variant}>{badge.label}</Badge>
 
-          {isBrouillon && (
+          {isBrouillon && canWrite && (
             <Button
               onClick={() => validerMutation.mutate({ factureId })}
               disabled={validerMutation.isPending}
@@ -125,7 +131,7 @@ export function FactureDetail({ factureId }: Props) {
             </Button>
           )}
 
-          {isValidee && (
+          {isValidee && canWrite && (
             <div className="flex items-center gap-2">
               <Select
                 options={MODE_PAIEMENT_OPTIONS}
@@ -146,7 +152,7 @@ export function FactureDetail({ factureId }: Props) {
             </div>
           )}
 
-          {(isBrouillon || isValidee) && (
+          {(isBrouillon || isValidee) && canAnnuler && (
             <Button
               variant="danger"
               onClick={() => annulerMutation.mutate({ factureId })}
@@ -227,7 +233,7 @@ export function FactureDetail({ factureId }: Props) {
                 <th className="px-4 py-3 font-medium text-gray-500 dark:text-gray-400">Quantite</th>
                 <th className="px-4 py-3 font-medium text-gray-500 dark:text-gray-400">Prix unitaire</th>
                 <th className="px-4 py-3 font-medium text-gray-500 dark:text-gray-400">Montant</th>
-                {isBrouillon && (
+                {isBrouillon && canWrite && (
                   <th className="px-4 py-3 font-medium text-gray-500 dark:text-gray-400">Actions</th>
                 )}
               </tr>
@@ -252,7 +258,7 @@ export function FactureDetail({ factureId }: Props) {
                   <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
                     {parseFloat(ligne.montant).toLocaleString('fr-FR')} FCFA
                   </td>
-                  {isBrouillon && (
+                  {isBrouillon && canWrite && (
                     <td className="px-4 py-3">
                       {ligne.articleId !== null && (
                         <Button
@@ -273,8 +279,8 @@ export function FactureDetail({ factureId }: Props) {
           </table>
         </div>
 
-        {/* Add supplement form — only for brouillon */}
-        {isBrouillon && (
+        {/* Add supplement form — only for brouillon, admin/facturation only */}
+        {isBrouillon && canWrite && (
           <div className="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700">
             <h3 className="mb-3 text-sm font-medium text-gray-700 dark:text-gray-300">
               Ajouter un supplement

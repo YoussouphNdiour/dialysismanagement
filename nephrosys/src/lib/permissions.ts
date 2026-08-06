@@ -22,7 +22,7 @@ const ROUTE_PERMISSIONS: RoutePermission[] = [
   { path: '/bilans', roles: ['admin', 'medecin', 'infirmiere'] },
   { path: '/planning/postes', roles: ['admin', 'medecin', 'secretaire'] },
   { path: '/planning', roles: ['admin', 'medecin', 'infirmiere', 'secretaire'] },
-  { path: '/facturation', roles: ['admin', 'facturation'] },
+  { path: '/facturation', roles: ['admin', 'facturation', 'medecin', 'infirmiere', 'secretaire'] },
   { path: '/admin/articles', roles: ['admin'] },
   { path: '/admin/rapports', roles: ['admin'] },
   { path: '/admin', roles: ['admin'] },

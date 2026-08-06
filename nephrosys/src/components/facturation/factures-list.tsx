@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useDeferredValue } from 'react';
 import { useRouter } from 'next/navigation';
 import { api } from '@/lib/trpc/client';
 import { Button } from '@/components/ui/button';
@@ -31,6 +31,14 @@ export function FacturesList() {
   const [statutFilter, setStatutFilter] = useState('');
   const [dateDebut, setDateDebut] = useState('');
   const [dateFin, setDateFin] = useState('');
+  const [patientSearch, setPatientSearch] = useState('');
+  const [selectedPatientId, setSelectedPatientId] = useState<string | undefined>(undefined);
+  const deferredPatientSearch = useDeferredValue(patientSearch);
+
+  const { data: patientSuggestions } = api.patients.list.useQuery(
+    { page: 1, perPage: 10, search: deferredPatientSearch },
+    { enabled: deferredPatientSearch.length >= 2 },
+  );
 
   const { data, isLoading } = api.factures.list.useQuery({
     page,
@@ -38,6 +46,7 @@ export function FacturesList() {
     statut: statutFilter ? (statutFilter as 'brouillon' | 'validee' | 'payee' | 'annulee') : undefined,
     dateDebut: dateDebut || undefined,
     dateFin: dateFin || undefined,
+    patientId: selectedPatientId,
   });
 
   const { data: stats, isLoading: statsLoading } = api.factures.stats.useQuery();
@@ -87,7 +96,7 @@ export function FacturesList() {
 
       {/* Filters */}
       <Card className="mb-6">
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Select
             label="Statut"
             options={STATUT_OPTIONS}
@@ -106,6 +115,38 @@ export function FacturesList() {
             value={dateFin}
             onChange={(e) => { setDateFin(e.target.value); setPage(1); }}
           />
+          <div className="relative">
+            <Input
+              label="Patient"
+              type="text"
+              placeholder="Rechercher un patient..."
+              value={patientSearch}
+              onChange={(e) => {
+                setPatientSearch(e.target.value);
+                if (!e.target.value) {
+                  setSelectedPatientId(undefined);
+                  setPage(1);
+                }
+              }}
+            />
+            {deferredPatientSearch.length >= 2 && patientSuggestions && patientSuggestions.data.length > 0 && !selectedPatientId && (
+              <ul className="absolute z-10 mt-1 max-h-48 overflow-auto rounded border border-gray-200 bg-white shadow dark:border-gray-700 dark:bg-gray-900">
+                {patientSuggestions.data.map((p) => (
+                  <li
+                    key={p.id}
+                    className="cursor-pointer px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+                    onClick={() => {
+                      setSelectedPatientId(p.id);
+                      setPatientSearch(`${p.nom} ${p.prenom}`);
+                      setPage(1);
+                    }}
+                  >
+                    {p.nom} {p.prenom}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </Card>
 

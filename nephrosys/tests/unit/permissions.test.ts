@@ -14,14 +14,14 @@ describe('canAccess', () => {
     expect(canAccess('secretaire', '/planning')).toBe(true);
   });
 
-  it('secretaire cannot access facturation or admin', () => {
-    expect(canAccess('secretaire', '/facturation')).toBe(false);
+  it('secretaire cannot access admin but can access facturation (read)', () => {
+    expect(canAccess('secretaire', '/facturation')).toBe(true);
     expect(canAccess('secretaire', '/admin')).toBe(false);
   });
 
-  it('infirmiere can access seances but not facturation', () => {
+  it('infirmiere can access seances and facturation (read)', () => {
     expect(canAccess('infirmiere', '/seances')).toBe(true);
-    expect(canAccess('infirmiere', '/facturation')).toBe(false);
+    expect(canAccess('infirmiere', '/facturation')).toBe(true);
   });
 
   it('facturation can access facturation but not seances', () => {
