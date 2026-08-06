@@ -23,6 +23,8 @@ const ROUTE_PERMISSIONS: RoutePermission[] = [
   { path: '/planning/postes', roles: ['admin', 'medecin', 'secretaire'] },
   { path: '/planning', roles: ['admin', 'medecin', 'infirmiere', 'secretaire'] },
   { path: '/facturation', roles: ['admin', 'facturation'] },
+  { path: '/admin/articles', roles: ['admin'] },
+  { path: '/admin/rapports', roles: ['admin'] },
   { path: '/admin', roles: ['admin'] },
   { path: '/portail', roles: ['patient'] },
 ];
@@ -88,6 +90,18 @@ const ALL_MENU_ITEMS: (MenuItem & { roles: UserRole[] })[] = [
     label: 'Configuration',
     href: '/admin/configuration',
     icon: 'Settings',
+    roles: ['admin'],
+  },
+  {
+    label: 'Articles',
+    href: '/admin/articles',
+    icon: 'Package',
+    roles: ['admin'],
+  },
+  {
+    label: 'Rapports',
+    href: '/admin/rapports',
+    icon: 'FileText',
     roles: ['admin'],
   },
 ];
