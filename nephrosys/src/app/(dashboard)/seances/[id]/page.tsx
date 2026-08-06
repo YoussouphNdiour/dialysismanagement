@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { api } from '@/lib/trpc/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -35,6 +36,19 @@ export default function SessionDetailPage() {
   });
   const annulerMutation = api.sessions.annuler.useMutation({
     onSuccess: () => utils.sessions.getById.invalidate({ id }),
+  });
+
+  const { data: factureData } = api.factures.getBySessionId.useQuery(
+    { sessionId: id },
+    { enabled: !!session && session.statut === 'terminee' },
+  );
+
+  const generateFactureMutation = api.factures.generate.useMutation({
+    onSuccess: (data) => {
+      if (data) {
+        window.location.href = `/facturation/${data.id}`;
+      }
+    },
   });
 
   if (isLoading) return <Skeleton className="h-96 w-full" />;
@@ -93,6 +107,22 @@ export default function SessionDetailPage() {
             >
               Annuler
             </Button>
+          )}
+          {session.statut === 'terminee' && !factureData && (
+            <Button
+              variant="secondary"
+              onClick={() => generateFactureMutation.mutate({ sessionId: id })}
+              disabled={generateFactureMutation.isPending}
+            >
+              Generer la facture
+            </Button>
+          )}
+          {session.statut === 'terminee' && factureData && (
+            <Link href={`/facturation/${factureData.id}`}>
+              <Button variant="outline">
+                Voir la facture ({factureData.reference})
+              </Button>
+            </Link>
           )}
         </div>
       </div>

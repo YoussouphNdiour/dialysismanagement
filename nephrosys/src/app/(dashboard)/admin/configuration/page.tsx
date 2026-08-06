@@ -1,6 +1,7 @@
 'use client';
 
 import { SeuilsTable } from '@/components/configuration/seuils-table';
+import { TarifsConfig } from '@/components/facturation/tarifs-config';
 
 export default function ConfigurationPage() {
   return (
@@ -12,6 +13,9 @@ export default function ConfigurationPage() {
         Definissez les seuils de reference pour les parametres biologiques. Les statuts des bilans seront calcules automatiquement en fonction de ces seuils.
       </p>
       <SeuilsTable />
+      <div className="mt-6">
+        <TarifsConfig />
+      </div>
     </div>
   );
 }
