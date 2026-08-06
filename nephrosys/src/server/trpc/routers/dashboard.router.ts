@@ -8,7 +8,7 @@ import {
   vitalSigns,
   lignesFacture,
 } from '@/server/db/schema';
-import { eq, and, gte, lte, count, desc, sql, ne, isNotNull } from 'drizzle-orm';
+import { eq, and, gte, count, desc, sql, ne, isNotNull } from 'drizzle-orm';
 
 export const dashboardRouter = router({
   adminStats: roleProcedure(['admin', 'facturation'])
@@ -140,45 +140,38 @@ export const dashboardRouter = router({
         .orderBy(dialysisSessions.createdAt);
 
       // Patients avec Kt/V inadequat (3 dernieres seances toutes inadequate)
-      // Step 1: get distinct patients with at least 3 terminee sessions
-      const patientsAvecSeances = await ctx.db
-        .select({
-          patientId: dialysisSessions.patientId,
-        })
-        .from(dialysisSessions)
-        .where(and(
-          eq(dialysisSessions.physicianId, userId),
-          eq(dialysisSessions.statut, 'terminee'),
-          isNotNull(dialysisSessions.ktvStatus),
-        ))
-        .groupBy(dialysisSessions.patientId)
-        .having(sql`COUNT(*) >= 3`);
-
-      const patientsKtvInadequat: { id: string; nom: string; prenom: string }[] = [];
-
-      for (const { patientId } of patientsAvecSeances) {
-        const lastThree = await ctx.db
-          .select({ ktvStatus: dialysisSessions.ktvStatus })
-          .from(dialysisSessions)
-          .where(and(
-            eq(dialysisSessions.patientId, patientId),
-            eq(dialysisSessions.statut, 'terminee'),
-            isNotNull(dialysisSessions.ktvStatus),
-          ))
-          .orderBy(desc(dialysisSessions.dateSeance))
-          .limit(3);
-
-        if (lastThree.length === 3 && lastThree.every((s) => s.ktvStatus === 'inadequate')) {
-          const [patient] = await ctx.db
-            .select({ id: patients.id, nom: patients.nom, prenom: patients.prenom })
-            .from(patients)
-            .where(eq(patients.id, patientId))
-            .limit(1);
-          if (patient) {
-            patientsKtvInadequat.push(patient);
-          }
-        }
-      }
+      // Single query: use a CTE to rank sessions per patient, then keep only
+      // patients whose top-3 ranked sessions are ALL 'inadequate'.
+      const patientsKtvInadequat = await ctx.db.execute<{
+        id: string;
+        nom: string;
+        prenom: string;
+      }>(sql`
+        WITH ranked AS (
+          SELECT
+            ds.patient_id,
+            ds.ktv_status,
+            ROW_NUMBER() OVER (
+              PARTITION BY ds.patient_id
+              ORDER BY ds.date_seance DESC
+            ) AS rn
+          FROM dialysis_sessions ds
+          WHERE ds.physician_id = ${userId}
+            AND ds.statut      = 'terminee'
+            AND ds.ktv_status  IS NOT NULL
+        ),
+        last3 AS (
+          SELECT patient_id
+          FROM ranked
+          WHERE rn <= 3
+          GROUP BY patient_id
+          HAVING COUNT(*) = 3
+             AND COUNT(*) FILTER (WHERE ktv_status = 'inadequate') = 3
+        )
+        SELECT p.id, p.nom, p.prenom
+        FROM patients p
+        INNER JOIN last3 ON last3.patient_id = p.id
+      `);
 
       // Bilans hors seuils
       const bilansHorsSeuils = await ctx.db
@@ -360,30 +353,23 @@ export const dashboardRouter = router({
         .where(eq(dialysisSessions.dateSeance, today))
         .groupBy(dialysisSessions.statut);
 
-      // Patients actifs sans seance cette semaine
-      const patientsActifs = await ctx.db
-        .select({ id: patients.id, nom: patients.nom, prenom: patients.prenom })
-        .from(patients)
-        .where(eq(patients.statut, 'actif'));
-
-      const patientsSansSeance: { id: string; nom: string; prenom: string }[] = [];
-
-      for (const patient of patientsActifs) {
-        const [seanceCetteSemaine] = await ctx.db
-          .select({ id: dialysisSessions.id })
-          .from(dialysisSessions)
-          .where(and(
-            eq(dialysisSessions.patientId, patient.id),
-            gte(dialysisSessions.dateSeance, weekStart),
-            lte(dialysisSessions.dateSeance, weekEnd),
-            ne(dialysisSessions.statut, 'annulee'),
-          ))
-          .limit(1);
-
-        if (!seanceCetteSemaine) {
-          patientsSansSeance.push(patient);
-        }
-      }
+      // Patients actifs sans seance cette semaine — single LEFT JOIN query
+      const patientsSansSeance = await ctx.db.execute<{
+        id: string;
+        nom: string;
+        prenom: string;
+      }>(sql`
+        SELECT p.id, p.nom, p.prenom
+        FROM patients p
+        WHERE p.statut = 'actif'
+          AND p.id NOT IN (
+            SELECT ds.patient_id
+            FROM dialysis_sessions ds
+            WHERE ds.date_seance >= ${weekStart}
+              AND ds.date_seance <= ${weekEnd}
+              AND ds.statut      <> 'annulee'
+          )
+      `);
 
       // Nb nouveaux patients ce mois
       const [nouveauxPatients] = await ctx.db
