@@ -4,6 +4,7 @@ import { use } from 'react';
 import { api } from '@/lib/trpc/client';
 import { PatientForm } from '@/components/patients/patient-form';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ExportPdfButton } from '@/components/reports/export-pdf-button';
 
 export default function PatientDetailPage({
   params,
@@ -30,9 +31,12 @@ export default function PatientDetailPage({
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-gray-900 dark:text-white">
-        {patient.prenom} {patient.nom}
-      </h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          {patient.prenom} {patient.nom}
+        </h1>
+        <ExportPdfButton href={`/api/reports/patient/${id}`} label="Exporter PDF" />
+      </div>
       <PatientForm
         mode="edit"
         defaultValues={{
