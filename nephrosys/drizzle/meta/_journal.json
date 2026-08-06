@@ -22,6 +22,13 @@
       "when": 1785973726103,
       "tag": "0002_concerned_blindfold",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785999179408,
+      "tag": "0003_faithful_firedrake",
+      "breakpoints": true
     }
   ]
 }

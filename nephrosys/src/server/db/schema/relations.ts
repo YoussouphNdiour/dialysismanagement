@@ -6,6 +6,9 @@ import { plannings } from './plannings';
 import { dialysisSessions } from './dialysis-sessions';
 import { vitalSigns } from './vital-signs';
 import { bilans } from './bilans';
+import { articles } from './articles';
+import { factures } from './factures';
+import { lignesFacture } from './lignes-facture';
 
 export const usersRelations = relations(users, ({ many }) => ({
   patientsAsMedecin: many(patients, { relationName: 'medecinRef' }),
@@ -14,6 +17,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   sessionsAsPhysician: many(dialysisSessions, { relationName: 'sessionPhysician' }),
   sessionsAsNurse: many(dialysisSessions, { relationName: 'sessionNurse' }),
   bilansAsPhysician: many(bilans, { relationName: 'bilanPhysician' }),
+  facturesAsCreator: many(factures, { relationName: 'factureCreator' }),
 }));
 
 export const patientsRelations = relations(patients, ({ one, many }) => ({
@@ -30,6 +34,7 @@ export const patientsRelations = relations(patients, ({ one, many }) => ({
   plannings: many(plannings),
   dialysisSessions: many(dialysisSessions),
   bilans: many(bilans),
+  factures: many(factures),
 }));
 
 export const postesDialyseRelations = relations(postesDialyse, ({ many }) => ({
@@ -83,6 +88,7 @@ export const dialysisSessionsRelations = relations(dialysisSessions, ({ one, man
     relationName: 'sessionNurse',
   }),
   vitalSigns: many(vitalSigns),
+  factures: many(factures),
 }));
 
 export const vitalSignsRelations = relations(vitalSigns, ({ one }) => ({
@@ -101,5 +107,37 @@ export const bilansRelations = relations(bilans, ({ one }) => ({
     fields: [bilans.physicianId],
     references: [users.id],
     relationName: 'bilanPhysician',
+  }),
+}));
+
+export const articlesRelations = relations(articles, ({ many }) => ({
+  lignesFacture: many(lignesFacture),
+}));
+
+export const facturesRelations = relations(factures, ({ one, many }) => ({
+  session: one(dialysisSessions, {
+    fields: [factures.sessionId],
+    references: [dialysisSessions.id],
+  }),
+  patient: one(patients, {
+    fields: [factures.patientId],
+    references: [patients.id],
+  }),
+  createdByUser: one(users, {
+    fields: [factures.createdBy],
+    references: [users.id],
+    relationName: 'factureCreator',
+  }),
+  lignes: many(lignesFacture),
+}));
+
+export const lignesFactureRelations = relations(lignesFacture, ({ one }) => ({
+  facture: one(factures, {
+    fields: [lignesFacture.factureId],
+    references: [factures.id],
+  }),
+  article: one(articles, {
+    fields: [lignesFacture.articleId],
+    references: [articles.id],
   }),
 }));

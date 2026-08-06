@@ -8,3 +8,7 @@ export * from './vital-signs';
 export * from './bilans';
 export * from './seuils-cliniques';
 export * from './relations';
+export * from './articles';
+export * from './factures';
+export * from './lignes-facture';
+export * from './tarifs-base';

@@ -55,3 +55,23 @@ export const serologieResultEnum = pgEnum('serologie_result', [
 export const bioStatusEnum = pgEnum('bio_status', ['ok', 'low', 'high']);
 
 export const ktvStatusEnum = pgEnum('ktv_status', ['adequate', 'inadequate']);
+
+export const categorieArticleEnum = pgEnum('categorie_article', [
+  'medicament',
+  'consommable',
+  'acte_medical',
+]);
+
+export const statutFactureEnum = pgEnum('statut_facture', [
+  'brouillon',
+  'validee',
+  'payee',
+  'annulee',
+]);
+
+export const modePaiementEnum = pgEnum('mode_paiement', [
+  'especes',
+  'cheque',
+  'virement',
+  'mobile_money',
+]);

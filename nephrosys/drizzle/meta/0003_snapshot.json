@@ -1,0 +1,2151 @@
+{
+  "id": "150cc4bc-4a38-49eb-ab45-ccf63aa6215b",
+  "prevId": "b04aafb2-98d3-4ff1-8a6f-92d0c51a123f",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password_hash": {
+          "name": "password_hash",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "user_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'patient'"
+        },
+        "nom": {
+          "name": "nom",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prenom": {
+          "name": "prenom",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.patients": {
+      "name": "patients",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nom": {
+          "name": "nom",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prenom": {
+          "name": "prenom",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date_naissance": {
+          "name": "date_naissance",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sexe": {
+          "name": "sexe",
+          "type": "sexe",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "telephone": {
+          "name": "telephone",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "groupe_sanguin": {
+          "name": "groupe_sanguin",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "taille_cm": {
+          "name": "taille_cm",
+          "type": "numeric(5, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "poids_sec_kg": {
+          "name": "poids_sec_kg",
+          "type": "numeric(5, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nephropathie": {
+          "name": "nephropathie",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_premiere_dialyse": {
+          "name": "date_premiere_dialyse",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "medecin_ref_id": {
+          "name": "medecin_ref_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "statut": {
+          "name": "statut",
+          "type": "patient_statut",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'actif'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "patients_user_id_users_id_fk": {
+          "name": "patients_user_id_users_id_fk",
+          "tableFrom": "patients",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "patients_medecin_ref_id_users_id_fk": {
+          "name": "patients_medecin_ref_id_users_id_fk",
+          "tableFrom": "patients",
+          "tableTo": "users",
+          "columnsFrom": [
+            "medecin_ref_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.postes_dialyse": {
+      "name": "postes_dialyse",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nom": {
+          "name": "nom",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "numero": {
+          "name": "numero",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_vip": {
+          "name": "is_vip",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "equipement": {
+          "name": "equipement",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.plannings": {
+      "name": "plannings",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "poste_id": {
+          "name": "poste_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "medecin_id": {
+          "name": "medecin_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "infirmier_id": {
+          "name": "infirmier_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "jour_semaine": {
+          "name": "jour_semaine",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vacation": {
+          "name": "vacation",
+          "type": "vacation",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recurrence": {
+          "name": "recurrence",
+          "type": "recurrence",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'hebdo'"
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "plannings_patient_id_patients_id_fk": {
+          "name": "plannings_patient_id_patients_id_fk",
+          "tableFrom": "plannings",
+          "tableTo": "patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "plannings_poste_id_postes_dialyse_id_fk": {
+          "name": "plannings_poste_id_postes_dialyse_id_fk",
+          "tableFrom": "plannings",
+          "tableTo": "postes_dialyse",
+          "columnsFrom": [
+            "poste_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "plannings_medecin_id_users_id_fk": {
+          "name": "plannings_medecin_id_users_id_fk",
+          "tableFrom": "plannings",
+          "tableTo": "users",
+          "columnsFrom": [
+            "medecin_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "plannings_infirmier_id_users_id_fk": {
+          "name": "plannings_infirmier_id_users_id_fk",
+          "tableFrom": "plannings",
+          "tableTo": "users",
+          "columnsFrom": [
+            "infirmier_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "plannings_poste_jour_vacation_unique": {
+          "name": "plannings_poste_jour_vacation_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "poste_id",
+            "jour_semaine",
+            "vacation"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.dialysis_sessions": {
+      "name": "dialysis_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "planning_id": {
+          "name": "planning_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "poste_id": {
+          "name": "poste_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "physician_id": {
+          "name": "physician_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nurse_id": {
+          "name": "nurse_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date_seance": {
+          "name": "date_seance",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dialysis_number": {
+          "name": "dialysis_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_vip": {
+          "name": "is_vip",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "arrival_status": {
+          "name": "arrival_status",
+          "type": "arrival_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "arrival_weight": {
+          "name": "arrival_weight",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dry_weight": {
+          "name": "dry_weight",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "interdialysis_increase": {
+          "name": "interdialysis_increase",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ta_pre_dialyse": {
+          "name": "ta_pre_dialyse",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ta_debout": {
+          "name": "ta_debout",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ta_coucher": {
+          "name": "ta_coucher",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "temperature_pre": {
+          "name": "temperature_pre",
+          "type": "numeric(4, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type_dialyse": {
+          "name": "type_dialyse",
+          "type": "type_dialyse",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dialyzer_type": {
+          "name": "dialyzer_type",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type_abord_vasculaire": {
+          "name": "type_abord_vasculaire",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "debit_sang": {
+          "name": "debit_sang",
+          "type": "numeric(6, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "debit_dialysat": {
+          "name": "debit_dialysat",
+          "type": "numeric(6, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uf_prescrite": {
+          "name": "uf_prescrite",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uf_max": {
+          "name": "uf_max",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "duree_prescrite": {
+          "name": "duree_prescrite",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conductivite": {
+          "name": "conductivite",
+          "type": "numeric(4, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bain_calcium": {
+          "name": "bain_calcium",
+          "type": "numeric(4, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bain_potassium": {
+          "name": "bain_potassium",
+          "type": "numeric(4, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bain_glucose": {
+          "name": "bain_glucose",
+          "type": "numeric(4, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bain_sodium": {
+          "name": "bain_sodium",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "temperature_bain": {
+          "name": "temperature_bain",
+          "type": "numeric(4, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bicarbonate": {
+          "name": "bicarbonate",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "anticoagulation": {
+          "name": "anticoagulation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aiguille_arterielle": {
+          "name": "aiguille_arterielle",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aiguille_veineuse": {
+          "name": "aiguille_veineuse",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ponction": {
+          "name": "ponction",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pression_arterielle": {
+          "name": "pression_arterielle",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pression_veineuse": {
+          "name": "pression_veineuse",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ptm": {
+          "name": "ptm",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "departure_weight": {
+          "name": "departure_weight",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uf_reelle": {
+          "name": "uf_reelle",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "duree_reelle": {
+          "name": "duree_reelle",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tolerance_globale": {
+          "name": "tolerance_globale",
+          "type": "tolerance",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aspect_rein": {
+          "name": "aspect_rein",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes_fin": {
+          "name": "notes_fin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uree_pre": {
+          "name": "uree_pre",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uree_post": {
+          "name": "uree_post",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ktv_calculated": {
+          "name": "ktv_calculated",
+          "type": "numeric(4, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ktv_status": {
+          "name": "ktv_status",
+          "type": "ktv_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "urr_calculated": {
+          "name": "urr_calculated",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "traitement_en_cours": {
+          "name": "traitement_en_cours",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hemoculture": {
+          "name": "hemoculture",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vaccination": {
+          "name": "vaccination",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "transfusion": {
+          "name": "transfusion",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "erythropoietine": {
+          "name": "erythropoietine",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "observations": {
+          "name": "observations",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "statut": {
+          "name": "statut",
+          "type": "statut_seance",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'planifiee'"
+        },
+        "locked_at": {
+          "name": "locked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "dialysis_sessions_patient_id_patients_id_fk": {
+          "name": "dialysis_sessions_patient_id_patients_id_fk",
+          "tableFrom": "dialysis_sessions",
+          "tableTo": "patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "dialysis_sessions_planning_id_plannings_id_fk": {
+          "name": "dialysis_sessions_planning_id_plannings_id_fk",
+          "tableFrom": "dialysis_sessions",
+          "tableTo": "plannings",
+          "columnsFrom": [
+            "planning_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "dialysis_sessions_poste_id_postes_dialyse_id_fk": {
+          "name": "dialysis_sessions_poste_id_postes_dialyse_id_fk",
+          "tableFrom": "dialysis_sessions",
+          "tableTo": "postes_dialyse",
+          "columnsFrom": [
+            "poste_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "dialysis_sessions_physician_id_users_id_fk": {
+          "name": "dialysis_sessions_physician_id_users_id_fk",
+          "tableFrom": "dialysis_sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "physician_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "dialysis_sessions_nurse_id_users_id_fk": {
+          "name": "dialysis_sessions_nurse_id_users_id_fk",
+          "tableFrom": "dialysis_sessions",
+          "tableTo": "users",
+          "columnsFrom": [
+            "nurse_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.vital_signs": {
+      "name": "vital_signs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "session_id": {
+          "name": "session_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "heure_mesure": {
+          "name": "heure_mesure",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tension_arterielle": {
+          "name": "tension_arterielle",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "frequence_cardiaque": {
+          "name": "frequence_cardiaque",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "frequence_respiratoire": {
+          "name": "frequence_respiratoire",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "spo2": {
+          "name": "spo2",
+          "type": "numeric(4, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "temperature": {
+          "name": "temperature",
+          "type": "numeric(4, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "glycemie": {
+          "name": "glycemie",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_hypotension": {
+          "name": "is_hypotension",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "vital_signs_session_id_dialysis_sessions_id_fk": {
+          "name": "vital_signs_session_id_dialysis_sessions_id_fk",
+          "tableFrom": "vital_signs",
+          "tableTo": "dialysis_sessions",
+          "columnsFrom": [
+            "session_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.bilans": {
+      "name": "bilans",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "reference": {
+          "name": "reference",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "physician_id": {
+          "name": "physician_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date_bilan": {
+          "name": "date_bilan",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type_bilan": {
+          "name": "type_bilan",
+          "type": "type_bilan",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hemoglobine": {
+          "name": "hemoglobine",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hematocrite": {
+          "name": "hematocrite",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "globules_blancs": {
+          "name": "globules_blancs",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "plaquettes": {
+          "name": "plaquettes",
+          "type": "numeric(10, 0)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "neutrophiles": {
+          "name": "neutrophiles",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "eosinophiles": {
+          "name": "eosinophiles",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "basophiles": {
+          "name": "basophiles",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lymphocytes": {
+          "name": "lymphocytes",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "monocytes": {
+          "name": "monocytes",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ferritine": {
+          "name": "ferritine",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "saturation_transferrine": {
+          "name": "saturation_transferrine",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vgm": {
+          "name": "vgm",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ccmh": {
+          "name": "ccmh",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creatinine": {
+          "name": "creatinine",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uree_pre": {
+          "name": "uree_pre",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uree_post": {
+          "name": "uree_post",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "acide_urique": {
+          "name": "acide_urique",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uricemie": {
+          "name": "uricemie",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "urr_calculated": {
+          "name": "urr_calculated",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dfg_mdrd": {
+          "name": "dfg_mdrd",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sodium": {
+          "name": "sodium",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "potassium": {
+          "name": "potassium",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "chlore": {
+          "name": "chlore",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "calcium": {
+          "name": "calcium",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phosphore": {
+          "name": "phosphore",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bicarbonate_bilan": {
+          "name": "bicarbonate_bilan",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reserve_alcaline": {
+          "name": "reserve_alcaline",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "produit_ca_p": {
+          "name": "produit_ca_p",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pth": {
+          "name": "pth",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vitamine_d": {
+          "name": "vitamine_d",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phosphatase_alcaline": {
+          "name": "phosphatase_alcaline",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hdl": {
+          "name": "hdl",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ldl": {
+          "name": "ldl",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cholesterol_total": {
+          "name": "cholesterol_total",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "triglycerides": {
+          "name": "triglycerides",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "albumine": {
+          "name": "albumine",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "prealbumine": {
+          "name": "prealbumine",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proteines_totales": {
+          "name": "proteines_totales",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "proteidemie": {
+          "name": "proteidemie",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "crp": {
+          "name": "crp",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "alat": {
+          "name": "alat",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "asat": {
+          "name": "asat",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gamma_gt": {
+          "name": "gamma_gt",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ldh": {
+          "name": "ldh",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cpk": {
+          "name": "cpk",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "haptoglobine": {
+          "name": "haptoglobine",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bilirubine_totale": {
+          "name": "bilirubine_totale",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bilirubine_indirecte": {
+          "name": "bilirubine_indirecte",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "schizocytes": {
+          "name": "schizocytes",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rac": {
+          "name": "rac",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cst": {
+          "name": "cst",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fer_serique": {
+          "name": "fer_serique",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "gaj": {
+          "name": "gaj",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hba1c": {
+          "name": "hba1c",
+          "type": "numeric(4, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pu_24h": {
+          "name": "pu_24h",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "eppu": {
+          "name": "eppu",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ecbu": {
+          "name": "ecbu",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nau": {
+          "name": "nau",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ku": {
+          "name": "ku",
+          "type": "numeric(6, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rapport_na_k": {
+          "name": "rapport_na_k",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "uree_urinaire": {
+          "name": "uree_urinaire",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "creat_urinaire": {
+          "name": "creat_urinaire",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pbr_resultat": {
+          "name": "pbr_resultat",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hbs_ag": {
+          "name": "hbs_ag",
+          "type": "serologie_result",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "anti_hbs": {
+          "name": "anti_hbs",
+          "type": "serologie_result",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "anti_hbc": {
+          "name": "anti_hbc",
+          "type": "serologie_result",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "anti_hcv": {
+          "name": "anti_hcv",
+          "type": "serologie_result",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "anti_hiv": {
+          "name": "anti_hiv",
+          "type": "serologie_result",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tpha": {
+          "name": "tpha",
+          "type": "serologie_result",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vdrl": {
+          "name": "vdrl",
+          "type": "serologie_result",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hb_statut": {
+          "name": "hb_statut",
+          "type": "bio_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "potassium_statut": {
+          "name": "potassium_statut",
+          "type": "bio_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phosphore_statut": {
+          "name": "phosphore_statut",
+          "type": "bio_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "albumine_statut": {
+          "name": "albumine_statut",
+          "type": "bio_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pth_statut": {
+          "name": "pth_statut",
+          "type": "bio_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ca_p_statut": {
+          "name": "ca_p_statut",
+          "type": "bio_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "bilans_patient_id_patients_id_fk": {
+          "name": "bilans_patient_id_patients_id_fk",
+          "tableFrom": "bilans",
+          "tableTo": "patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "bilans_physician_id_users_id_fk": {
+          "name": "bilans_physician_id_users_id_fk",
+          "tableFrom": "bilans",
+          "tableTo": "users",
+          "columnsFrom": [
+            "physician_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "bilans_reference_unique": {
+          "name": "bilans_reference_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "reference"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.seuils_cliniques": {
+      "name": "seuils_cliniques",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "parametre": {
+          "name": "parametre",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "seuil_bas": {
+          "name": "seuil_bas",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "seuil_haut": {
+          "name": "seuil_haut",
+          "type": "numeric(8, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "unite": {
+          "name": "unite",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "seuils_cliniques_parametre_unique": {
+          "name": "seuils_cliniques_parametre_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "parametre"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.articles": {
+      "name": "articles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "nom": {
+          "name": "nom",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "categorie": {
+          "name": "categorie",
+          "type": "categorie_article",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prix_unitaire": {
+          "name": "prix_unitaire",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unite": {
+          "name": "unite",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voie_administration": {
+          "name": "voie_administration",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.factures": {
+      "name": "factures",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "reference": {
+          "name": "reference",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "session_id": {
+          "name": "session_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "patient_id": {
+          "name": "patient_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "date_facture": {
+          "name": "date_facture",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "montant_base": {
+          "name": "montant_base",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "montant_supplements": {
+          "name": "montant_supplements",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "montant_total": {
+          "name": "montant_total",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "statut": {
+          "name": "statut",
+          "type": "statut_facture",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'brouillon'"
+        },
+        "mode_paiement": {
+          "name": "mode_paiement",
+          "type": "mode_paiement",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_paiement": {
+          "name": "date_paiement",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "factures_session_id_dialysis_sessions_id_fk": {
+          "name": "factures_session_id_dialysis_sessions_id_fk",
+          "tableFrom": "factures",
+          "tableTo": "dialysis_sessions",
+          "columnsFrom": [
+            "session_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "factures_patient_id_patients_id_fk": {
+          "name": "factures_patient_id_patients_id_fk",
+          "tableFrom": "factures",
+          "tableTo": "patients",
+          "columnsFrom": [
+            "patient_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "factures_created_by_users_id_fk": {
+          "name": "factures_created_by_users_id_fk",
+          "tableFrom": "factures",
+          "tableTo": "users",
+          "columnsFrom": [
+            "created_by"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "factures_reference_unique": {
+          "name": "factures_reference_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "reference"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.lignes_facture": {
+      "name": "lignes_facture",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "facture_id": {
+          "name": "facture_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "article_id": {
+          "name": "article_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "designation": {
+          "name": "designation",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quantite": {
+          "name": "quantite",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'1'"
+        },
+        "prix_unitaire": {
+          "name": "prix_unitaire",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "montant": {
+          "name": "montant",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "lignes_facture_facture_id_factures_id_fk": {
+          "name": "lignes_facture_facture_id_factures_id_fk",
+          "tableFrom": "lignes_facture",
+          "tableTo": "factures",
+          "columnsFrom": [
+            "facture_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "lignes_facture_article_id_articles_id_fk": {
+          "name": "lignes_facture_article_id_articles_id_fk",
+          "tableFrom": "lignes_facture",
+          "tableTo": "articles",
+          "columnsFrom": [
+            "article_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tarifs_base": {
+      "name": "tarifs_base",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "label": {
+          "name": "label",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(50)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "montant": {
+          "name": "montant",
+          "type": "numeric(12, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "tarifs_base_code_unique": {
+          "name": "tarifs_base_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.arrival_status": {
+      "name": "arrival_status",
+      "schema": "public",
+      "values": [
+        "stable",
+        "malade",
+        "urgence"
+      ]
+    },
+    "public.bio_status": {
+      "name": "bio_status",
+      "schema": "public",
+      "values": [
+        "ok",
+        "low",
+        "high"
+      ]
+    },
+    "public.categorie_article": {
+      "name": "categorie_article",
+      "schema": "public",
+      "values": [
+        "medicament",
+        "consommable",
+        "acte_medical"
+      ]
+    },
+    "public.ktv_status": {
+      "name": "ktv_status",
+      "schema": "public",
+      "values": [
+        "adequate",
+        "inadequate"
+      ]
+    },
+    "public.mode_paiement": {
+      "name": "mode_paiement",
+      "schema": "public",
+      "values": [
+        "especes",
+        "cheque",
+        "virement",
+        "mobile_money"
+      ]
+    },
+    "public.patient_statut": {
+      "name": "patient_statut",
+      "schema": "public",
+      "values": [
+        "actif",
+        "inactif",
+        "transfere",
+        "decede"
+      ]
+    },
+    "public.recurrence": {
+      "name": "recurrence",
+      "schema": "public",
+      "values": [
+        "hebdo",
+        "bihebdo",
+        "trihebdo"
+      ]
+    },
+    "public.serologie_result": {
+      "name": "serologie_result",
+      "schema": "public",
+      "values": [
+        "positif",
+        "negatif",
+        "non_fait"
+      ]
+    },
+    "public.sexe": {
+      "name": "sexe",
+      "schema": "public",
+      "values": [
+        "M",
+        "F"
+      ]
+    },
+    "public.statut_facture": {
+      "name": "statut_facture",
+      "schema": "public",
+      "values": [
+        "brouillon",
+        "validee",
+        "payee",
+        "annulee"
+      ]
+    },
+    "public.statut_seance": {
+      "name": "statut_seance",
+      "schema": "public",
+      "values": [
+        "planifiee",
+        "en_cours",
+        "terminee",
+        "annulee"
+      ]
+    },
+    "public.tolerance": {
+      "name": "tolerance",
+      "schema": "public",
+      "values": [
+        "bonne",
+        "moyenne",
+        "mauvaise"
+      ]
+    },
+    "public.type_bilan": {
+      "name": "type_bilan",
+      "schema": "public",
+      "values": [
+        "mensuel",
+        "trimestriel",
+        "semestriel",
+        "annuel"
+      ]
+    },
+    "public.type_dialyse": {
+      "name": "type_dialyse",
+      "schema": "public",
+      "values": [
+        "hemodialyse",
+        "hemodiafiltration",
+        "dialyse_peritoneale"
+      ]
+    },
+    "public.user_role": {
+      "name": "user_role",
+      "schema": "public",
+      "values": [
+        "admin",
+        "secretaire",
+        "medecin",
+        "infirmiere",
+        "facturation",
+        "patient"
+      ]
+    },
+    "public.vacation": {
+      "name": "vacation",
+      "schema": "public",
+      "values": [
+        "matin",
+        "apres_midi"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
