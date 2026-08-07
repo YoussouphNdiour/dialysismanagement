@@ -11,8 +11,9 @@ import { PreDialyseTab } from '@/components/sessions/pre-dialyse-tab';
 import { MachineTab } from '@/components/sessions/machine-tab';
 import { ConstantesTab } from '@/components/sessions/constantes-tab';
 import { FinSeanceTab } from '@/components/sessions/fin-seance-tab';
+import { PrescriptionsTab } from '@/components/sessions/prescriptions-tab';
 
-const TABS = ['Pre-dialyse', 'Machine', 'Constantes', 'Fin de seance'] as const;
+const TABS = ['Pre-dialyse', 'Machine', 'Constantes', 'Fin de seance', 'Prescriptions'] as const;
 
 const STATUT_BADGES: Record<string, { className: string; label: string }> = {
   planifiee: { className: 'bg-blue-100 text-blue-800', label: 'Planifiee' },
@@ -219,6 +220,13 @@ export default function SessionDetailPage() {
           ktvCalculated={session.ktvCalculated}
           ktvStatus={session.ktvStatus}
           urrCalculated={session.urrCalculated}
+          isLocked={isLocked}
+        />
+      )}
+      {activeTab === 4 && (
+        <PrescriptionsTab
+          sessionId={id}
+          sessionStatut={session.statut}
           isLocked={isLocked}
         />
       )}
