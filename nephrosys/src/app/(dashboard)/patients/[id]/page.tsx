@@ -64,8 +64,9 @@ export default function PatientDetailPage({
       {activeTab === 0 && (
         <PatientForm
           mode="edit"
+          patientId={patient.id}
+          isAdmin={me?.role === 'admin'}
           defaultValues={{
-            id: patient.id,
             nom: patient.nom,
             prenom: patient.prenom,
             dateNaissance: patient.dateNaissance || undefined,
@@ -78,6 +79,7 @@ export default function PatientDetailPage({
             datePremiereDialyse: patient.datePremiereDialyse || undefined,
             medecinRefId: patient.medecinRefId || undefined,
             statut: patient.statut || undefined,
+            userId: patient.userId || undefined,
           }}
         />
       )}

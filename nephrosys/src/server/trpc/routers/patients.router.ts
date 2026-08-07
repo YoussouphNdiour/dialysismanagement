@@ -120,6 +120,7 @@ export const patientsRouter = router({
       if (data.datePremiereDialyse !== undefined) updateData.datePremiereDialyse = data.datePremiereDialyse;
       if (data.medecinRefId !== undefined) updateData.medecinRefId = data.medecinRefId;
       if (data.statut !== undefined) updateData.statut = data.statut;
+      if (data.userId !== undefined) updateData.userId = data.userId;
 
       const [patient] = await ctx.db
         .update(patients)

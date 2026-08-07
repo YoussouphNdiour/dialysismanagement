@@ -19,6 +19,7 @@ export type CreatePatientInput = z.infer<typeof createPatientSchema>;
 
 export const updatePatientSchema = createPatientSchema.partial().extend({
   id: z.string().uuid(),
+  userId: z.string().uuid().nullable().optional(),
 });
 
 export type UpdatePatientInput = z.infer<typeof updatePatientSchema>;

@@ -1,5 +1,5 @@
 import { router, roleProcedure } from '@/server/trpc';
-import { users } from '@/server/db/schema';
+import { users, patients } from '@/server/db/schema';
 import { createUserSchema, updateUserSchema } from '@/lib/validators/users';
 import { eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
@@ -83,6 +83,36 @@ export const usersRouter = router({
       }
 
       return user;
+    }),
+
+  listPatientsDisponibles: roleProcedure(['admin'])
+    .input(z.object({ currentPatientId: z.string().uuid().optional() }))
+    .query(async ({ ctx, input }) => {
+      // Retourne les users role=patient non encore lies a un dossier patient,
+      // plus le user actuellement lie au patient en cours d'edition (s'il existe)
+      const result = await ctx.db
+        .select({
+          id: users.id,
+          email: users.email,
+          nom: users.nom,
+          prenom: users.prenom,
+          patientUserId: patients.userId,
+          patientId: patients.id,
+        })
+        .from(users)
+        .leftJoin(patients, eq(patients.userId, users.id))
+        .where(eq(users.role, 'patient'))
+        .orderBy(users.nom);
+
+      return result
+        .filter((u) => {
+          // Inclure si non lie (patientId null) OU lie au patient courant
+          const nonLie = u.patientId === null;
+          const lieeAuPatientCourant =
+            input.currentPatientId !== undefined && u.patientId === input.currentPatientId;
+          return nonLie || lieeAuPatientCourant;
+        })
+        .map(({ patientUserId: _pu, patientId: _pi, ...u }) => u);
     }),
 
   toggleActive: roleProcedure(['admin'])

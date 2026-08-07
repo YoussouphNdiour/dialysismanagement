@@ -3,29 +3,43 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
+import { z } from 'zod';
 import { api } from '@/lib/trpc/client';
-import { createPatientSchema, type CreatePatientInput } from '@/lib/validators/patients';
+import { createPatientSchema } from '@/lib/validators/patients';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
 
+// Schema du formulaire: les champs editables (sans id)
+const patientFormSchema = createPatientSchema.extend({
+  userId: z.string().uuid().nullable().optional(),
+});
+type PatientFormValues = z.infer<typeof patientFormSchema>;
+
 type PatientFormProps = {
-  defaultValues?: Partial<CreatePatientInput> & { id?: string };
+  defaultValues?: Partial<PatientFormValues>;
   mode: 'create' | 'edit';
+  isAdmin?: boolean;
+  patientId?: string;
 };
 
-export function PatientForm({ defaultValues, mode }: PatientFormProps) {
+export function PatientForm({ defaultValues, mode, isAdmin, patientId }: PatientFormProps) {
   const router = useRouter();
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<CreatePatientInput>({
-    resolver: zodResolver(createPatientSchema),
-    defaultValues: defaultValues || {},
+  } = useForm<PatientFormValues>({
+    resolver: zodResolver(patientFormSchema),
+    defaultValues: defaultValues ?? {},
   });
+
+  const { data: usersPatient } = api.users.listPatientsDisponibles.useQuery(
+    { currentPatientId: patientId },
+    { enabled: isAdmin === true && mode === 'edit' },
+  );
 
   const utils = api.useUtils();
   const createMutation = api.patients.create.useMutation({
@@ -37,14 +51,18 @@ export function PatientForm({ defaultValues, mode }: PatientFormProps) {
   const updateMutation = api.patients.update.useMutation({
     onSuccess: () => {
       utils.patients.list.invalidate();
-      utils.patients.getById.invalidate({ id: defaultValues?.id });
-      router.push(`/patients/${defaultValues?.id}`);
+      utils.patients.getById.invalidate({ id: patientId });
+      router.push(`/patients/${patientId}`);
     },
   });
 
-  const onSubmit = (data: CreatePatientInput) => {
-    if (mode === 'edit' && defaultValues?.id) {
-      updateMutation.mutate({ ...data, id: defaultValues.id });
+  const onSubmit = (data: PatientFormValues) => {
+    if (mode === 'edit' && patientId) {
+      updateMutation.mutate({
+        ...data,
+        id: patientId,
+        userId: data.userId ?? null,
+      });
     } else {
       createMutation.mutate(data);
     }
@@ -172,6 +190,37 @@ export function PatientForm({ defaultValues, mode }: PatientFormProps) {
           />
         </div>
       </Card>
+
+      {isAdmin === true && mode === 'edit' && (
+        <Card>
+          <h2 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
+            Acces portail patient
+          </h2>
+          <div>
+            <label
+              htmlFor="userId"
+              className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Compte portail patient (optionnel)
+            </label>
+            <select
+              id="userId"
+              {...register('userId')}
+              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+            >
+              <option value="">-- Aucun compte associe --</option>
+              {usersPatient?.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.prenom} {u.nom} ({u.email})
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-xs text-gray-500">
+              Seuls les comptes avec role &quot;patient&quot; non encore associes sont listes.
+            </p>
+          </div>
+        </Card>
+      )}
 
       <div className="flex justify-end gap-3">
         <Button type="button" variant="outline" onClick={() => router.back()}>
