@@ -11,6 +11,7 @@ import { bilansRouter } from './routers/bilans.router';
 import { articlesRouter } from './routers/articles.router';
 import { facturesRouter } from './routers/factures.router';
 import { dashboardRouter } from './routers/dashboard.router';
+import { stockRouter } from './routers/stock.router';
 
 export const appRouter = router({
   auth: authRouter,
@@ -25,6 +26,7 @@ export const appRouter = router({
   articles: articlesRouter,
   factures: facturesRouter,
   dashboard: dashboardRouter,
+  stock: stockRouter,
 });
 
 export type AppRouter = typeof appRouter;
