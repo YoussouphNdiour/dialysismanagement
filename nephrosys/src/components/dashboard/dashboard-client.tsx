@@ -20,6 +20,14 @@ export function DashboardClient({ role }: Props) {
       return <InfirmiereDashboard />;
     case 'secretaire':
       return <SecretaireDashboard />;
+    case 'gestionnaire_stock':
+      return (
+        <div className="rounded-xl border border-gray-200 p-8 text-center dark:border-gray-800">
+          <p className="text-lg text-gray-500 dark:text-gray-400">
+            Accedez a la gestion du stock via le menu
+          </p>
+        </div>
+      );
     case 'patient':
       return (
         <div className="rounded-xl border border-gray-200 p-8 text-center dark:border-gray-800">

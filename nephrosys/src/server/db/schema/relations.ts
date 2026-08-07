@@ -9,6 +9,11 @@ import { bilans } from './bilans';
 import { articles } from './articles';
 import { factures } from './factures';
 import { lignesFacture } from './lignes-facture';
+import { lots } from './lots';
+import { mouvementsStock } from './mouvements-stock';
+import { seuilsStock } from './seuils-stock';
+import { prescriptionsSeance } from './prescriptions-seance';
+import { ordonnances } from './ordonnances';
 
 export const usersRelations = relations(users, ({ many }) => ({
   patientsAsMedecin: many(patients, { relationName: 'medecinRef' }),
@@ -18,6 +23,10 @@ export const usersRelations = relations(users, ({ many }) => ({
   sessionsAsNurse: many(dialysisSessions, { relationName: 'sessionNurse' }),
   bilansAsPhysician: many(bilans, { relationName: 'bilanPhysician' }),
   facturesAsCreator: many(factures, { relationName: 'factureCreator' }),
+  lotsCreated: many(lots),
+  mouvementsCreated: many(mouvementsStock),
+  prescriptionsCreated: many(prescriptionsSeance),
+  ordonnancesCreated: many(ordonnances),
 }));
 
 export const patientsRelations = relations(patients, ({ one, many }) => ({
@@ -35,6 +44,9 @@ export const patientsRelations = relations(patients, ({ one, many }) => ({
   dialysisSessions: many(dialysisSessions),
   bilans: many(bilans),
   factures: many(factures),
+  prescriptionsSeance: many(prescriptionsSeance),
+  ordonnances: many(ordonnances),
+  mouvementsStock: many(mouvementsStock),
 }));
 
 export const postesDialyseRelations = relations(postesDialyse, ({ many }) => ({
@@ -89,6 +101,8 @@ export const dialysisSessionsRelations = relations(dialysisSessions, ({ one, man
   }),
   vitalSigns: many(vitalSigns),
   factures: many(factures),
+  prescriptionsSeance: many(prescriptionsSeance),
+  mouvementsStock: many(mouvementsStock),
 }));
 
 export const vitalSignsRelations = relations(vitalSigns, ({ one }) => ({
@@ -112,6 +126,10 @@ export const bilansRelations = relations(bilans, ({ one }) => ({
 
 export const articlesRelations = relations(articles, ({ many }) => ({
   lignesFacture: many(lignesFacture),
+  lots: many(lots),
+  seuilStock: many(seuilsStock),
+  prescriptionsSeance: many(prescriptionsSeance),
+  mouvementsStock: many(mouvementsStock),
 }));
 
 export const facturesRelations = relations(factures, ({ one, many }) => ({
@@ -139,5 +157,82 @@ export const lignesFactureRelations = relations(lignesFacture, ({ one }) => ({
   article: one(articles, {
     fields: [lignesFacture.articleId],
     references: [articles.id],
+  }),
+}));
+
+export const lotsRelations = relations(lots, ({ one, many }) => ({
+  article: one(articles, {
+    fields: [lots.articleId],
+    references: [articles.id],
+  }),
+  createdByUser: one(users, {
+    fields: [lots.createdBy],
+    references: [users.id],
+  }),
+  mouvementsStock: many(mouvementsStock),
+  prescriptionsSeance: many(prescriptionsSeance),
+}));
+
+export const mouvementsStockRelations = relations(mouvementsStock, ({ one }) => ({
+  article: one(articles, {
+    fields: [mouvementsStock.articleId],
+    references: [articles.id],
+  }),
+  lot: one(lots, {
+    fields: [mouvementsStock.lotId],
+    references: [lots.id],
+  }),
+  session: one(dialysisSessions, {
+    fields: [mouvementsStock.sessionId],
+    references: [dialysisSessions.id],
+  }),
+  patient: one(patients, {
+    fields: [mouvementsStock.patientId],
+    references: [patients.id],
+  }),
+  createdByUser: one(users, {
+    fields: [mouvementsStock.createdBy],
+    references: [users.id],
+  }),
+}));
+
+export const seuilsStockRelations = relations(seuilsStock, ({ one }) => ({
+  article: one(articles, {
+    fields: [seuilsStock.articleId],
+    references: [articles.id],
+  }),
+}));
+
+export const prescriptionsSeanceRelations = relations(prescriptionsSeance, ({ one }) => ({
+  session: one(dialysisSessions, {
+    fields: [prescriptionsSeance.sessionId],
+    references: [dialysisSessions.id],
+  }),
+  article: one(articles, {
+    fields: [prescriptionsSeance.articleId],
+    references: [articles.id],
+  }),
+  patient: one(patients, {
+    fields: [prescriptionsSeance.patientId],
+    references: [patients.id],
+  }),
+  lot: one(lots, {
+    fields: [prescriptionsSeance.lotId],
+    references: [lots.id],
+  }),
+  prescritParUser: one(users, {
+    fields: [prescriptionsSeance.prescritPar],
+    references: [users.id],
+  }),
+}));
+
+export const ordonnancesRelations = relations(ordonnances, ({ one }) => ({
+  patient: one(patients, {
+    fields: [ordonnances.patientId],
+    references: [patients.id],
+  }),
+  prescritParUser: one(users, {
+    fields: [ordonnances.prescritPar],
+    references: [users.id],
   }),
 }));

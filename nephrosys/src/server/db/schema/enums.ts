@@ -7,6 +7,7 @@ export const userRoleEnum = pgEnum('user_role', [
   'infirmiere',
   'facturation',
   'patient',
+  'gestionnaire_stock',
 ]);
 
 export const patientStatutEnum = pgEnum('patient_statut', [
@@ -74,4 +75,16 @@ export const modePaiementEnum = pgEnum('mode_paiement', [
   'cheque',
   'virement',
   'mobile_money',
+]);
+
+export const typeMouvementEnum = pgEnum('type_mouvement', [
+  'entree',
+  'sortie',
+  'ajustement',
+]);
+
+export const statutPrescriptionEnum = pgEnum('statut_prescription', [
+  'prescrite',
+  'administree',
+  'annulee',
 ]);

@@ -12,6 +12,10 @@ import {
   Receipt,
   Shield,
   Settings,
+  Package,
+  Warehouse,
+  AlertTriangle,
+  FileText,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -27,6 +31,10 @@ const ICON_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
   Receipt,
   Shield,
   Settings,
+  Package,
+  Warehouse,
+  AlertTriangle,
+  FileText,
 };
 
 type SidebarProps = {

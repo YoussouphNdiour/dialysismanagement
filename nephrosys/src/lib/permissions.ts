@@ -5,6 +5,7 @@ export const USER_ROLES = [
   'infirmiere',
   'facturation',
   'patient',
+  'gestionnaire_stock',
 ] as const;
 
 export type UserRole = (typeof USER_ROLES)[number];
@@ -23,6 +24,7 @@ const ROUTE_PERMISSIONS: RoutePermission[] = [
   { path: '/planning/postes', roles: ['admin', 'medecin', 'secretaire'] },
   { path: '/planning', roles: ['admin', 'medecin', 'infirmiere', 'secretaire'] },
   { path: '/facturation', roles: ['admin', 'facturation', 'medecin', 'infirmiere', 'secretaire'] },
+  { path: '/stock', roles: ['admin', 'gestionnaire_stock', 'infirmiere'] },
   { path: '/admin/articles', roles: ['admin'] },
   { path: '/admin/rapports', roles: ['admin'] },
   { path: '/admin', roles: ['admin'] },
@@ -81,6 +83,12 @@ const ALL_MENU_ITEMS: (MenuItem & { roles: UserRole[] })[] = [
     roles: ['admin', 'facturation'],
   },
   {
+    label: 'Stock',
+    href: '/stock',
+    icon: 'Warehouse',
+    roles: ['admin', 'gestionnaire_stock', 'infirmiere'],
+  },
+  {
     label: 'Utilisateurs',
     href: '/admin/utilisateurs',
     icon: 'Shield',
@@ -119,4 +127,5 @@ export const ROLE_MENU_ITEMS: Record<UserRole, MenuItem[]> = {
   infirmiere: getMenuItemsForRole('infirmiere'),
   facturation: getMenuItemsForRole('facturation'),
   patient: getMenuItemsForRole('patient'),
+  gestionnaire_stock: getMenuItemsForRole('gestionnaire_stock'),
 };

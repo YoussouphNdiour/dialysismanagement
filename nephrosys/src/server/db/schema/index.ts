@@ -12,3 +12,8 @@ export * from './articles';
 export * from './factures';
 export * from './lignes-facture';
 export * from './tarifs-base';
+export * from './lots';
+export * from './mouvements-stock';
+export * from './seuils-stock';
+export * from './prescriptions-seance';
+export * from './ordonnances';
