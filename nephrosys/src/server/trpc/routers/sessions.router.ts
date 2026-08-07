@@ -17,7 +17,9 @@ import {
   calculateKtV,
   calculateURR,
 } from '@/lib/clinical-calculations';
-import { eq, and, count } from 'drizzle-orm';
+import { eq, and, count, gt, sql } from 'drizzle-orm';
+import { prescriptionsSeance, lots, mouvementsStock } from '@/server/db/schema';
+import { applyFifo } from '@/lib/stock-fifo';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 
@@ -368,7 +370,7 @@ export const sessionsRouter = router({
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
       const [existing] = await ctx.db
-        .select({ statut: dialysisSessions.statut })
+        .select({ statut: dialysisSessions.statut, patientId: dialysisSessions.patientId })
         .from(dialysisSessions)
         .where(eq(dialysisSessions.id, input.id))
         .limit(1);
@@ -381,6 +383,73 @@ export const sessionsRouter = router({
         });
       }
 
+      // Auto-administration des prescriptions
+      const prescriptionsPrescrites = await ctx.db
+        .select()
+        .from(prescriptionsSeance)
+        .where(
+          and(
+            eq(prescriptionsSeance.sessionId, input.id),
+            eq(prescriptionsSeance.statut, 'prescrite'),
+          ),
+        );
+
+      for (const prescription of prescriptionsPrescrites) {
+        const lotsDisponibles = await ctx.db
+          .select({
+            lotId: lots.id,
+            lotArticleId: lots.articleId,
+            datePeremption: lots.datePeremption,
+            quantiteDisponible: sql<number>`CAST(${lots.quantiteDisponible} AS FLOAT)`,
+          })
+          .from(lots)
+          .where(
+            and(
+              eq(lots.articleId, prescription.articleId),
+              gt(lots.quantiteDisponible, '0'),
+            ),
+          );
+
+        const quantite = parseFloat(prescription.quantite);
+        const resultat = applyFifo(lotsDisponibles, quantite);
+
+        if (resultat.satisfait && resultat.allocations.length > 0) {
+          // Decrementer les lots et creer les mouvements
+          const premierLot = resultat.allocations[0]!;
+          for (const alloc of resultat.allocations) {
+            await ctx.db
+              .update(lots)
+              .set({
+                quantiteDisponible: sql`${lots.quantiteDisponible} - ${alloc.quantite}`,
+              })
+              .where(eq(lots.id, alloc.lotId));
+
+            await ctx.db.insert(mouvementsStock).values({
+              articleId: prescription.articleId,
+              lotId: alloc.lotId,
+              typeMouvement: 'sortie',
+              quantite: (-alloc.quantite).toString(),
+              motif: 'Administration per-seance',
+              sessionId: input.id,
+              patientId: existing.patientId,
+              createdBy: ctx.session.user.id,
+            });
+          }
+
+          // Mettre a jour la prescription: statut administree, lot_id du premier lot
+          await ctx.db
+            .update(prescriptionsSeance)
+            .set({
+              statut: 'administree',
+              lotId: premierLot.lotId,
+              updatedAt: new Date(),
+            })
+            .where(eq(prescriptionsSeance.id, prescription.id));
+        }
+        // Si stock insuffisant: laisser statut 'prescrite' — seance se termine quand meme
+      }
+
+      // Terminer la seance
       const [session] = await ctx.db
         .update(dialysisSessions)
         .set({ statut: 'terminee', updatedAt: new Date() })
