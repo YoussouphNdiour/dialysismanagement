@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { MenuItem } from '@/lib/permissions';
+import { api } from '@/lib/trpc/client';
 
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number }>> = {
   LayoutDashboard,
@@ -44,6 +45,13 @@ type SidebarProps = {
 export function Sidebar({ items }: SidebarProps) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+
+  const hasStockItem = items.some((item) => item.href === '/stock');
+  const { data: alertesData } = api.stock.alertesCount.useQuery(undefined, {
+    enabled: hasStockItem,
+    refetchInterval: 60_000,
+  });
+  const alertesCount = alertesData?.count ?? 0;
 
   return (
     <aside
@@ -74,6 +82,7 @@ export function Sidebar({ items }: SidebarProps) {
             item.href === '/'
               ? pathname === '/'
               : pathname.startsWith(item.href);
+          const showBadge = item.href === '/stock' && alertesCount > 0;
 
           return (
             <Link
@@ -89,7 +98,19 @@ export function Sidebar({ items }: SidebarProps) {
               title={collapsed ? item.label : undefined}
             >
               <Icon size={20} />
-              {!collapsed && <span>{item.label}</span>}
+              {!collapsed && (
+                <span className="flex-1">{item.label}</span>
+              )}
+              {!collapsed && showBadge && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-bold text-white">
+                  {alertesCount > 99 ? '99+' : alertesCount}
+                </span>
+              )}
+              {collapsed && showBadge && (
+                <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 text-xs font-bold text-white">
+                  {alertesCount > 99 ? '99+' : alertesCount}
+                </span>
+              )}
             </Link>
           );
         })}
