@@ -9,6 +9,7 @@ export default function PortailAccueilPage() {
   const { data: seances, isLoading: seancesLoading } = api.portail.mesSeances.useQuery({
     page: 1,
     perPage: 3,
+    statut: 'planifiee',
   });
   const { data: ordonnances, isLoading: ordLoading } = api.portail.mesOrdonnances.useQuery();
 
@@ -16,7 +17,7 @@ export default function PortailAccueilPage() {
 
   if (isLoading) return <Skeleton className="h-64 w-full" />;
 
-  const prochainesSeances = seances?.filter((s) => s.statut === 'planifiee') ?? [];
+  const prochainesSeances = seances ?? [];
   const derniereOrdonnance = ordonnances?.[0] ?? null;
 
   return (

@@ -64,11 +64,21 @@ export const portailRouter = router({
       z.object({
         page: z.number().int().positive().default(1),
         perPage: z.number().int().positive().max(50).default(10),
+        statut: z.enum(['planifiee', 'en_cours', 'terminee', 'annulee'] as const).optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
       const patientId = await resolvePatientId(ctx);
       const offset = (input.page - 1) * input.perPage;
+
+      const conditions = [eq(dialysisSessions.patientId, patientId)];
+      if (input.statut !== undefined) {
+        conditions.push(eq(dialysisSessions.statut, input.statut));
+      }
+
+      const orderBy = input.statut === 'planifiee'
+        ? asc(dialysisSessions.dateSeance)
+        : desc(dialysisSessions.dateSeance);
 
       const data = await ctx.db
         .select({
@@ -81,8 +91,8 @@ export const portailRouter = router({
         })
         .from(dialysisSessions)
         .innerJoin(postesDialyse, eq(dialysisSessions.posteId, postesDialyse.id))
-        .where(eq(dialysisSessions.patientId, patientId))
-        .orderBy(desc(dialysisSessions.dateSeance))
+        .where(and(...conditions))
+        .orderBy(orderBy)
         .limit(input.perPage)
         .offset(offset);
 

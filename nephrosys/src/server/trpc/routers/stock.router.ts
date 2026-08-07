@@ -12,7 +12,7 @@ import {
   setSeuilSchema,
 } from '@/lib/validators/stock';
 import { applyFifo } from '@/lib/stock-fifo';
-import { eq, and, gt, sql, lte, desc, asc } from 'drizzle-orm';
+import { eq, and, gt, gte, sql, lte, desc, asc } from 'drizzle-orm';
 import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 
@@ -318,6 +318,7 @@ export const stockRouter = router({
       const dans30Jours = new Date();
       dans30Jours.setDate(dans30Jours.getDate() + 30);
       const dateLimite = dans30Jours.toISOString().slice(0, 10);
+      const aujourdhui = new Date().toISOString().slice(0, 10);
 
       const lotsPeremption = await ctx.db
         .select({
@@ -328,7 +329,7 @@ export const stockRouter = router({
           quantiteDisponible: lots.quantiteDisponible,
         })
         .from(lots)
-        .where(and(lte(lots.datePeremption, dateLimite), gt(lots.quantiteDisponible, '0')))
+        .where(and(gte(lots.datePeremption, aujourdhui), lte(lots.datePeremption, dateLimite), gt(lots.quantiteDisponible, '0')))
         .orderBy(asc(lots.datePeremption));
 
       return { stockBas, lotsPeremption };
@@ -364,11 +365,12 @@ export const stockRouter = router({
       const dans30Jours = new Date();
       dans30Jours.setDate(dans30Jours.getDate() + 30);
       const dateLimite = dans30Jours.toISOString().slice(0, 10);
+      const aujourdhui = new Date().toISOString().slice(0, 10);
 
       const [{ nbLotsPeremption }] = await ctx.db
         .select({ nbLotsPeremption: sql<number>`COUNT(*)::int` })
         .from(lots)
-        .where(and(lte(lots.datePeremption, dateLimite), gt(lots.quantiteDisponible, '0')));
+        .where(and(gte(lots.datePeremption, aujourdhui), lte(lots.datePeremption, dateLimite), gt(lots.quantiteDisponible, '0')));
 
       return { count: nbStockBas + (nbLotsPeremption ?? 0) };
     }),
