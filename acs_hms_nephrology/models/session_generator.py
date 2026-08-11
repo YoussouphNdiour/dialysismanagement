@@ -247,6 +247,8 @@ class NephrologySessionValidator(models.TransientModel):
             ) % skipped_count)
 
         created_count = 0
+        rdv_created = 0
+        rdv_failed = 0
         for line in eligible_lines:
             valid_dates = generator._get_valid_dates(
                 line.schedule_id, generator.date_start, generator.date_end,
@@ -271,10 +273,15 @@ class NephrologySessionValidator(models.TransientModel):
                 if generator.create_appointments:
                     try:
                         procedure.action_create_appointment_from_schedule()
+                        rdv_created += 1
                     except Exception:
-                        pass  # Ne pas bloquer si la création du RDV échoue
+                        rdv_failed += 1
 
         msg = _('%d séances créées avec succès.') % created_count
+        if generator.create_appointments and rdv_created:
+            msg += ' ' + _('%d RDV créés.') % rdv_created
+        if rdv_failed:
+            msg += ' ' + _('(%d RDV non créés — vérifier les plannings)') % rdv_failed
         if skipped_count:
             msg += ' ' + _('(%d patients ignorés — déjà planifiés)') % skipped_count
 
