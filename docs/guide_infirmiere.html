@@ -39,8 +39,9 @@
   .steps li:last-child { border-bottom: none; }
   .steps li::before { content: '→'; position: absolute; left: 0; color: #4299e1; font-weight: 700; }
 
-  .screenshot { display: block; max-width: 100%; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.12); margin: 1.5rem 0; border: 1px solid #e2e8f0; }
-  .img-caption { text-align: center; font-size: 0.82rem; color: #718096; margin-top: -0.8rem; margin-bottom: 1.5rem; font-style: italic; }
+  .screenshot-wrap { margin-top: 1.2rem; }
+  .screenshot { max-width: 100%; border-radius: 8px; display: block; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin: 1.5rem 0; border: 1px solid #e2e8f0; }
+  .caption { text-align: center; font-size: 0.8rem; color: #a0aec0; margin-top: -1rem; margin-bottom: 1rem; font-style: italic; }
 
   .info-box { background: #ebf8ff; border-left: 4px solid #3182ce; border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1.2rem 0; }
   .info-box strong { color: #2b6cb0; }
@@ -96,6 +97,18 @@
       <li>Le tableau affiche uniquement les patients des <strong>plannings auxquels vous êtes assignée</strong></li>
       <li>Chaque carte patient indique : nom, poste, statut de la séance, durée prévue</li>
     </ul>
+    <div class="screenshot-wrap">
+      <img src="screenshots/013_inf_accueil.png" alt="Accueil infirmière" class="screenshot">
+      <div class="caption">Accueil infirmière</div>
+    </div>
+    <div class="screenshot-wrap">
+      <img src="screenshots/014_inf_nephro_accueil.png" alt="Néphrologie infirmière" class="screenshot">
+      <div class="caption">Néphrologie infirmière</div>
+    </div>
+    <div class="screenshot-wrap">
+      <img src="screenshots/015_inf_patients_liste.png" alt="Liste patients" class="screenshot">
+      <div class="caption">Liste patients</div>
+    </div>
     <div class="warn-box">
       <strong>⚠ Important :</strong> Si vous ne voyez pas un patient, vérifiez que votre nom figure dans la liste des infirmières du planning correspondant (à configurer par l'administrateur).
     </div>
@@ -107,8 +120,14 @@
       <div class="step-num">2</div>
       <h2>Démarrer une séance</h2>
     </div>
-    <img src="../tests/screenshots/inf_seance_debut.png" alt="Début de séance infirmière" class="screenshot">
-    <p class="img-caption">Fig. 1 — Interface infirmière : démarrage d'une séance avec saisie des constantes initiales</p>
+    <div class="screenshot-wrap">
+      <img src="screenshots/016_inf_hemodialyses_liste.png" alt="Liste hémodialyses" class="screenshot">
+      <div class="caption">Liste hémodialyses</div>
+    </div>
+    <div class="screenshot-wrap">
+      <img src="screenshots/017_inf_seance_formulaire.png" alt="Formulaire séance" class="screenshot">
+      <div class="caption">Formulaire séance — saisie des constantes initiales</div>
+    </div>
     <ol class="steps">
       <li>Sur le tableau de bord, repérez la carte du patient avec la séance à démarrer (statut <strong>Programmé</strong>)</li>
       <li>Cliquez sur le bouton <strong>Démarrer</strong> (ou icône play) sur la carte patient</li>
@@ -144,8 +163,10 @@
       <div class="step-num">4</div>
       <h2>Signaler une complication</h2>
     </div>
-    <img src="../tests/screenshots/inf_complication_popup.png" alt="Modal signalement complication" class="screenshot">
-    <p class="img-caption">Fig. 2 — Popup de signalement de complication avec tous les types disponibles</p>
+    <div class="screenshot-wrap">
+      <img src="screenshots/018_inf_seance_champs_cliniques.png" alt="Champs cliniques (scrolled)" class="screenshot">
+      <div class="caption">Champs cliniques de la séance</div>
+    </div>
     <ol class="steps">
       <li>Cliquez sur le bouton <strong>"Signaler une complication"</strong> sur la carte du patient concerné</li>
       <li>Dans le popup, sélectionnez le <strong>Type de complication</strong> :</li>
@@ -177,8 +198,10 @@
       <div class="step-num">5</div>
       <h2>Terminer la séance</h2>
     </div>
-    <img src="../tests/screenshots/inf_seance_terminee.png" alt="Séances terminées - tableau de bord infirmière" class="screenshot">
-    <p class="img-caption">Fig. 3 — Dashboard infirmière avec toutes les séances en statut "Terminé"</p>
+    <div class="screenshot-wrap">
+      <img src="screenshots/017_inf_seance_formulaire.png" alt="Formulaire séance" class="screenshot">
+      <div class="caption">Formulaire séance — saisie des constantes post-dialyse</div>
+    </div>
     <ol class="steps">
       <li>Une fois la durée de dialyse atteinte, cliquez sur <strong>"Terminer la séance"</strong></li>
       <li>Saisissez les <strong>constantes post-dialyse</strong> obligatoires :</li>
