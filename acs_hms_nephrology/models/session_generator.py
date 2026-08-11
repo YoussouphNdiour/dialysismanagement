@@ -42,6 +42,11 @@ class NephrologySessionGenerator(models.TransientModel):
     date_start = fields.Date(string='Date de début', required=True, default=fields.Date.today)
     date_end = fields.Date(string='Date de fin', required=True)
     exclude_holidays = fields.Boolean(string='Exclure jours fériés', default=True)
+    create_appointments = fields.Boolean(
+        string='Créer aussi les RDV',
+        default=False,
+        help="Si coché, un rendez-vous sera automatiquement créé pour chaque séance générée.",
+    )
     preview_count = fields.Integer(
         string='Séances prévues (aperçu)',
         compute='_compute_preview_count',
@@ -242,6 +247,8 @@ class NephrologySessionValidator(models.TransientModel):
             ) % skipped_count)
 
         created_count = 0
+        rdv_created = 0
+        rdv_failed = 0
         for line in eligible_lines:
             valid_dates = generator._get_valid_dates(
                 line.schedule_id, generator.date_start, generator.date_end,
@@ -263,7 +270,18 @@ class NephrologySessionValidator(models.TransientModel):
                 })
                 created_count += 1
 
+                if generator.create_appointments:
+                    try:
+                        procedure.action_create_appointment_from_schedule()
+                        rdv_created += 1
+                    except Exception:
+                        rdv_failed += 1
+
         msg = _('%d séances créées avec succès.') % created_count
+        if generator.create_appointments and rdv_created:
+            msg += ' ' + _('%d RDV créés.') % rdv_created
+        if rdv_failed:
+            msg += ' ' + _('(%d RDV non créés — vérifier les plannings)') % rdv_failed
         if skipped_count:
             msg += ' ' + _('(%d patients ignorés — déjà planifiés)') % skipped_count
 

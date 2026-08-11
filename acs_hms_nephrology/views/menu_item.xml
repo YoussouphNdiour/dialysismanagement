@@ -39,12 +39,13 @@
         action="action_nephrology_procedure"
         sequence="40"/>
 
-    <!-- 4. Séances de Dialyse — traitements en cours -->
+    <!-- 4. Séances de Dialyse — MASQUÉ (remplacé par le wizard de génération en masse) -->
     <menuitem id="menu_acs_treatment"
         name="Séances de Dialyse"
         parent="menu_acs_main_nephrology"
         action="action_acs_treatment"
-        sequence="45"/>
+        sequence="45"
+        active="0"/>
 
     <!-- ── Phase 4 : Prescriptions médicales ── -->
 
