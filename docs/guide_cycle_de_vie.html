@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cycle de Vie — Flux de Travail HMS Néphro | As-Shafi Medical</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, Arial, sans-serif; background: #f0f4f8; color: #2d3748; line-height: 1.6; }
+
+  /* ─── HEADER ─── */
+  header { background: linear-gradient(135deg, #1a202c 0%, #2d3748 60%, #3d4e63 100%); color: white; padding: 0; }
+  .header-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.75rem 2rem; background: rgba(0,0,0,0.22);
+    font-size: 0.83rem; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .header-top a { color: rgba(255,255,255,0.75); text-decoration: none; }
+  .header-top a:hover { color: #90cdf4; }
+  .header-content { padding: 2rem 3rem 2.5rem; }
+  .role-pill {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    background: rgba(144,205,244,0.18); border: 1px solid rgba(144,205,244,0.35);
+    border-radius: 20px; padding: 0.2rem 0.9rem; font-size: 0.8rem;
+    margin-bottom: 0.8rem; letter-spacing: 0.03em; text-transform: uppercase; color: #90cdf4;
+  }
+  header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.3px; }
+  header h1 span { color: #90cdf4; }
+  header .sub { margin-top: 0.4rem; opacity: 0.82; font-size: 0.97rem; }
+
+  /* ─── MAIN ─── */
+  main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+  /* ─── INTRO BOX ─── */
+  .intro-box {
+    background: #ebf8ff; border: 1px solid #bee3f8;
+    border-left: 5px solid #3182ce; border-radius: 10px;
+    padding: 1.3rem 1.5rem; margin-bottom: 2rem;
+  }
+  .intro-box .intro-role { font-weight: 700; color: #2b6cb0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
+  .intro-box p { font-size: 0.95rem; color: #2c5282; line-height: 1.7; }
+
+  /* ─── TOC ─── */
+  .toc {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 1rem 1.4rem; margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .toc-label { font-size: 0.8rem; font-weight: 700; color: #a0aec0; text-transform: uppercase; letter-spacing: 0.05em; flex-shrink: 0; }
+  .toc-items { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .toc-item {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: #edf2f7; border-radius: 20px; padding: 0.25rem 0.75rem;
+    font-size: 0.82rem; color: #4a5568; text-decoration: none; transition: background 0.15s;
+  }
+  .toc-item:hover { background: #bee3f8; color: #2b6cb0; }
+  .toc-item .num {
+    background: #4299e1; color: white; width: 18px; height: 18px;
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+  }
+
+  /* ─── STEP ─── */
+  .step {
+    background: white; border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem; overflow: hidden;
+  }
+  .step-header {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.2rem 1.6rem;
+    background: linear-gradient(to right, #f7fafc, #fff);
+    border-bottom: 1px solid #edf2f7;
+  }
+  .step-num {
+    background: #4299e1; color: white; width: 38px; height: 38px;
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 1rem; flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(66,153,225,0.35);
+  }
+  .step-header h2 { font-size: 1.12rem; font-weight: 700; color: #1a202c; }
+  .step-header .step-desc { font-size: 0.82rem; color: #718096; margin-top: 0.15rem; }
+
+  .step-body { padding: 1.5rem 1.6rem; }
+  .step-body p { line-height: 1.75; color: #4a5568; margin-bottom: 0.9rem; font-size: 0.95rem; }
+  .step-body p:last-child { margin-bottom: 0; }
+  .step-body h3 { font-size: 1rem; font-weight: 700; color: #2d3748; margin: 1.2rem 0 0.6rem; }
+  .step-body h3:first-child { margin-top: 0; }
+
+  /* ─── INSTRUCTIONS ─── */
+  .instructions { list-style: none; margin: 0.5rem 0 1rem; }
+  .instructions li {
+    display: flex; align-items: flex-start; gap: 0.7rem;
+    padding: 0.45rem 0; font-size: 0.93rem; color: #4a5568;
+    border-bottom: 1px solid #f7fafc;
+  }
+  .instructions li:last-child { border-bottom: none; }
+  .instructions .step-dot {
+    background: #ebf8ff; color: #3182ce; border-radius: 50%;
+    width: 22px; height: 22px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; flex-shrink: 0; margin-top: 0.1rem;
+  }
+  kbd {
+    display: inline-block; background: #4299e1; color: white; border-radius: 5px;
+    padding: 0.1rem 0.5rem; font-size: 0.82em; font-family: inherit;
+    font-weight: 600; white-space: nowrap;
+  }
+  code {
+    background: #edf2f7; color: #2d3748; border-radius: 4px;
+    padding: 0.05rem 0.4rem; font-family: 'Courier New', monospace; font-size: 0.87em;
+  }
+  .path { color: #3182ce; font-weight: 600; }
+
+  /* ─── STATUS BADGES ─── */
+  .status-list { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0.8rem 0; align-items: center; }
+  .badge {
+    border-radius: 20px; padding: 0.2rem 0.75rem; font-size: 0.8rem; font-weight: 600;
+  }
+  .badge-draft  { background: #edf2f7; color: #4a5568; }
+  .badge-sched  { background: #ebf8ff; color: #2b6cb0; }
+  .badge-conf   { background: #e9d8fd; color: #553c9a; }
+  .badge-done   { background: #c6f6d5; color: #276749; }
+  .badge-cancel { background: #fff5f5; color: #c53030; }
+  .badge-running { background: #fefcbf; color: #975a16; }
+
+  .flow-arrow { font-size: 1.1rem; color: #a0aec0; font-weight: 700; }
+
+  /* ─── CALLOUTS ─── */
+  .tip, .warn, .info {
+    border-radius: 8px; padding: 0.85rem 1rem 0.85rem 1.1rem; margin-top: 1rem;
+    font-size: 0.9rem; line-height: 1.65; display: flex; gap: 0.6rem; align-items: flex-start;
+  }
+  .tip  { background: #f0fff4; border-left: 3px solid #38a169; color: #276749; }
+  .warn { background: #fffbeb; border-left: 3px solid #d69e2e; color: #744210; }
+  .info { background: #ebf8ff; border-left: 3px solid #3182ce; color: #2b6cb0; }
+  .callout-icon { flex-shrink: 0; font-size: 1rem; margin-top: 0.05rem; font-style: normal; }
+
+  /* ─── TABLE ─── */
+  .data-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.88rem; }
+  .data-table th { background: #4299e1; color: white; padding: 0.6rem 0.9rem; text-align: left; font-weight: 600; }
+  .data-table th:first-child { border-radius: 6px 0 0 0; }
+  .data-table th:last-child  { border-radius: 0 6px 0 0; }
+  .data-table td { padding: 0.55rem 0.9rem; border-bottom: 1px solid #edf2f7; color: #4a5568; }
+  .data-table tr:hover td { background: #f7fafc; }
+
+  /* ─── FLOW DIAGRAM ─── */
+  .flow-diagram {
+    background: #1a202c; color: #90cdf4; border-radius: 10px;
+    padding: 1.5rem 1.8rem; margin: 1rem 0; font-family: 'Courier New', monospace;
+    font-size: 0.85rem; line-height: 1.9; overflow-x: auto; white-space: pre;
+  }
+  .flow-diagram .highlight { color: #68d391; font-weight: 700; }
+  .flow-diagram .dim { color: #718096; }
+  .flow-diagram .accent { color: #f6ad55; }
+
+  /* ─── MENU TREE ─── */
+  .menu-tree {
+    background: #1a202c; color: #e2e8f0; border-radius: 10px;
+    padding: 1.5rem 1.8rem; margin: 1rem 0; font-family: 'Courier New', monospace;
+    font-size: 0.88rem; line-height: 2;
+  }
+  .menu-tree .menu-root { color: #90cdf4; font-weight: 700; font-size: 1rem; }
+  .menu-tree .menu-seq { color: #718096; font-size: 0.8rem; }
+  .menu-tree .menu-note { color: #f6ad55; font-style: italic; font-size: 0.8rem; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    text-align: center; padding: 2rem; color: #a0aec0;
+    font-size: 0.83rem; border-top: 1px solid #e2e8f0; margin-top: 2rem;
+    background: white;
+  }
+  footer a { color: #4299e1; text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <a href="index.html">&larr; Retour au portail des guides</a>
+    <span>As-Shafi Medical &mdash; HMS N&eacute;phro</span>
+  </div>
+  <div class="header-content">
+    <div class="role-pill">Documentation transversale</div>
+    <h1>Cycle de Vie &mdash; <span>Flux de Travail HMS N&eacute;phro</span></h1>
+    <p class="sub">Vue d'ensemble des processus, des r&ocirc;les et des transitions d'&eacute;tat</p>
+  </div>
+</header>
+
+<main>
+
+  <div class="intro-box">
+    <div class="intro-role">Pr&eacute;sentation g&eacute;n&eacute;rale</div>
+    <p>Ce document d&eacute;crit les cycles de vie complets du syst&egrave;me HMS N&eacute;phro (As-Shafi Medical).
+       Il couvre les deux flux principaux &mdash; les <strong>consultations</strong> (rendez-vous classiques)
+       et les <strong>s&eacute;ances de dialyse</strong> (g&eacute;n&eacute;r&eacute;es en masse via assistant) &mdash;
+       ainsi que les r&ocirc;les impliqu&eacute;s, les transitions d'&eacute;tat et l'arborescence des menus.
+       Ce guide s'adresse &agrave; tous les profils utilisateurs.</p>
+  </div>
+
+  <nav class="toc">
+    <span class="toc-label">Sections</span>
+    <div class="toc-items">
+      <a class="toc-item" href="#sec1"><span class="num">1</span> Vue d'ensemble</a>
+      <a class="toc-item" href="#sec2"><span class="num">2</span> Flux Consultations</a>
+      <a class="toc-item" href="#sec3"><span class="num">3</span> Flux S&eacute;ances de dialyse</a>
+      <a class="toc-item" href="#sec4"><span class="num">4</span> R&ocirc;les et responsabilit&eacute;s</a>
+      <a class="toc-item" href="#sec5"><span class="num">5</span> Cycle de vie d'une s&eacute;ance</a>
+      <a class="toc-item" href="#sec6"><span class="num">6</span> Structure des menus</a>
+    </div>
+  </nav>
+
+  <!-- ═══ SECTION 1 : Vue d'ensemble ═══ -->
+  <div class="step" id="sec1">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div>
+        <h2>Vue d'ensemble</h2>
+        <div class="step-desc">Les deux flux principaux du syst&egrave;me</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Le syst&egrave;me HMS N&eacute;phro organise l'activit&eacute; clinique autour de <strong>deux flux de travail compl&eacute;mentaires</strong> :</p>
+
+      <h3>A. Consultations (Rendez-vous)</h3>
+      <p>Les consultations sont des rendez-vous individuels, cr&eacute;&eacute;s manuellement par le m&eacute;decin ou la secr&eacute;taire.
+         Elles correspondent au mod&egrave;le <code>hms.appointment</code> et suivent un cycle de vie simple :
+         brouillon, planifi&eacute;, confirm&eacute;, termin&eacute;.</p>
+
+      <h3>B. S&eacute;ances de dialyse</h3>
+      <p>Les s&eacute;ances de dialyse (h&eacute;modialyses) sont g&eacute;n&eacute;r&eacute;es en masse via l'assistant
+         <kbd>G&eacute;n&eacute;rer s&eacute;ances en masse</kbd>. Chaque s&eacute;ance correspond &agrave; une proc&eacute;dure
+         (<code>acs.patient.procedure</code>) et peut optionnellement &ecirc;tre li&eacute;e &agrave; un rendez-vous
+         (<code>hms.appointment</code>) en relation 1:1.</p>
+
+      <div class="info">
+        <i class="callout-icon">&#x2139;&#xFE0F;</i>
+        <div>
+          <strong>Mod&egrave;les cl&eacute;s :</strong>
+          <code>hms.appointment</code> = Rendez-vous/Consultation,
+          <code>acs.patient.procedure</code> = S&eacute;ance de dialyse (proc&eacute;dure),
+          <code>generate.procedure.wizard</code> = Assistant de g&eacute;n&eacute;ration en masse.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 2 : Flux Consultations ═══ -->
+  <div class="step" id="sec2">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div>
+        <h2>Flux Consultations</h2>
+        <div class="step-desc">Cycle de vie des rendez-vous (<code>hms.appointment</code>)</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Le flux consultations est le plus simple. Un rendez-vous est cr&eacute;&eacute; par le m&eacute;decin ou la secr&eacute;taire
+         m&eacute;dicale et suit le cycle suivant :</p>
+
+      <h3>Transitions d'&eacute;tat</h3>
+      <div class="status-list">
+        <span class="badge badge-draft">Draft</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="badge badge-sched">Scheduled</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="badge badge-conf">Confirmed</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="badge badge-done">Done</span>
+      </div>
+      <div class="status-list" style="margin-top: 0.3rem;">
+        <span style="font-size: 0.85rem; color: #718096; margin-right: 0.5rem;">Alternative :</span>
+        <span class="badge badge-draft">Draft</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="badge badge-sched">Scheduled</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="badge badge-cancel">Cancel</span>
+      </div>
+
+      <h3>&Eacute;tapes d&eacute;taill&eacute;es</h3>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">1</span>
+          <span><strong>Cr&eacute;ation :</strong> Le m&eacute;decin ou la secr&eacute;taire cr&eacute;e un nouveau RDV via
+            <span class="path">N&eacute;phrologie &gt; Rendez-vous &gt; Nouveau</span>. Le RDV est en &eacute;tat <span class="badge badge-draft">Draft</span>.</span>
+        </li>
+        <li>
+          <span class="step-dot">2</span>
+          <span><strong>Planification :</strong> Le patient, la date, l'heure et le m&eacute;decin sont renseign&eacute;s.
+            Le RDV passe en <span class="badge badge-sched">Scheduled</span>.</span>
+        </li>
+        <li>
+          <span class="step-dot">3</span>
+          <span><strong>Confirmation :</strong> Le m&eacute;decin confirme la consultation. Le RDV passe en
+            <span class="badge badge-conf">Confirmed</span>.</span>
+        </li>
+        <li>
+          <span class="step-dot">4</span>
+          <span><strong>R&eacute;alisation :</strong> La consultation a lieu. Le m&eacute;decin cl&ocirc;ture le RDV, qui passe en
+            <span class="badge badge-done">Done</span>.</span>
+        </li>
+      </ol>
+
+      <div class="tip">
+        <i class="callout-icon">&#x2705;</i>
+        <div>Un RDV peut &ecirc;tre annul&eacute; (<span class="badge badge-cancel">Cancel</span>) &agrave; tout moment
+          avant l'&eacute;tat <em>Done</em>, par exemple en cas d'absence du patient.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 3 : Flux Séances de dialyse ═══ -->
+  <div class="step" id="sec3">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div>
+        <h2>Flux S&eacute;ances de dialyse</h2>
+        <div class="step-desc">G&eacute;n&eacute;ration en masse et cycle de vie des proc&eacute;dures</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Le flux principal du syst&egrave;me. Les s&eacute;ances de dialyse sont g&eacute;n&eacute;r&eacute;es en masse
+         via un assistant d&eacute;di&eacute;, puis suivies individuellement par l'&eacute;quipe soignante.</p>
+
+      <h3>Diagramme du flux de g&eacute;n&eacute;ration</h3>
+      <div class="flow-diagram"><span class="highlight">Admin / Secr&eacute;taire / M&eacute;decin</span>
+  <span class="dim">|</span>
+  <span class="dim">|</span>  <span class="accent">N&eacute;phrologie &gt; G&eacute;n&eacute;rer s&eacute;ances en masse</span>
+  <span class="dim">|</span>
+  <span class="dim">v</span>
+  <span class="highlight">S&eacute;lection</span> : patients + planning + p&eacute;riode (date d&eacute;but / fin)
+  <span class="dim">|</span>
+  <span class="dim">|</span>  [Optionnel] Cocher <span class="accent">"Cr&eacute;er aussi les RDV"</span>
+  <span class="dim">|</span>
+  <span class="dim">v</span>
+  <span class="highlight">Aper&ccedil;u</span> : tableau r&eacute;capitulatif des s&eacute;ances &agrave; cr&eacute;er (validation)
+  <span class="dim">|</span>
+  <span class="dim">v</span>
+  <span class="highlight">Confirmation</span> : clic sur "Confirmer"
+  <span class="dim">|</span>
+  <span class="dim">|----&gt;</span> Cr&eacute;e <span class="accent">N s&eacute;ances</span> (<code>acs.patient.procedure</code>)
+  <span class="dim">|</span>
+  <span class="dim">|----&gt;</span> Si checkbox : cr&eacute;e <span class="accent">N RDV</span> (<code>hms.appointment</code>) li&eacute;s 1:1
+  <span class="dim">|</span>
+  <span class="dim">v</span>
+  <span class="highlight">Termin&eacute;</span> : les s&eacute;ances apparaissent dans H&eacute;modialyses</div>
+
+      <h3>Cycle de vie d'une proc&eacute;dure (s&eacute;ance)</h3>
+      <div class="status-list">
+        <span class="badge badge-sched">Scheduled</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="badge badge-running">Running</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="badge badge-done">Done</span>
+      </div>
+      <div class="status-list" style="margin-top: 0.3rem;">
+        <span style="font-size: 0.85rem; color: #718096; margin-right: 0.5rem;">Alternative :</span>
+        <span class="badge badge-sched">Scheduled</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="badge badge-cancel">Cancel</span>
+      </div>
+
+      <div class="warn">
+        <i class="callout-icon">&#x26A0;&#xFE0F;</i>
+        <div><strong>Important :</strong> Les s&eacute;ances g&eacute;n&eacute;r&eacute;es excluent automatiquement les jours f&eacute;ri&eacute;s
+          configur&eacute;s dans le syst&egrave;me (<span class="path">Configuration &gt; Jours f&eacute;ri&eacute;s</span>).
+          V&eacute;rifiez toujours l'aper&ccedil;u avant de confirmer.</div>
+      </div>
+
+      <div class="info">
+        <i class="callout-icon">&#x2139;&#xFE0F;</i>
+        <div><strong>Lien s&eacute;ance / RDV :</strong> Lorsque la checkbox "Cr&eacute;er aussi les RDV" est coch&eacute;e,
+          chaque proc&eacute;dure est reli&eacute;e &agrave; un RDV en relation 1:1. Le RDV sert de support
+          pour la planification calendaire tandis que la proc&eacute;dure porte les donn&eacute;es cliniques.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 4 : Rôles et responsabilités ═══ -->
+  <div class="step" id="sec4">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div>
+        <h2>R&ocirc;les et responsabilit&eacute;s</h2>
+        <div class="step-desc">Matrice des acc&egrave;s et des t&acirc;ches par profil</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Le syst&egrave;me d&eacute;finit six profils utilisateurs, chacun avec des droits d'acc&egrave;s et des responsabilit&eacute;s sp&eacute;cifiques :</p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>R&ocirc;le</th>
+            <th>Acc&egrave;s</th>
+            <th>Responsabilit&eacute;s</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Secr&eacute;taire</strong></td>
+            <td>Patients, RDV, G&eacute;n&eacute;rer s&eacute;ances, Absences</td>
+            <td>Cr&eacute;ation des dossiers patients, planification des rendez-vous et des s&eacute;ances, gestion des absences et de la liste d'attente</td>
+          </tr>
+          <tr>
+            <td><strong>M&eacute;decin</strong></td>
+            <td>Patients, RDV, H&eacute;modialyses, Ordonnances, G&eacute;n&eacute;rer s&eacute;ances</td>
+            <td>Validation clinique des s&eacute;ances, prescriptions m&eacute;dicamenteuses, ordonnances, suivi m&eacute;dical global du patient</td>
+          </tr>
+          <tr>
+            <td><strong>Infirmi&egrave;re</strong></td>
+            <td>Patients, H&eacute;modialyses</td>
+            <td>Saisie des donn&eacute;es cliniques per-s&eacute;ance : constantes vitales (TA, poids, d&eacute;bit, Kt/V, etc.)</td>
+          </tr>
+          <tr>
+            <td><strong>Facturation</strong></td>
+            <td>Facturation, S&eacute;ances factur&eacute;es</td>
+            <td>G&eacute;n&eacute;ration des factures &agrave; partir des s&eacute;ances termin&eacute;es, suivi comptable</td>
+          </tr>
+          <tr>
+            <td><strong>Patient (portail)</strong></td>
+            <td>Mon portail</td>
+            <td>Lecture seule : prochaines s&eacute;ances, bilans, ordonnances, factures</td>
+          </tr>
+          <tr>
+            <td><strong>Administrateur</strong></td>
+            <td>Configuration compl&egrave;te</td>
+            <td>Gestion des postes de dialyse, planning, jours f&eacute;ri&eacute;s, param&eacute;trage syst&egrave;me</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <i class="callout-icon">&#x2705;</i>
+        <div><strong>Principe de moindre privil&egrave;ge :</strong> Chaque r&ocirc;le n'acc&egrave;de qu'aux menus et donn&eacute;es
+          n&eacute;cessaires &agrave; ses fonctions. Les menus non autoris&eacute;s sont masqu&eacute;s automatiquement.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 5 : Cycle de vie d'une séance ═══ -->
+  <div class="step" id="sec5">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      <div>
+        <h2>Cycle de vie d'une s&eacute;ance</h2>
+        <div class="step-desc">De la cr&eacute;ation &agrave; la facturation</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Chaque s&eacute;ance de dialyse suit un parcours pr&eacute;cis, impliquant plusieurs acteurs successifs :</p>
+
+      <h3>&Eacute;tape 1 &mdash; Cr&eacute;ation</h3>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>La s&eacute;ance est cr&eacute;&eacute;e <strong>via l'assistant de g&eacute;n&eacute;ration en masse</strong>
+            (<span class="path">N&eacute;phrologie &gt; G&eacute;n&eacute;rer s&eacute;ances en masse</span>).</span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Elle appara&icirc;t dans la liste des h&eacute;modialyses avec l'&eacute;tat
+            <span class="badge badge-sched">Scheduled</span>.</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Le patient, le poste, la date et l'heure sont pr&eacute;-renseign&eacute;s automatiquement selon le planning.</span>
+        </li>
+      </ol>
+
+      <h3>&Eacute;tape 2 &mdash; Saisie clinique (Infirmi&egrave;re)</h3>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>L'infirmi&egrave;re ouvre la s&eacute;ance du jour via
+            <span class="path">N&eacute;phrologie &gt; H&eacute;modialyses</span>.</span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Elle remplit les <strong>constantes cliniques</strong> : tension art&eacute;rielle (TA), poids sec,
+            poids avant/apr&egrave;s, d&eacute;bit sanguin, d&eacute;bit dialysat, Kt/V, ultrafiltration, etc.</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Elle peut &eacute;galement noter des observations ou signaler des complications.</span>
+        </li>
+        <li>
+          <span class="step-dot">d</span>
+          <span>La s&eacute;ance passe en &eacute;tat <span class="badge badge-running">Running</span> d&egrave;s que
+            la saisie commence.</span>
+        </li>
+      </ol>
+
+      <h3>&Eacute;tape 3 &mdash; Validation m&eacute;dicale (M&eacute;decin)</h3>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Le m&eacute;decin r&eacute;vise les donn&eacute;es cliniques saisies par l'infirmi&egrave;re.</span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Il peut ajouter des prescriptions ou modifier le protocole si n&eacute;cessaire.</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Il valide la s&eacute;ance, qui passe en &eacute;tat <span class="badge badge-done">Done</span>.</span>
+        </li>
+      </ol>
+
+      <h3>&Eacute;tape 4 &mdash; Facturation</h3>
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Une fois la s&eacute;ance en <span class="badge badge-done">Done</span>, le service facturation peut
+            g&eacute;n&eacute;rer la facture correspondante.</span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>La facturation peut &ecirc;tre individuelle ou group&eacute;e (plusieurs s&eacute;ances d'un m&ecirc;me patient).</span>
+        </li>
+      </ol>
+
+      <div class="warn">
+        <i class="callout-icon">&#x26A0;&#xFE0F;</i>
+        <div><strong>R&egrave;gle m&eacute;tier :</strong> Aucune facturation n'est possible tant que la s&eacute;ance n'est pas en
+          &eacute;tat <span class="badge badge-done">Done</span>. Cette r&egrave;gle garantit que seules les
+          s&eacute;ances valid&eacute;es m&eacute;dicalement sont factur&eacute;es.</div>
+      </div>
+
+      <h3>R&eacute;sum&eacute; visuel du cycle</h3>
+      <div class="status-list">
+        <span class="badge badge-sched">Scheduled</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span style="font-size: 0.8rem; color: #718096;">Infirmi&egrave;re saisit</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="badge badge-running">Running</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span style="font-size: 0.8rem; color: #718096;">M&eacute;decin valide</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span class="badge badge-done">Done</span>
+        <span class="flow-arrow">&rarr;</span>
+        <span style="font-size: 0.8rem; color: #718096;">Facturation</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SECTION 6 : Structure des menus ═══ -->
+  <div class="step" id="sec6">
+    <div class="step-header">
+      <div class="step-num">6</div>
+      <div>
+        <h2>Structure des menus</h2>
+        <div class="step-desc">Arborescence du module N&eacute;phrologie</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Le menu principal <strong>N&eacute;phrologie</strong> est organis&eacute; comme suit. L'acc&egrave;s &agrave; chaque
+         entr&eacute;e d&eacute;pend du r&ocirc;le de l'utilisateur connect&eacute; :</p>
+
+      <div class="menu-tree"><span class="menu-root">N&eacute;phrologie</span>
+  <span class="dim">|</span>
+  <span class="dim">|--</span> Rendez-vous            <span class="menu-seq">(seq 10)</span>
+  <span class="dim">|</span>
+  <span class="dim">|--</span> Patients               <span class="menu-seq">(seq 30)</span>
+  <span class="dim">|</span>
+  <span class="dim">|--</span> H&eacute;modialyses            <span class="menu-seq">(seq 40)</span>
+  <span class="dim">|</span>
+  <span class="dim">|--</span> Ordonnances            <span class="menu-seq">(seq 60)</span>    <span class="menu-note">-- m&eacute;decins uniquement</span>
+  <span class="dim">|</span>
+  <span class="dim">|--</span> G&eacute;n&eacute;rer s&eacute;ances en masse <span class="menu-seq">(seq 70)</span>    <span class="menu-note">-- secr&eacute;taire, m&eacute;decin, manager</span>
+  <span class="dim">|</span>
+  <span class="dim">|--</span> Configuration          <span class="menu-seq">(seq 100)</span>   <span class="menu-note">-- admin uniquement</span>
+  <span class="dim">    |</span>
+  <span class="dim">    |--</span> Postes de dialyse
+  <span class="dim">    |--</span> Planning hebdomadaire
+  <span class="dim">    |--</span> Jours f&eacute;ri&eacute;s
+  <span class="dim">    |--</span> Param&egrave;tres</div>
+
+      <div class="info">
+        <i class="callout-icon">&#x2139;&#xFE0F;</i>
+        <div><strong>Visibilit&eacute; dynamique :</strong> Les menus sont masqu&eacute;s automatiquement en fonction des groupes
+          de s&eacute;curit&eacute; de l'utilisateur. Par exemple, un utilisateur avec le r&ocirc;le
+          <em>Infirmi&egrave;re</em> ne verra pas les menus <em>Ordonnances</em>, <em>G&eacute;n&eacute;rer s&eacute;ances en masse</em>
+          ni <em>Configuration</em>.</div>
+      </div>
+
+      <h3>Acc&egrave;s par r&ocirc;le</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Menu</th>
+            <th>Secr&eacute;taire</th>
+            <th>M&eacute;decin</th>
+            <th>Infirmi&egrave;re</th>
+            <th>Facturation</th>
+            <th>Admin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Rendez-vous</td>
+            <td>Oui</td>
+            <td>Oui</td>
+            <td>Non</td>
+            <td>Non</td>
+            <td>Oui</td>
+          </tr>
+          <tr>
+            <td>Patients</td>
+            <td>Oui</td>
+            <td>Oui</td>
+            <td>Oui</td>
+            <td>Non</td>
+            <td>Oui</td>
+          </tr>
+          <tr>
+            <td>H&eacute;modialyses</td>
+            <td>Non</td>
+            <td>Oui</td>
+            <td>Oui</td>
+            <td>Non</td>
+            <td>Oui</td>
+          </tr>
+          <tr>
+            <td>Ordonnances</td>
+            <td>Non</td>
+            <td>Oui</td>
+            <td>Non</td>
+            <td>Non</td>
+            <td>Oui</td>
+          </tr>
+          <tr>
+            <td>G&eacute;n&eacute;rer s&eacute;ances</td>
+            <td>Oui</td>
+            <td>Oui</td>
+            <td>Non</td>
+            <td>Non</td>
+            <td>Oui</td>
+          </tr>
+          <tr>
+            <td>Configuration</td>
+            <td>Non</td>
+            <td>Non</td>
+            <td>Non</td>
+            <td>Non</td>
+            <td>Oui</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>&copy; 2026 As-Shafi Medical &mdash; HMS N&eacute;phro (Odoo 19)</p>
+  <p style="margin-top: 0.4rem;"><a href="index.html">&larr; Retour au portail des guides</a></p>
+</footer>
+
+</body>
+</html>

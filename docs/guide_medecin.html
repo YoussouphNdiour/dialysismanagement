@@ -219,6 +219,17 @@
   .badge-green  { background: #f0fff4; color: #276749; border: 1px solid #c6f6d5; }
   .badge-yellow { background: #fffbeb; color: #744210; border: 1px solid #fefcbf; }
   .badge-blue   { background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; }
+  .badge-sched  { background: #ebf8ff; color: #2b6cb0; border: 1px solid #bee3f8; }
+  .badge-conf   { background: #f0fff4; color: #276749; border: 1px solid #c6f6d5; }
+
+  /* ─── STATUS LIST ─── */
+  .status-list {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.8rem 0;
+    flex-wrap: wrap;
+  }
 
   /* ─── SCREENSHOT ─── */
   .screenshot-wrap { margin-top: 1.2rem; }
@@ -303,7 +314,7 @@
   <div class="header-content">
     <div class="role-pill">Médecin Néphrologue</div>
     <h1>Guide Utilisateur — <span>Médecin Néphrologue</span></h1>
-    <p class="sub">Prescriptions · Générateur de séances · Bilans biologiques · Dashboard · Complications</p>
+    <p class="sub">Prescriptions · Générateur de séances · Séances en masse avec RDV · Bilans biologiques · Dashboard · Complications</p>
   </div>
 </header>
 
@@ -333,6 +344,7 @@
       <a class="toc-item" href="#etape5"><span class="num">5</span> Prescription médicamenteuse</a>
       <a class="toc-item" href="#etape6"><span class="num">6</span> Dashboard médecin</a>
       <a class="toc-item" href="#etape7"><span class="num">7</span> Complications</a>
+      <a class="toc-item" href="#etape8"><span class="num">8</span> Générer séances en masse</a>
     </div>
   </nav>
 
@@ -924,6 +936,68 @@
         <span>Une complication <strong>Non résolue</strong> reste signalée en rouge dans le dashboard jusqu'à
               mise à jour par l'équipe médicale. Elle doit être traitée avant la prochaine séance du patient
               concerné pour assurer sa sécurité.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════
+       ÉTAPE 8 — GÉNÉRER SÉANCES EN MASSE
+  ════════════════════════════════════════════════ -->
+  <div class="step" id="etape8">
+    <div class="step-header">
+      <div class="step-num">8</div>
+      <div>
+        <h2>Générer des séances avec RDV</h2>
+        <div class="step-desc">Menu : <span class="path">Néphrologie &gt; Générer séances en masse</span></div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>En tant que médecin, vous pouvez générer les séances de dialyse pour vos patients et
+         optionnellement créer les rendez-vous associés. La case <strong>Créer aussi les RDV</strong>
+         permet de lier automatiquement chaque séance à un rendez-vous dans le calendrier.</p>
+
+      <ol class="instructions">
+        <li>
+          <span class="step-dot">a</span>
+          <span>Naviguez vers <span class="path">Néphrologie &gt; Générer séances en masse</span></span>
+        </li>
+        <li>
+          <span class="step-dot">b</span>
+          <span>Cliquez sur <kbd>New</kbd> et sélectionnez les patients, le planning et la période souhaitée</span>
+        </li>
+        <li>
+          <span class="step-dot">c</span>
+          <span>Cochez <strong>Créer aussi les RDV</strong> pour générer un rendez-vous pour chaque séance (recommandé)</span>
+        </li>
+        <li>
+          <span class="step-dot">d</span>
+          <span>Cliquez sur <kbd>Générer l'aperçu</kbd> puis vérifiez le récapitulatif</span>
+        </li>
+        <li>
+          <span class="step-dot">e</span>
+          <span>Cliquez sur <kbd>Confirmer</kbd> — les séances et RDV sont créés automatiquement</span>
+        </li>
+      </ol>
+
+      <p>Chaque séance créée est liée à son RDV en relation 1:1 :</p>
+      <div class="status-list">
+        <span class="badge badge-sched">Séance (Scheduled)</span>
+        <span style="color:#a0aec0; font-size:1.1rem;">↔</span>
+        <span class="badge badge-conf">RDV (Scheduled)</span>
+      </div>
+
+      <div class="info">
+        <span class="callout-icon">i</span>
+        <span>Les rendez-vous créés apparaissent dans la vue <span class="path">Néphrologie &gt; Rendez-vous</span>
+              et sont liés à la séance correspondante. Vous pouvez les retrouver via le smart button
+              <kbd>Rendez-vous</kbd> sur la fiche de la séance.</span>
+      </div>
+
+      <div class="tip">
+        <span class="callout-icon">✓</span>
+        <span>En cochant la case RDV, les séances apparaissent également dans votre calendrier Odoo,
+              facilitant la visualisation de votre planning hebdomadaire de dialyse.</span>
       </div>
     </div>
   </div>
