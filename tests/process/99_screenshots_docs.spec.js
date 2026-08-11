@@ -84,6 +84,13 @@ test.describe('99 — Screenshots documentation', () => {
     if (rdvAction) {
       await page.goto(`/odoo/action-${rdvAction.id}`, { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
+      // Supprimer les filtres par défaut pour voir tous les RDV
+      const filters = page.locator('.o_facet_remove, .o_searchview_facet .o_facet_remove');
+      while (await filters.first().isVisible().catch(() => false)) {
+        await filters.first().click();
+        await page.waitForTimeout(500);
+      }
+      await page.waitForTimeout(1000);
       await docSnap(page, 'sec_rendez_vous_liste');
     }
 
@@ -158,12 +165,22 @@ test.describe('99 — Screenshots documentation', () => {
     if (procActionId) {
       await page.goto(`/odoo/action-${procActionId}`, { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
+      // Supprimer les filtres pour voir toutes les séances
+      const procFilters = page.locator('.o_facet_remove, .o_searchview_facet .o_facet_remove');
+      while (await procFilters.first().isVisible().catch(() => false)) {
+        await procFilters.first().click();
+        await page.waitForTimeout(500);
+      }
+      await page.waitForTimeout(1000);
       await docSnap(page, 'med_hemodialyses_liste');
 
-      // Ouvrir une séance
-      const firstProc = page.locator('.o_data_row').first();
-      if (await firstProc.isVisible()) {
-        await firstProc.click();
+      // Ouvrir une séance "done" (avec données cliniques)
+      const doneProcs = await apiSearchRead(
+        request, 'acs.patient.procedure',
+        [['state', '=', 'done']], ['id'], 1,
+      );
+      if (doneProcs.length > 0) {
+        await page.goto(`/odoo/action-${procActionId}/${doneProcs[0].id}`, { waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(2000);
         await docSnap(page, 'med_seance_formulaire');
       }
@@ -177,6 +194,13 @@ test.describe('99 — Screenshots documentation', () => {
     if (ordActions.length > 0) {
       await page.goto(`/odoo/action-${ordActions[0].id}`, { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
+      // Supprimer les filtres pour voir toutes les ordonnances
+      const ordFilters = page.locator('.o_facet_remove, .o_searchview_facet .o_facet_remove');
+      while (await ordFilters.first().isVisible().catch(() => false)) {
+        await ordFilters.first().click();
+        await page.waitForTimeout(500);
+      }
+      await page.waitForTimeout(1000);
       await docSnap(page, 'med_ordonnances_liste');
     }
 
@@ -242,12 +266,22 @@ test.describe('99 — Screenshots documentation', () => {
     if (procActionId) {
       await page.goto(`/odoo/action-${procActionId}`, { waitUntil: 'domcontentloaded' });
       await page.waitForTimeout(2000);
+      // Supprimer les filtres pour voir toutes les séances
+      const infFilters = page.locator('.o_facet_remove, .o_searchview_facet .o_facet_remove');
+      while (await infFilters.first().isVisible().catch(() => false)) {
+        await infFilters.first().click();
+        await page.waitForTimeout(500);
+      }
+      await page.waitForTimeout(1000);
       await docSnap(page, 'inf_hemodialyses_liste');
 
-      // Ouvrir une séance
-      const firstProc = page.locator('.o_data_row').first();
-      if (await firstProc.isVisible()) {
-        await firstProc.click();
+      // Ouvrir une séance "done" (avec données cliniques remplies)
+      const doneProcs = await apiSearchRead(
+        request, 'acs.patient.procedure',
+        [['state', '=', 'done']], ['id'], 1,
+      );
+      if (doneProcs.length > 0) {
+        await page.goto(`/odoo/action-${procActionId}/${doneProcs[0].id}`, { waitUntil: 'domcontentloaded' });
         await page.waitForTimeout(2000);
         await docSnap(page, 'inf_seance_formulaire');
 
@@ -312,17 +346,17 @@ test.describe('99 — Screenshots documentation', () => {
     await docSnap(page, 'pat_portail_accueil');
 
     // 2. Mes séances
-    await page.goto('/my/nephro/seances', { waitUntil: 'domcontentloaded' }).catch(() => {});
+    await page.goto('/my/seances', { waitUntil: 'domcontentloaded' }).catch(() => {});
     await page.waitForTimeout(2000);
     await docSnap(page, 'pat_mes_seances');
 
     // 3. Mes bilans
-    await page.goto('/my/nephro/bilans', { waitUntil: 'domcontentloaded' }).catch(() => {});
+    await page.goto('/my/bilans', { waitUntil: 'domcontentloaded' }).catch(() => {});
     await page.waitForTimeout(2000);
     await docSnap(page, 'pat_mes_bilans');
 
     // 4. Mes ordonnances
-    await page.goto('/my/nephro/ordonnances', { waitUntil: 'domcontentloaded' }).catch(() => {});
+    await page.goto('/my/ordonnances', { waitUntil: 'domcontentloaded' }).catch(() => {});
     await page.waitForTimeout(2000);
     await docSnap(page, 'pat_mes_ordonnances');
 
@@ -332,7 +366,7 @@ test.describe('99 — Screenshots documentation', () => {
     await docSnap(page, 'pat_mes_factures');
 
     // 6. Mes rendez-vous
-    await page.goto('/my/nephro/rdv', { waitUntil: 'domcontentloaded' }).catch(() => {});
+    await page.goto('/my/rdv', { waitUntil: 'domcontentloaded' }).catch(() => {});
     await page.waitForTimeout(2000);
     await docSnap(page, 'pat_mes_rdv');
   });
@@ -343,8 +377,9 @@ test.describe('99 — Screenshots documentation', () => {
   test('Administrateur — captures d\'écran', async ({ page, request }) => {
     await loginUI(page, 'admin', 'admin');
 
-    // 1. Accueil admin
-    await page.waitForTimeout(2000);
+    // 1. Accueil admin — ouvrir la grille des apps
+    await page.click('.o_navbar_apps_menu button, .o_menu_toggle');
+    await page.waitForTimeout(1500);
     await docSnap(page, 'adm_accueil');
 
     // 2. Module Néphrologie
