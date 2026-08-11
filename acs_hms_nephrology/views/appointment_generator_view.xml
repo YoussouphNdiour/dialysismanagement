@@ -24,14 +24,14 @@
                         string="Créer RDV depuis planning"
                         type="object"
                         class="btn-primary"
-                        invisible="appointment_id or not nephrology_schedule_ids"
+                        invisible="1"
                         help="Créer un rendez-vous automatiquement basé sur le planning de néphrologie"/>
 
                 <button name="action_generate_recurring_appointments"
                         string="Générer RDV récurrents"
                         type="object"
                         class="btn-secondary"
-                        invisible="not nephrology_schedule_ids"
+                        invisible="1"
                         help="Générer plusieurs rendez-vous récurrents selon le planning"/>
             </xpath>
 
