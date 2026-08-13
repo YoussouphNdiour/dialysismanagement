@@ -63,9 +63,16 @@ const USER_DEFINITIONS = [
     key:      'doctor',
     name:     'Médecin Néphro E2E',
     login:    'medecin@nephro.test',
+    // Groupes : docteur HMS + tous les groupes impliqués dans la chaîne
+    // Odoo 19 : [6,0,ids] ne résout pas les implied_ids automatiquement,
+    // il faut inclure toute la chaîne explicitement :
+    // doctor → jr_doctor → nurse + receptionist
     groupXmlIds: [
       'acs_hms_base.group_hms_user',
       'acs_hms.group_hms_doctor',
+      'acs_hms.group_hms_jr_doctor',
+      'acs_hms.group_hms_nurse',
+      'acs_hms.group_hms_receptionist',
       'base.group_user',
     ],
     // Action d'accueil : liste patients /odoo/almightyhms-patient
@@ -76,9 +83,12 @@ const USER_DEFINITIONS = [
     key:      'nurse',
     name:     'Infirmière Néphro E2E',
     login:    'infirmiere@nephro.test',
+    // Groupes : infirmière HMS + réceptionniste (implied par nurse)
+    // Odoo 19 : implied_ids non résolus par [6,0,ids], inclure explicitement
     groupXmlIds: [
       'acs_hms_base.group_hms_user',
       'acs_hms.group_hms_nurse',
+      'acs_hms.group_hms_receptionist',
       'base.group_user',
     ],
     // Action d'accueil : Interface Infirmier (dashboard infirmière néphro)

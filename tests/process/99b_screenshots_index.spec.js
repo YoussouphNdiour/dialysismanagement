@@ -1,0 +1,809 @@
+// @ts-check
+/**
+ * 99b — Régénération des screenshots pour docs/index.html
+ *
+ * Ce test régénère TOUS les screenshots référencés par docs/index.html
+ * dans le dossier screenshots/ à la racine du projet.
+ *
+ * Prérequis : exécuter 98_seed_data.spec.js d'abord pour avoir des données.
+ *
+ * Exécution :
+ *   cd tests && npx playwright test process/99b_screenshots_index.spec.js --workers=1
+ */
+
+const { test, expect } = require('@playwright/test');
+const { loginUI } = require('../helpers/auth');
+const { loginApi, apiSearchRead, apiRead } = require('../helpers/api');
+const path = require('path');
+const fs = require('fs');
+
+const TEST_PASSWORD = 'Nephro2024!';
+const SCREENSHOTS_DIR = path.resolve(__dirname, '..', '..', 'screenshots');
+
+/** Sauvegarde un screenshot avec le nom exact attendu par index.html */
+async function snap(page, name) {
+  if (!fs.existsSync(SCREENSHOTS_DIR)) fs.mkdirSync(SCREENSHOTS_DIR, { recursive: true });
+  const filePath = path.join(SCREENSHOTS_DIR, `${name}.png`);
+  await page.screenshot({ path: filePath, fullPage: false });
+  console.log(`[snap] ${name}.png`);
+  return filePath;
+}
+
+/** Supprime tous les filtres actifs dans la barre de recherche Odoo */
+async function clearFilters(page) {
+  const filters = page.locator('.o_facet_remove, .o_searchview_facet .o_facet_remove');
+  let attempts = 0;
+  while (attempts < 10 && await filters.first().isVisible().catch(() => false)) {
+    await filters.first().click();
+    await page.waitForTimeout(500);
+    attempts++;
+  }
+  await page.waitForTimeout(500);
+}
+
+test.describe('99b — Screenshots pour docs/index.html', () => {
+  test.describe.configure({ timeout: 300000 });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // P0 — Prérequis (Login + Admin dashboard)
+  // ═══════════════════════════════════════════════════════════════════
+  test('P0 — Login et dashboard admin', async ({ page }) => {
+    // p0_login_page — page de connexion
+    await page.goto('/web/login', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+    await snap(page, 'p0_login_page');
+
+    // p0_dashboard_admin — accueil admin (grille apps)
+    await loginUI(page, 'admin', 'admin');
+    await page.click('.o_navbar_apps_menu button, .o_menu_toggle');
+    await page.waitForTimeout(1500);
+    await snap(page, 'p0_dashboard_admin');
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // C1 — Secrétaire (vues quotidiennes)
+  // ═══════════════════════════════════════════════════════════════════
+  test('C1 — Secrétaire vues quotidiennes', async ({ page, request }) => {
+    await loginUI(page, 'secretaire@nephro.test', TEST_PASSWORD);
+    await loginApi(request, 'admin', 'admin');
+
+    // c1_sec_01_patient_list — liste patients
+    const patActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'hms.patient']], ['id', 'name'], 10,
+    );
+    const patAction = patActions.find(a => /patient/i.test(a.name));
+    if (patAction) {
+      await page.goto(`/odoo/action-${patAction.id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await snap(page, 'c1_sec_01_patient_list');
+    }
+
+    // c1_sec_02_patient_dossier — fiche patient
+    // Basculer en vue liste si kanban par défaut
+    const listBtnSec = page.locator('.o_cp_switch_buttons button.o_list, button[data-tooltip="List"], .o_switch_view.o_list');
+    if (await listBtnSec.first().isVisible().catch(() => false)) {
+      await listBtnSec.first().click();
+      await page.waitForTimeout(2000);
+    }
+    await page.waitForSelector('.o_data_row', { timeout: 5000 }).catch(() => {});
+    const firstPatient = page.locator('.o_data_row').first();
+    if (await firstPatient.isVisible()) {
+      await firstPatient.click();
+      await page.waitForTimeout(2000);
+      await snap(page, 'c1_sec_02_patient_dossier');
+    } else {
+      // Essayer via kanban
+      const kanbanCard = page.locator('.o_kanban_record').first();
+      if (await kanbanCard.isVisible().catch(() => false)) {
+        await kanbanCard.click();
+        await page.waitForTimeout(2000);
+        await snap(page, 'c1_sec_02_patient_dossier');
+      }
+    }
+
+    // c1_sec_03_absences_list — liste absences (model: acs.dialysis.absence, action 591)
+    await page.goto('/odoo/action-591', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+    await clearFilters(page);
+    await snap(page, 'c1_sec_03_absences_list');
+
+    // c1_sec_04_absence_detail — détail absence (ouvrir la première)
+    await page.waitForSelector('.o_data_row', { timeout: 5000 }).catch(() => {});
+    const firstAbsRow = page.locator('.o_data_row').first();
+    if (await firstAbsRow.isVisible()) {
+      await firstAbsRow.click();
+      await page.waitForTimeout(2000);
+      await snap(page, 'c1_sec_04_absence_detail');
+    } else {
+      await snap(page, 'c1_sec_04_absence_detail');
+    }
+
+    // c1_sec_05_waiting_list (pas référencé dans index.html mais existe)
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // C2 — Médecin (vues quotidiennes)
+  // ═══════════════════════════════════════════════════════════════════
+  test('C2 — Médecin vues quotidiennes', async ({ page, request }) => {
+    await loginUI(page, 'medecin@nephro.test', TEST_PASSWORD);
+    await loginApi(request, 'admin', 'admin');
+
+    // c2_med_01_accueil — accueil médecin (liste patients, pas Discuss)
+    await page.waitForTimeout(2000);
+    await snap(page, 'c2_med_01_accueil');
+
+    // c2_med_02_patient_list — liste patients
+    const patActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'hms.patient']], ['id', 'name'], 10,
+    );
+    const patAction = patActions.find(a => /patient/i.test(a.name));
+    if (patAction) {
+      await page.goto(`/odoo/action-${patAction.id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await snap(page, 'c2_med_02_patient_list');
+    }
+
+    // c2_med_03_patient_dossier — dossier patient
+    // Basculer en vue liste si kanban par défaut
+    const listBtnMed = page.locator('.o_cp_switch_buttons button.o_list, button[data-tooltip="List"], .o_switch_view.o_list');
+    if (await listBtnMed.first().isVisible().catch(() => false)) {
+      await listBtnMed.first().click();
+      await page.waitForTimeout(2000);
+    }
+    await page.waitForSelector('.o_data_row', { timeout: 5000 }).catch(() => {});
+    const firstPatientMed = page.locator('.o_data_row').first();
+    if (await firstPatientMed.isVisible()) {
+      await firstPatientMed.click();
+      await page.waitForTimeout(2000);
+      await snap(page, 'c2_med_03_patient_dossier');
+    } else {
+      // Essayer via kanban
+      const kanbanCardMed = page.locator('.o_kanban_record').first();
+      if (await kanbanCardMed.isVisible().catch(() => false)) {
+        await kanbanCardMed.click();
+        await page.waitForTimeout(2000);
+        await snap(page, 'c2_med_03_patient_dossier');
+      }
+    }
+
+    // c2_med_04_prescription — liste prescriptions (PAS la page avec erreur!)
+    const ordActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'prescription.order']], ['id', 'name'], 10,
+    );
+    if (ordActions.length > 0) {
+      await page.goto(`/odoo/action-${ordActions[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      await page.waitForTimeout(1000);
+      await snap(page, 'c2_med_04_prescription');
+    }
+
+    // c2_med_05_sessions_list — liste séances
+    const procActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'acs.patient.procedure']], ['id', 'name'], 20,
+    );
+    const nephroProc = procActions.find(a => /n[eé]phro|dialys|h[eé]mo/i.test(a.name));
+    const procActionId = nephroProc ? nephroProc.id : procActions[0]?.id;
+    if (procActionId) {
+      await page.goto(`/odoo/action-${procActionId}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      await page.waitForTimeout(1000);
+      await snap(page, 'c2_med_05_sessions_list');
+    }
+
+    // c2_med_06_bilan_pre — bilan biologique (liste ou formulaire)
+    const bilanActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'acs.nephro.bilan']], ['id', 'name'], 10,
+    );
+    if (bilanActions.length > 0) {
+      await page.goto(`/odoo/action-${bilanActions[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      // Ouvrir le premier bilan s'il existe
+      const firstBilan = page.locator('.o_data_row').first();
+      if (await firstBilan.isVisible()) {
+        await firstBilan.click();
+        await page.waitForTimeout(2000);
+      }
+      await snap(page, 'c2_med_06_bilan_pre');
+    }
+
+    // c2_med_07_ordonnance — ordonnance (formulaire)
+    if (ordActions.length > 0) {
+      await page.goto(`/odoo/action-${ordActions[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      const firstOrd = page.locator('.o_data_row').first();
+      if (await firstOrd.isVisible()) {
+        await firstOrd.click();
+        await page.waitForTimeout(2000);
+      }
+      await snap(page, 'c2_med_07_ordonnance');
+    }
+
+    // c2_med_08_dashboard_grille — dashboard médecin (ir.actions.client, action 589)
+    await page.goto('/odoo/action-589', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(3000);
+    await snap(page, 'c2_med_08_dashboard_grille');
+
+    // c2_med_09_dashboard_liste — vue liste (si switch dispo)
+    const listBtn = page.locator('.o_cp_switch_buttons button.o_list, button[data-tooltip="List"], .o_switch_view.o_list');
+    if (await listBtn.first().isVisible().catch(() => false)) {
+      await listBtn.first().click();
+      await page.waitForTimeout(2000);
+    }
+    await snap(page, 'c2_med_09_dashboard_liste');
+
+    // c2_med_10_dashboard_stats — vue kanban/stats
+    const kanbanBtn = page.locator('.o_cp_switch_buttons button.o_kanban, button[data-tooltip="Kanban"], .o_switch_view.o_kanban');
+    if (await kanbanBtn.first().isVisible().catch(() => false)) {
+      await kanbanBtn.first().click();
+      await page.waitForTimeout(2000);
+    }
+    await snap(page, 'c2_med_10_dashboard_stats');
+
+    // c2_med_12_bilan_post — bilan post-dialyse
+    if (bilanActions.length > 0) {
+      await page.goto(`/odoo/action-${bilanActions[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      // Essayer d'ouvrir un bilan post (le dernier)
+      const lastBilan = page.locator('.o_data_row').last();
+      if (await lastBilan.isVisible()) {
+        await lastBilan.click();
+        await page.waitForTimeout(2000);
+      }
+      await snap(page, 'c2_med_12_bilan_post');
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // C3 — Infirmière (séance de dialyse)
+  // ═══════════════════════════════════════════════════════════════════
+  test('C3 — Infirmière séance de dialyse', async ({ page, request }) => {
+    await loginUI(page, 'infirmiere@nephro.test', TEST_PASSWORD);
+    await loginApi(request, 'admin', 'admin');
+
+    // c3_inf_01_dashboard — dashboard infirmière
+    await page.waitForTimeout(3000);
+    await snap(page, 'c3_inf_01_dashboard');
+
+    // c3_inf_02_session_start — formulaire séance (ouvrir une séance scheduled)
+    const procActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'acs.patient.procedure']], ['id', 'name'], 20,
+    );
+    const nephroProc = procActions.find(a => /n[eé]phro|dialys|h[eé]mo/i.test(a.name));
+    const procActionId = nephroProc ? nephroProc.id : procActions[0]?.id;
+
+    // Trouver une séance scheduled
+    const schedProcs = await apiSearchRead(
+      request, 'acs.patient.procedure',
+      [['state', '=', 'scheduled']], ['id'], 1,
+    );
+    if (schedProcs.length > 0 && procActionId) {
+      await page.goto(`/odoo/action-${procActionId}/${schedProcs[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await snap(page, 'c3_inf_02_session_start');
+    }
+
+    // c3_inf_03_vitals_initial — séance running (avec vitaux initiaux)
+    const runningProcs = await apiSearchRead(
+      request, 'acs.patient.procedure',
+      [['state', '=', 'running']], ['id'], 1,
+    );
+    if (runningProcs.length > 0 && procActionId) {
+      await page.goto(`/odoo/action-${procActionId}/${runningProcs[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await snap(page, 'c3_inf_03_vitals_initial');
+
+      // c3_inf_04_session_running — même séance scrollée
+      await page.evaluate(() => window.scrollTo(0, 400));
+      await page.waitForTimeout(500);
+      await snap(page, 'c3_inf_04_session_running');
+    }
+
+    // c3_inf_05_complication_popup — chercher le bouton complication
+    // (simulation : revenir à la fiche et tenter d'ouvrir l'onglet complications)
+    if (runningProcs.length > 0 && procActionId) {
+      await page.goto(`/odoo/action-${procActionId}/${runningProcs[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      // Chercher l'onglet complications
+      const compTab = page.locator('.o_notebook .nav-link:has-text("Complication")').first();
+      if (await compTab.isVisible().catch(() => false)) {
+        await compTab.click();
+        await page.waitForTimeout(1000);
+      }
+      await snap(page, 'c3_inf_05_complication_popup');
+    }
+
+    // c3_inf_06_complication_filled — complication formulaire (model: acs.dialysis.complication, action 586)
+    await page.goto('/odoo/action-586', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+    await clearFilters(page);
+    await page.waitForSelector('.o_data_row', { timeout: 5000 }).catch(() => {});
+    const firstComp = page.locator('.o_data_row').first();
+    if (await firstComp.isVisible()) {
+      await firstComp.click();
+      await page.waitForTimeout(2000);
+      await snap(page, 'c3_inf_06_complication_filled');
+    } else {
+      await snap(page, 'c3_inf_06_complication_filled');
+    }
+
+    // c3_inf_07_dashboard_alert — retour dashboard avec alerte
+    // (re-ouvrir dashboard infirmière)
+    await page.goto('/odoo/action-588', { waitUntil: 'domcontentloaded' }).catch(() => {});
+    await page.waitForTimeout(3000);
+    await snap(page, 'c3_inf_07_dashboard_alert');
+
+    // c3_inf_08_session_end — séance terminée (done)
+    const doneProcs = await apiSearchRead(
+      request, 'acs.patient.procedure',
+      [['state', '=', 'done']], ['id'], 1,
+    );
+    if (doneProcs.length > 0 && procActionId) {
+      await page.goto(`/odoo/action-${procActionId}/${doneProcs[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await snap(page, 'c3_inf_08_session_end');
+
+      // c3_inf_09_end_vitals — scroll pour voir vitaux de fin
+      await page.evaluate(() => window.scrollTo(0, 400));
+      await page.waitForTimeout(500);
+      await snap(page, 'c3_inf_09_end_vitals');
+
+      // c3_inf_10_session_done — vue résumé done
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.waitForTimeout(500);
+      await snap(page, 'c3_inf_10_session_done');
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // C3 — Médecin (dashboard avec alertes)
+  // ═══════════════════════════════════════════════════════════════════
+  test('C3 — Médecin dashboard alertes', async ({ page, request }) => {
+    await loginUI(page, 'medecin@nephro.test', TEST_PASSWORD);
+    await loginApi(request, 'admin', 'admin');
+
+    // c3_med_01_dashboard_with_alert — dashboard médecin (ir.actions.client, action 589)
+    await page.goto('/odoo/action-589', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(3000);
+    await snap(page, 'c3_med_01_dashboard_with_alert');
+
+    // c3_med_02_complication_detail — détail complication (action 586)
+    await page.goto('/odoo/action-586', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+    await clearFilters(page);
+    await page.waitForSelector('.o_data_row', { timeout: 5000 }).catch(() => {});
+    const firstCompMed = page.locator('.o_data_row').first();
+    if (await firstCompMed.isVisible()) {
+      await firstCompMed.click();
+      await page.waitForTimeout(2000);
+    }
+    await snap(page, 'c3_med_02_complication_detail');
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // C4 — Facturation
+  // ═══════════════════════════════════════════════════════════════════
+  test('C4 — Facturation', async ({ page, request }) => {
+    await loginUI(page, 'facturation@nephro.test', TEST_PASSWORD);
+    await loginApi(request, 'admin', 'admin');
+
+    // c4_fac_01_dashboard — accueil facturation
+    await page.waitForTimeout(2000);
+    await snap(page, 'c4_fac_01_dashboard');
+
+    // c4_fac_02_unbilled_sessions — séances non facturées
+    const procActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'acs.patient.procedure']], ['id', 'name'], 20,
+    );
+    const nephroProc = procActions.find(a => /n[eé]phro|dialys|non.factur|unbilled/i.test(a.name));
+    const procActionId = nephroProc ? nephroProc.id : procActions[0]?.id;
+    if (procActionId) {
+      await page.goto(`/odoo/action-${procActionId}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      await page.waitForTimeout(1000);
+      await snap(page, 'c4_fac_02_unbilled_sessions');
+    }
+
+    // c4_fac_03_invoice_draft — facture brouillon
+    const invActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'account.move']], ['id', 'name'], 20,
+    );
+    const facAction = invActions.find(a => /facture|invoice/i.test(a.name));
+    const invActionId = facAction ? facAction.id : invActions[0]?.id;
+    if (invActionId) {
+      await page.goto(`/odoo/action-${invActionId}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      await page.waitForTimeout(1000);
+      await snap(page, 'c4_fac_03_invoice_draft');
+
+      // Ouvrir la première facture
+      const firstInv = page.locator('.o_data_row').first();
+      if (await firstInv.isVisible()) {
+        await firstInv.click();
+        await page.waitForTimeout(2000);
+
+        // c4_fac_04_invoice_split — détail facture
+        await snap(page, 'c4_fac_04_invoice_split');
+
+        // c4_fac_05_invoice_posted — scroll pour voir lignes
+        await page.evaluate(() => window.scrollTo(0, 300));
+        await page.waitForTimeout(500);
+        await snap(page, 'c4_fac_05_invoice_posted');
+      }
+    }
+
+    // c4_fac_06_payment_dialog — retour liste + chercher facture payée
+    if (invActionId) {
+      await page.goto(`/odoo/action-${invActionId}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      await page.waitForTimeout(1000);
+
+      // Chercher une facture posted/paid
+      const rows = page.locator('.o_data_row');
+      const count = await rows.count();
+      if (count >= 2) {
+        await rows.nth(1).click();
+        await page.waitForTimeout(2000);
+        await snap(page, 'c4_fac_06_payment_dialog');
+      } else if (count >= 1) {
+        await rows.first().click();
+        await page.waitForTimeout(2000);
+        await snap(page, 'c4_fac_06_payment_dialog');
+      }
+    }
+
+    // c4_fac_07_invoice_paid — facture payée
+    if (invActionId) {
+      await page.goto(`/odoo/action-${invActionId}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      const rows2 = page.locator('.o_data_row');
+      const count2 = await rows2.count();
+      if (count2 >= 3) {
+        await rows2.nth(2).click();
+      } else if (count2 >= 1) {
+        await rows2.last().click();
+      }
+      await page.waitForTimeout(2000);
+      await snap(page, 'c4_fac_07_invoice_paid');
+    }
+
+    // c4_fac_08_report_wizard — rapports / wizard
+    // Chercher un menu rapport dans la facturation
+    await page.click('.o_navbar_apps_menu button, .o_menu_toggle');
+    await page.waitForTimeout(500);
+    const facApp = page.locator('.o_app:has-text("Facturation"), .o_app:has-text("Invoicing")').first();
+    if (await facApp.isVisible()) {
+      await facApp.click();
+      await page.waitForTimeout(2000);
+    }
+    await snap(page, 'c4_fac_08_report_wizard');
+
+    // c4_fac_09_patient_balances — soldes patients
+    const balActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'hms.patient']], ['id', 'name'], 10,
+    );
+    const balAction = balActions.find(a => /patient/i.test(a.name));
+    if (balAction) {
+      await page.goto(`/odoo/action-${balAction.id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await snap(page, 'c4_fac_09_patient_balances');
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // C5 — Patient Portail
+  // ═══════════════════════════════════════════════════════════════════
+  test('C5 — Patient portail', async ({ page }) => {
+    await loginUI(page, 'patient@nephro.test', TEST_PASSWORD);
+
+    // c5_pat_01_dashboard — tableau de bord portail
+    await page.goto('/my/nephro', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(3000);
+    await snap(page, 'c5_pat_01_dashboard');
+
+    // c5_pat_02_sessions_list — mes séances
+    await page.goto('/my/seances', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+    await snap(page, 'c5_pat_02_sessions_list');
+
+    // c5_pat_03_session_detail — détail séance (ouvrir la première)
+    const firstLink = page.locator('a[href*="/my/seances/"]').first();
+    if (await firstLink.isVisible()) {
+      await firstLink.click();
+      await page.waitForTimeout(2000);
+      await snap(page, 'c5_pat_03_session_detail');
+    } else {
+      await snap(page, 'c5_pat_03_session_detail');
+    }
+
+    // c5_pat_04_bilans — mes bilans
+    await page.goto('/my/bilans', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+    await snap(page, 'c5_pat_04_bilans');
+
+    // c5_pat_05_rdv — mes rendez-vous
+    await page.goto('/my/rdv', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+    await snap(page, 'c5_pat_05_rdv');
+
+    // c5_pat_06_ordonnances — mes ordonnances
+    await page.goto('/my/ordonnances', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+    await snap(page, 'c5_pat_06_ordonnances');
+
+    // c5_pat_07_factures — mes factures
+    await page.goto('/my/invoices', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+    await snap(page, 'c5_pat_07_factures');
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // P1 — Secrétaire parcours inscription
+  // ═══════════════════════════════════════════════════════════════════
+  test('P1 — Secrétaire parcours inscription', async ({ page, request }) => {
+    await loginUI(page, 'secretaire@nephro.test', TEST_PASSWORD);
+    await loginApi(request, 'admin', 'admin');
+
+    // p1_sec_01_patient_list — liste patients vue secrétaire
+    const patActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'hms.patient']], ['id', 'name'], 10,
+    );
+    const patAction = patActions.find(a => /patient/i.test(a.name));
+    if (patAction) {
+      await page.goto(`/odoo/action-${patAction.id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await snap(page, 'p1_sec_01_patient_list');
+
+      // p1_sec_02_patient_form_empty — formulaire vide
+      // Basculer en vue liste si kanban par défaut
+      const listBtnP1 = page.locator('.o_cp_switch_buttons button.o_list, button[data-tooltip="List"], .o_switch_view.o_list');
+      if (await listBtnP1.first().isVisible().catch(() => false)) {
+        await listBtnP1.first().click();
+        await page.waitForTimeout(2000);
+      }
+      await page.waitForSelector('.o_data_row', { timeout: 5000 }).catch(() => {});
+      const newBtn = page.locator('.o_list_button_add, button:has-text("Nouveau"), .btn-primary:has-text("New")').first();
+      if (await newBtn.isVisible()) {
+        await newBtn.click();
+        await page.waitForTimeout(3000);
+        await snap(page, 'p1_sec_02_patient_form_empty');
+
+        // Remplir le formulaire — chercher le champ nom dans le formulaire
+        const nameField = page.locator('.o_field_widget[name="name"] input, input[name="name"]').first();
+        if (await nameField.isVisible().catch(() => false)) {
+          await nameField.click();
+          await nameField.fill('Amadou Bâ');
+          await page.waitForTimeout(1000);
+        }
+        await snap(page, 'p1_sec_03_patient_form_filled');
+
+        // Annuler pour ne pas créer de doublon
+        const discardBtn = page.locator('.o_form_button_cancel, button:has-text("Annuler"), button:has-text("Discard")').first();
+        if (await discardBtn.isVisible().catch(() => false)) {
+          await discardBtn.click();
+          await page.waitForTimeout(1000);
+          // Confirmer l'annulation si popup
+          const confirmBtn = page.locator('.modal-footer .btn-primary, button:has-text("OK")').first();
+          if (await confirmBtn.isVisible().catch(() => false)) {
+            await confirmBtn.click();
+            await page.waitForTimeout(1000);
+          }
+        }
+      }
+
+      // p1_sec_04_patient_saved — fiche patient existant
+      await page.goto(`/odoo/action-${patAction.id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      // Basculer en vue liste si kanban par défaut
+      const listBtnP1b = page.locator('.o_cp_switch_buttons button.o_list, button[data-tooltip="List"], .o_switch_view.o_list');
+      if (await listBtnP1b.first().isVisible().catch(() => false)) {
+        await listBtnP1b.first().click();
+        await page.waitForTimeout(2000);
+      }
+      await page.waitForSelector('.o_data_row', { timeout: 5000 }).catch(() => {});
+      const firstP = page.locator('.o_data_row').first();
+      if (await firstP.isVisible()) {
+        await firstP.click();
+        await page.waitForTimeout(2000);
+        await snap(page, 'p1_sec_04_patient_saved');
+      } else {
+        // Essayer via kanban
+        const kanbanP1 = page.locator('.o_kanban_record').first();
+        if (await kanbanP1.isVisible().catch(() => false)) {
+          await kanbanP1.click();
+          await page.waitForTimeout(2000);
+          await snap(page, 'p1_sec_04_patient_saved');
+        }
+      }
+    }
+
+    // p1_sec_05_absence_draft + p1_sec_06_absence_validated (action 591)
+    await page.goto('/odoo/action-591', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(2000);
+    await clearFilters(page);
+
+    // Ouvrir la première absence
+    await page.waitForSelector('.o_data_row', { timeout: 5000 }).catch(() => {});
+    const firstAbsP1 = page.locator('.o_data_row').first();
+    if (await firstAbsP1.isVisible()) {
+      await firstAbsP1.click();
+      await page.waitForTimeout(2000);
+      await snap(page, 'p1_sec_05_absence_draft');
+      await snap(page, 'p1_sec_06_absence_validated');
+    } else {
+      // Si pas d'absence, prendre la vue liste
+      await snap(page, 'p1_sec_05_absence_draft');
+      await snap(page, 'p1_sec_06_absence_validated');
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // P1 — Médecin parcours prescription
+  // ═══════════════════════════════════════════════════════════════════
+  test('P1 — Médecin parcours prescription', async ({ page, request }) => {
+    await loginUI(page, 'medecin@nephro.test', TEST_PASSWORD);
+    await loginApi(request, 'admin', 'admin');
+
+    // p1_med_01_prescription_empty — vue prescriptions
+    const ordActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'prescription.order']], ['id', 'name'], 10,
+    );
+    if (ordActions.length > 0) {
+      await page.goto(`/odoo/action-${ordActions[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      await snap(page, 'p1_med_01_prescription_empty');
+
+      // Ouvrir la première prescription si elle existe
+      const firstOrd = page.locator('.o_data_row').first();
+      if (await firstOrd.isVisible()) {
+        await firstOrd.click();
+        await page.waitForTimeout(2000);
+        await snap(page, 'p1_med_02_prescription_filled');
+
+        // Scroll pour voir les lignes
+        await page.evaluate(() => window.scrollTo(0, 300));
+        await page.waitForTimeout(500);
+        await snap(page, 'p1_med_03_prescription_saved');
+      }
+    }
+
+    // p1_med_04_generator_empty — wizard générateur
+    const genActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'nephrology.session.generator']], ['id', 'name'], 5,
+    );
+    if (genActions.length > 0) {
+      await page.goto(`/odoo/action-${genActions[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await snap(page, 'p1_med_04_generator_empty');
+
+      // Ouvrir le wizard (formulaire nouveau)
+      const newBtnGen = page.locator('.o_list_button_add, button:has-text("Nouveau"), .btn-primary:has-text("New")').first();
+      if (await newBtnGen.isVisible().catch(() => false)) {
+        await newBtnGen.click();
+        await page.waitForTimeout(3000);
+        await snap(page, 'p1_med_05_generator_filled');
+      } else {
+        // Si déjà en vue formulaire ou liste vide, prendre quand même
+        await snap(page, 'p1_med_05_generator_filled');
+      }
+    } else {
+      // Pas de générateur, prendre un screenshot placeholder
+      await snap(page, 'p1_med_04_generator_empty');
+      await snap(page, 'p1_med_05_generator_filled');
+    }
+
+    // p1_med_06_generator_preview — vue validation
+    const valActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'nephrology.session.validator']], ['id', 'name'], 5,
+    );
+    if (valActions.length > 0) {
+      await page.goto(`/odoo/action-${valActions[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await snap(page, 'p1_med_06_generator_preview');
+    } else {
+      // Fallback : prendre la vue du wizard
+      await snap(page, 'p1_med_06_generator_preview');
+    }
+
+    // p1_med_07_sessions_created — liste séances créées
+    const procActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'acs.patient.procedure']], ['id', 'name'], 20,
+    );
+    const nephroProc = procActions.find(a => /n[eé]phro|dialys|h[eé]mo/i.test(a.name));
+    const procActionId = nephroProc ? nephroProc.id : procActions[0]?.id;
+    if (procActionId) {
+      await page.goto(`/odoo/action-${procActionId}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      await page.waitForTimeout(1000);
+      await snap(page, 'p1_med_07_sessions_created');
+    }
+
+    // p1_med_08_bilan_pre — bilan pré-dialyse
+    const bilanActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'acs.nephro.bilan']], ['id', 'name'], 10,
+    );
+    if (bilanActions.length > 0) {
+      await page.goto(`/odoo/action-${bilanActions[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      const firstBilan = page.locator('.o_data_row').first();
+      if (await firstBilan.isVisible()) {
+        await firstBilan.click();
+        await page.waitForTimeout(2000);
+      }
+      await snap(page, 'p1_med_08_bilan_pre');
+    }
+
+    // p1_med_09_ordonnance — ordonnance
+    if (ordActions.length > 0) {
+      await page.goto(`/odoo/action-${ordActions[0].id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await clearFilters(page);
+      const firstOrd = page.locator('.o_data_row').first();
+      if (await firstOrd.isVisible()) {
+        await firstOrd.click();
+        await page.waitForTimeout(2000);
+      }
+      await snap(page, 'p1_med_09_ordonnance');
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
+  // P1 — Facturation parcours
+  // ═══════════════════════════════════════════════════════════════════
+  test('P1 — Facturation parcours assureur', async ({ page, request }) => {
+    await loginUI(page, 'facturation@nephro.test', TEST_PASSWORD);
+    await loginApi(request, 'admin', 'admin');
+
+    // p1_fac_01_assureur — liste assureurs (res.partner avec is_insurance)
+    const partnerActions = await apiSearchRead(
+      request, 'ir.actions.act_window',
+      [['res_model', '=', 'res.partner']], ['id', 'name'], 20,
+    );
+    const insurerAction = partnerActions.find(a => /assur|insur/i.test(a.name));
+    if (insurerAction) {
+      await page.goto(`/odoo/action-${insurerAction.id}`, { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(2000);
+      await snap(page, 'p1_fac_01_assureur');
+    } else {
+      // Fallback: prendre la vue facturation
+      await page.waitForTimeout(1000);
+      await snap(page, 'p1_fac_01_assureur');
+    }
+
+    // p1_fac_02_dossier_assureur — dossier assureur
+    const firstRow = page.locator('.o_data_row, .o_kanban_record').first();
+    if (await firstRow.isVisible()) {
+      await firstRow.click();
+      await page.waitForTimeout(2000);
+      await snap(page, 'p1_fac_02_dossier_assureur');
+    } else {
+      await snap(page, 'p1_fac_02_dossier_assureur');
+    }
+  });
+});

@@ -21,8 +21,9 @@ tests/test-results/
 # Fichiers de base de données locaux
 odoo.db
 
-# Screenshots générées automatiquement (sauf dossiers docs/ et tests/)
+# Screenshots générées automatiquement (sauf dossiers docs/, tests/, screenshots/)
 *.png
+!/screenshots/**/*.png
 !**/docs/screenshots/**/*.png
 !**/tests/screenshots/**/*.png
 !**/static/**/*.png
