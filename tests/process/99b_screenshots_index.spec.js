@@ -422,6 +422,60 @@ test.describe('99b — Screenshots pour docs/index.html', () => {
   });
 
   // ═══════════════════════════════════════════════════════════════════
+  // C3 — Planning Dialyse (action-590, acs_dialysis_calendar)
+  // ═══════════════════════════════════════════════════════════════════
+  test('C3 — Planning Dialyse', async ({ page, request }) => {
+    await loginUI(page, 'medecin@nephro.test', TEST_PASSWORD);
+    await loginApi(request, 'admin', 'admin');
+
+    // ── c3_plan_01_calendar_day — Planning Dialyse vue jour (postes + séances) ──
+    await page.goto('/odoo/action-590', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(4000);
+    await page.waitForSelector('.dc-wrap, .dc-content', { timeout: 10000 }).catch(() => {});
+    await page.waitForTimeout(1000);
+    // S'assurer qu'on est en vue jour (cliquer le bouton "Jour" si disponible)
+    const dayBtn = page.locator('button:has-text("Jour"), .dc-toolbar button:has-text("J")').first();
+    if (await dayBtn.isVisible().catch(() => false)) {
+      await dayBtn.click();
+      await page.waitForTimeout(2000);
+    }
+    await snap(page, 'c3_plan_01_calendar_day');
+
+    // ── c3_plan_02_calendar_week — Vue semaine ──
+    const weekBtn = page.locator('button:has-text("Semaine"), .dc-toolbar button:has-text("S")').first();
+    if (await weekBtn.isVisible().catch(() => false)) {
+      await weekBtn.click();
+      await page.waitForTimeout(2000);
+      await snap(page, 'c3_plan_02_calendar_week');
+    } else {
+      await snap(page, 'c3_plan_02_calendar_week');
+    }
+
+    // ── c3_plan_03_session_panel — Clic sur une séance → panneau patient ──
+    // Revenir en vue jour pour cliquer sur une carte de séance
+    if (await dayBtn.isVisible().catch(() => false)) {
+      await dayBtn.click();
+      await page.waitForTimeout(2000);
+    } else {
+      await page.goto('/odoo/action-590', { waitUntil: 'domcontentloaded' });
+      await page.waitForTimeout(4000);
+    }
+    // Cliquer sur la première carte de séance dans la grille
+    const sessionCard = page.locator('.dc-session-card, .session-card, [class*="session"]').first();
+    if (await sessionCard.isVisible().catch(() => false)) {
+      await sessionCard.click();
+      await page.waitForTimeout(2000);
+      // Attendre le panneau latéral DoctorPatientPanel
+      await page.waitForSelector('.doctor-patient-panel', { timeout: 5000 }).catch(() => {});
+      await page.waitForTimeout(1000);
+      await snap(page, 'c3_plan_03_session_panel');
+    } else {
+      // Pas de séance visible, prendre quand même un screenshot
+      await snap(page, 'c3_plan_03_session_panel');
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════
   // C3 — Médecin (dashboard avec alertes)
   // ═══════════════════════════════════════════════════════════════════
   test('C3 — Médecin dashboard alertes', async ({ page, request }) => {
