@@ -893,17 +893,16 @@
       <div class="step-card-header">
         <div class="step-num col-inf">2</div>
         <div class="title-block">
-          <h3>Démarrer la séance d'Amadou Bâ</h3>
-          <div class="step-meta">Action : bouton <kbd>Démarrer la séance</kbd></div>
+          <h3>Démarrer la séance du patient</h3>
+          <div class="step-meta">Action : bouton <kbd>Démarrer</kbd> dans la liste patients</div>
         </div>
         <span class="role-badge-inline col-inf">💊 Infirmière</span>
       </div>
       <div class="step-card-body">
-        <p>L'infirmière trouve la carte du patient Amadou Bâ avec le statut "Programmé". Elle clique pour ouvrir la fiche de séance puis démarre officiellement la séance après avoir branché le patient.</p>
+        <p>Dans la liste des patients du jour, l'infirmière repère le patient avec le statut <span class="badge badge-sched">En attente</span> et clique sur le bouton <kbd>Démarrer</kbd>. L'interface bascule vers le formulaire de séance dédié (NurseSessionForm) avec les données d'arrivée du patient et le formulaire de saisie des signes vitaux.</p>
         <ul class="inst-list">
-          <li><span class="inst-dot">1</span><span>Trouver la carte d'Amadou Bâ (statut : <span class="badge badge-sched">Programmé</span>)</span></li>
-          <li><span class="inst-dot">2</span><span>Cliquer sur la carte pour ouvrir la fiche de séance</span></li>
-          <li><span class="inst-dot">3</span><span>Cliquer sur <kbd>Démarrer la séance</kbd></span></li>
+          <li><span class="inst-dot">1</span><span>Repérer le patient dans le tableau (colonne Statut : <span class="badge badge-sched">En attente</span>)</span></li>
+          <li><span class="inst-dot">2</span><span>Cliquer sur <kbd>Démarrer</kbd> (bouton vert) dans la colonne Actions</span></li>
         </ul>
         <div class="screenshots-row single">
           <div class="screenshot-wrap">
@@ -918,18 +917,18 @@
       <div class="step-card-header">
         <div class="step-num col-inf">3</div>
         <div class="title-block">
-          <h3>Saisir les paramètres vitaux initiaux</h3>
-          <div class="step-meta">Champs : TA pré-dialyse, Poids pré-dialyse, FC</div>
+          <h3>Saisir les signes vitaux</h3>
+          <div class="step-meta">Champs : TA, FC, FR, SpO2, Température, Glycémie</div>
         </div>
         <span class="role-badge-inline col-inf">💊 Infirmière</span>
       </div>
       <div class="step-card-body">
-        <p>Avant de démarrer la pompe, l'infirmière mesure et enregistre les constantes initiales du patient. Ces valeurs serviront de référence pour détecter les complications pendant la séance.</p>
+        <p>Le formulaire de séance affiche en haut les <strong>données à l'arrivée</strong> (TA pré, statut arrivée, poids, prise interdialytique) en lecture seule. En dessous, la carte <strong>"Saisir les signes vitaux"</strong> permet de mesurer les constantes pendant la séance. Un timer de 30 minutes démarre automatiquement.</p>
         <ul class="inst-list">
-          <li><span class="inst-dot">1</span><span>Saisir la <strong>TA pré-dialyse</strong> (Tension Artérielle, ex: 140/85 mmHg)</span></li>
-          <li><span class="inst-dot">2</span><span>Saisir le <strong>Poids pré-dialyse</strong> (ex: 72.5 kg)</span></li>
-          <li><span class="inst-dot">3</span><span>Saisir la <strong>Fréquence Cardiaque</strong> (ex: 78 bpm)</span></li>
-          <li><span class="inst-dot">4</span><span>Valider les constantes — la séance passe EN COURS</span></li>
+          <li><span class="inst-dot">1</span><span>Saisir la <strong>TA</strong> (Tension Artérielle, ex: 135/80) — champ obligatoire</span></li>
+          <li><span class="inst-dot">2</span><span>Saisir la <strong>FC</strong> (Fréquence Cardiaque, ex: 78 bpm)</span></li>
+          <li><span class="inst-dot">3</span><span>Saisir optionnellement : <strong>FR</strong>, <strong>SpO2</strong>, <strong>Température</strong>, <strong>Glycémie</strong></span></li>
+          <li><span class="inst-dot">4</span><span>Cliquer sur <kbd>Enregistrer les signes vitaux</kbd> — les mesures s'ajoutent à l'historique</span></li>
         </ul>
         <div class="screenshots-row double">
           <div class="screenshot-wrap">
@@ -941,7 +940,7 @@
         </div>
         <div class="status-list">
           <span class="badge badge-running">En cours</span>
-          <small style="color:#718096;">— La séance est maintenant active et visible en temps réel sur le dashboard médecin</small>
+          <small style="color:#718096;">— Chaque mesure enregistrée apparaît dans l'historique avec heure et alerte d'hypotension automatique (TA systolique &lt; 90 mmHg)</small>
         </div>
       </div>
     </div>
@@ -997,18 +996,19 @@
         <div class="step-num col-inf">5</div>
         <div class="title-block">
           <h3>Signaler une complication</h3>
-          <div class="step-meta">Action : bouton <kbd>Signaler complication</kbd></div>
+          <div class="step-meta">Action : bouton <kbd>Signaler une complication</kbd></div>
         </div>
         <span class="role-badge-inline col-inf">💊 Infirmière</span>
       </div>
       <div class="step-card-body">
-        <p>Si le patient présente une complication (hypotension, crampe, nausées...), l'infirmière la déclare immédiatement via le bouton dédié. Un formulaire popup s'ouvre pour documenter l'incident.</p>
+        <p>Si le patient présente une complication, l'infirmière clique sur <kbd>Signaler une complication</kbd> dans le formulaire de séance. Un popup dédié s'ouvre avec 8 types de complications prédéfinis et un formulaire structuré.</p>
         <ul class="inst-list">
-          <li><span class="inst-dot">1</span><span>Cliquer sur <kbd>Signaler complication</kbd> dans la fiche séance</span></li>
-          <li><span class="inst-dot">2</span><span>Choisir le type : <strong>Hypotension</strong> (ou crampe, nausée, frissons...)</span></li>
-          <li><span class="inst-dot">3</span><span>Saisir la TA au moment de la complication et l'action prise (sérum salé, position)</span></li>
-          <li><span class="inst-dot">4</span><span>Indiquer si la complication est <strong>résolue</strong> ou <strong>en cours</strong></span></li>
-          <li><span class="inst-dot">5</span><span>Valider — l'alerte est envoyée au médecin</span></li>
+          <li><span class="inst-dot">1</span><span>Cliquer sur <kbd>Signaler une complication</kbd> (bouton jaune en bas du formulaire)</span></li>
+          <li><span class="inst-dot">2</span><span>Choisir le type parmi les 8 boutons : <strong>Hypotension</strong>, Crampes, Nausées/Vomissements, Douleur thoracique, Fièvre, Prurit, Arrêt prématuré, Autre</span></li>
+          <li><span class="inst-dot">3</span><span>Saisir l'<strong>heure de survenue</strong> et la <strong>TA au moment</strong> de la complication</span></li>
+          <li><span class="inst-dot">4</span><span>Décrire l'<strong>action prise</strong> (ex: sérum salé 100ml, position Trendelenburg) — champ obligatoire</span></li>
+          <li><span class="inst-dot">5</span><span>Indiquer la résolution : <strong>Résolue</strong>, <strong>Partielle</strong> ou <strong>Non résolue</strong> — champ obligatoire</span></li>
+          <li><span class="inst-dot">6</span><span>Cliquer sur <kbd>Enregistrer la complication</kbd> — l'alerte apparaît sur le dashboard médecin</span></li>
         </ul>
         <div class="screenshots-row double">
           <div class="screenshot-wrap">
@@ -1082,18 +1082,20 @@
       <div class="step-card-header">
         <div class="step-num col-inf">7</div>
         <div class="title-block">
-          <h3>Fin de séance — paramètres post-dialyse</h3>
-          <div class="step-meta">Action : bouton <kbd>Terminer la séance</kbd></div>
+          <h3>Fin de séance — données de sortie</h3>
+          <div class="step-meta">Action : bouton <kbd>Terminer la séance</kbd> puis <kbd>VALIDER LA SÉANCE</kbd></div>
         </div>
         <span class="role-badge-inline col-inf">💊 Infirmière</span>
       </div>
       <div class="step-card-body">
-        <p>En fin de séance, l'infirmière débranche le patient et saisit les paramètres de clôture : TA post, poids post, volume d'ultrafiltration réel, tolérances. Le KT/V est calculé automatiquement.</p>
+        <p>En fin de séance, l'infirmière clique sur <kbd>Terminer la séance</kbd> dans le formulaire. Un écran dédié (NurseEndSession) affiche un résumé de la séance et les champs de sortie à remplir. Le KT/V et l'URR sont calculés automatiquement après validation.</p>
         <ul class="inst-list">
-          <li><span class="inst-dot">1</span><span>Cliquer sur <kbd>Terminer la séance</kbd></span></li>
-          <li><span class="inst-dot">2</span><span>Saisir : TA post-dialyse, Poids post (ex: 70.2 kg), UF réelle retirée</span></li>
-          <li><span class="inst-dot">3</span><span>Le système calcule automatiquement le <strong>KT/V</strong> (indicateur d'efficacité)</span></li>
-          <li><span class="inst-dot">4</span><span>Confirmer la clôture — séance passe à <span class="badge badge-done">Terminé</span></span></li>
+          <li><span class="inst-dot">1</span><span>Cliquer sur <kbd>Terminer la séance →</kbd> (bouton vert en bas du formulaire)</span></li>
+          <li><span class="inst-dot">2</span><span>Le <strong>résumé</strong> s'affiche : durée calculée, UF habituelle, nombre de complications, nombre de mesures</span></li>
+          <li><span class="inst-dot">3</span><span>Saisir le <strong>Poids sortie</strong> (ex: 70.2 kg) — obligatoire, l'UF réelle est calculée automatiquement</span></li>
+          <li><span class="inst-dot">4</span><span>Sélectionner la <strong>Tolérance globale</strong> : Bonne, Moyenne ou Mauvaise — obligatoire</span></li>
+          <li><span class="inst-dot">5</span><span>Ajouter des <strong>Notes de fin</strong> si nécessaire</span></li>
+          <li><span class="inst-dot">6</span><span>Cliquer sur <kbd>VALIDER LA SÉANCE</kbd> — le <strong>KT/V</strong> et l'<strong>URR%</strong> s'affichent, puis retour automatique à la liste</span></li>
         </ul>
         <div class="screenshots-row double">
           <div class="screenshot-wrap">

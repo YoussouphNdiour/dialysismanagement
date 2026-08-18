@@ -229,21 +229,27 @@ test.describe('99b — Screenshots pour docs/index.html', () => {
 
     // c2_med_08_dashboard_grille — dashboard médecin (ir.actions.client, action 589)
     await page.goto('/odoo/action-589', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(4000);
+    // S'assurer qu'on est sur l'onglet Grille (data-tab="grid")
+    const gridTab = page.locator('button.dd-tab[data-tab="grid"]');
+    if (await gridTab.isVisible().catch(() => false)) {
+      await gridTab.click();
+      await page.waitForTimeout(2000);
+    }
     await snap(page, 'c2_med_08_dashboard_grille');
 
-    // c2_med_09_dashboard_liste — vue liste (si switch dispo)
-    const listBtn = page.locator('.o_cp_switch_buttons button.o_list, button[data-tooltip="List"], .o_switch_view.o_list');
-    if (await listBtn.first().isVisible().catch(() => false)) {
-      await listBtn.first().click();
+    // c2_med_09_dashboard_liste — onglet Liste (data-tab="list")
+    const listTab = page.locator('button.dd-tab[data-tab="list"]');
+    if (await listTab.isVisible().catch(() => false)) {
+      await listTab.click();
       await page.waitForTimeout(2000);
     }
     await snap(page, 'c2_med_09_dashboard_liste');
 
-    // c2_med_10_dashboard_stats — vue kanban/stats
-    const kanbanBtn = page.locator('.o_cp_switch_buttons button.o_kanban, button[data-tooltip="Kanban"], .o_switch_view.o_kanban');
-    if (await kanbanBtn.first().isVisible().catch(() => false)) {
-      await kanbanBtn.first().click();
+    // c2_med_10_dashboard_stats — onglet Stats (data-tab="stats")
+    const statsTab = page.locator('button.dd-tab[data-tab="stats"]');
+    if (await statsTab.isVisible().catch(() => false)) {
+      await statsTab.click();
       await page.waitForTimeout(2000);
     }
     await snap(page, 'c2_med_10_dashboard_stats');
@@ -264,105 +270,155 @@ test.describe('99b — Screenshots pour docs/index.html', () => {
   });
 
   // ═══════════════════════════════════════════════════════════════════
-  // C3 — Infirmière (séance de dialyse)
+  // C3 — Infirmière (séance de dialyse) — Interface OWL custom
   // ═══════════════════════════════════════════════════════════════════
   test('C3 — Infirmière séance de dialyse', async ({ page, request }) => {
     await loginUI(page, 'infirmiere@nephro.test', TEST_PASSWORD);
     await loginApi(request, 'admin', 'admin');
 
-    // c3_inf_01_dashboard — dashboard infirmière
-    await page.waitForTimeout(3000);
+    // ── c3_inf_01_dashboard — NursePatientList (action-588) ──
+    await page.goto('/odoo/action-588', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(4000);
+    // Attendre que le composant OWL NursePatientList se charge
+    await page.waitForSelector('.o_nurse_patient_list, .o_nurse_dashboard', { timeout: 10000 }).catch(() => {});
+    await page.waitForTimeout(1000);
     await snap(page, 'c3_inf_01_dashboard');
 
-    // c3_inf_02_session_start — formulaire séance (ouvrir une séance scheduled)
-    const procActions = await apiSearchRead(
-      request, 'ir.actions.act_window',
-      [['res_model', '=', 'acs.patient.procedure']], ['id', 'name'], 20,
-    );
-    const nephroProc = procActions.find(a => /n[eé]phro|dialys|h[eé]mo/i.test(a.name));
-    const procActionId = nephroProc ? nephroProc.id : procActions[0]?.id;
-
-    // Trouver une séance scheduled
-    const schedProcs = await apiSearchRead(
-      request, 'acs.patient.procedure',
-      [['state', '=', 'scheduled']], ['id'], 1,
-    );
-    if (schedProcs.length > 0 && procActionId) {
-      await page.goto(`/odoo/action-${procActionId}/${schedProcs[0].id}`, { waitUntil: 'domcontentloaded' });
-      await page.waitForTimeout(2000);
+    // ── c3_inf_02_session_start — Cliquer "Démarrer" sur un patient programmé ──
+    // Le bouton "Demarrer" (btn-success) dans la liste patient lance NurseSessionForm
+    const startBtn = page.locator('.o_nurse_patient_list .btn-success, .o_nurse_dashboard .btn-success').first();
+    if (await startBtn.isVisible().catch(() => false)) {
+      await startBtn.click();
+      await page.waitForTimeout(3000);
+      // NurseSessionForm est maintenant affiché (screen: 'session')
+      await page.waitForSelector('.o_nurse_session_form', { timeout: 10000 }).catch(() => {});
+      await page.waitForTimeout(1000);
+      await snap(page, 'c3_inf_02_session_start');
+    } else {
+      // Fallback: si pas de patient programmé, chercher "Reprendre" (running)
+      const resumeBtn = page.locator('.o_nurse_patient_list .btn-primary, .o_nurse_dashboard .btn-primary').first();
+      if (await resumeBtn.isVisible().catch(() => false)) {
+        await resumeBtn.click();
+        await page.waitForTimeout(3000);
+        await page.waitForSelector('.o_nurse_session_form', { timeout: 10000 }).catch(() => {});
+        await page.waitForTimeout(1000);
+      }
       await snap(page, 'c3_inf_02_session_start');
     }
 
-    // c3_inf_03_vitals_initial — séance running (avec vitaux initiaux)
-    const runningProcs = await apiSearchRead(
-      request, 'acs.patient.procedure',
-      [['state', '=', 'running']], ['id'], 1,
-    );
-    if (runningProcs.length > 0 && procActionId) {
-      await page.goto(`/odoo/action-${procActionId}/${runningProcs[0].id}`, { waitUntil: 'domcontentloaded' });
-      await page.waitForTimeout(2000);
-      await snap(page, 'c3_inf_03_vitals_initial');
+    // ── c3_inf_03_vitals_initial — Carte "Données à l'arrivée" + formulaire vitaux ──
+    // Le NurseSessionForm affiche les données d'arrivée et le formulaire de saisie des vitaux
+    await snap(page, 'c3_inf_03_vitals_initial');
 
-      // c3_inf_04_session_running — même séance scrollée
-      await page.evaluate(() => window.scrollTo(0, 400));
+    // ── c3_inf_04_session_running — Remplir les signes vitaux et enregistrer ──
+    // Saisir la TA (champ obligatoire pour activer le bouton)
+    const taInput = page.locator('.o_nurse_session_form input[type="text"]').first();
+    if (await taInput.isVisible().catch(() => false)) {
+      await taInput.fill('135/80');
       await page.waitForTimeout(500);
-      await snap(page, 'c3_inf_04_session_running');
     }
+    // Saisir FC
+    const fcInput = page.locator('.o_nurse_session_form input[type="number"]').first();
+    if (await fcInput.isVisible().catch(() => false)) {
+      await fcInput.fill('78');
+      await page.waitForTimeout(500);
+    }
+    await snap(page, 'c3_inf_04_session_running');
 
-    // c3_inf_05_complication_popup — chercher le bouton complication
-    // (simulation : revenir à la fiche et tenter d'ouvrir l'onglet complications)
-    if (runningProcs.length > 0 && procActionId) {
-      await page.goto(`/odoo/action-${procActionId}/${runningProcs[0].id}`, { waitUntil: 'domcontentloaded' });
+    // ── c3_inf_05_complication_popup — Popup complication OWL ──
+    // Cliquer "Signaler une complication" (btn-warning) pour ouvrir NurseComplicationPopup
+    const compBtn = page.locator('.o_nurse_session_form .btn-warning, button:has-text("Signaler")').first();
+    if (await compBtn.isVisible().catch(() => false)) {
+      await compBtn.click();
       await page.waitForTimeout(2000);
-      // Chercher l'onglet complications
-      const compTab = page.locator('.o_notebook .nav-link:has-text("Complication")').first();
-      if (await compTab.isVisible().catch(() => false)) {
-        await compTab.click();
+      // Le popup complication est un overlay custom (.o_complication_backdrop + .o_complication_modal)
+      await page.waitForSelector('.o_complication_modal, .o_complication_backdrop', { timeout: 5000 }).catch(() => {});
+      await page.waitForTimeout(1000);
+      await snap(page, 'c3_inf_05_complication_popup');
+
+      // ── c3_inf_06_complication_filled — Remplir la complication ──
+      // Sélectionner un type (cliquer le premier bouton toggle, ex: Hypotension)
+      const typeBtn = page.locator('.o_complication_modal .btn-outline-secondary').first();
+      if (await typeBtn.isVisible().catch(() => false)) {
+        await typeBtn.click();
+        await page.waitForTimeout(500);
+      }
+      // Saisir "Action prise" (textarea obligatoire)
+      const actionTextarea = page.locator('.o_complication_modal textarea').first();
+      if (await actionTextarea.isVisible().catch(() => false)) {
+        await actionTextarea.fill('Sérum salé 100ml, position Trendelenburg');
+        await page.waitForTimeout(500);
+      }
+      // Sélectionner résolution (premier bouton, ex: Résolue)
+      const resolBtn = page.locator('.o_complication_modal .btn-success, .o_complication_modal button:has-text("solue")').first();
+      if (await resolBtn.isVisible().catch(() => false)) {
+        await resolBtn.click();
+        await page.waitForTimeout(500);
+      }
+      await snap(page, 'c3_inf_06_complication_filled');
+
+      // Fermer le popup (Annuler pour ne pas modifier les données)
+      const cancelBtn = page.locator('.o_complication_modal .btn-secondary, .o_complication_modal button:has-text("Annuler")').first();
+      if (await cancelBtn.isVisible().catch(() => false)) {
+        await cancelBtn.click();
         await page.waitForTimeout(1000);
       }
-      await snap(page, 'c3_inf_05_complication_popup');
-    }
-
-    // c3_inf_06_complication_filled — complication formulaire (model: acs.dialysis.complication, action 586)
-    await page.goto('/odoo/action-586', { waitUntil: 'domcontentloaded' });
-    await page.waitForTimeout(2000);
-    await clearFilters(page);
-    await page.waitForSelector('.o_data_row', { timeout: 5000 }).catch(() => {});
-    const firstComp = page.locator('.o_data_row').first();
-    if (await firstComp.isVisible()) {
-      await firstComp.click();
-      await page.waitForTimeout(2000);
-      await snap(page, 'c3_inf_06_complication_filled');
     } else {
+      await snap(page, 'c3_inf_05_complication_popup');
       await snap(page, 'c3_inf_06_complication_filled');
     }
 
-    // c3_inf_07_dashboard_alert — retour dashboard avec alerte
-    // (re-ouvrir dashboard infirmière)
-    await page.goto('/odoo/action-588', { waitUntil: 'domcontentloaded' }).catch(() => {});
-    await page.waitForTimeout(3000);
-    await snap(page, 'c3_inf_07_dashboard_alert');
-
-    // c3_inf_08_session_end — séance terminée (done)
-    const doneProcs = await apiSearchRead(
-      request, 'acs.patient.procedure',
-      [['state', '=', 'done']], ['id'], 1,
-    );
-    if (doneProcs.length > 0 && procActionId) {
-      await page.goto(`/odoo/action-${procActionId}/${doneProcs[0].id}`, { waitUntil: 'domcontentloaded' });
+    // ── c3_inf_08_session_end — Écran fin de séance (NurseEndSession) ──
+    // Depuis le formulaire de séance, cliquer directement "Terminer la séance"
+    const endBtn = page.locator('button:has-text("Terminer la"), .btn-success:has-text("Terminer")').first();
+    if (await endBtn.isVisible().catch(() => false)) {
+      await endBtn.click();
       await page.waitForTimeout(2000);
+      // NurseEndSession est affiché (screen: 'end')
+      await page.waitForSelector('.o_nurse_end_session', { timeout: 10000 }).catch(() => {});
+      await page.waitForTimeout(1000);
       await snap(page, 'c3_inf_08_session_end');
 
-      // c3_inf_09_end_vitals — scroll pour voir vitaux de fin
-      await page.evaluate(() => window.scrollTo(0, 400));
-      await page.waitForTimeout(500);
+      // ── c3_inf_09_end_vitals — Remplir les données de sortie ──
+      // Poids sortie (champ obligatoire, form-control-lg)
+      const weightInput = page.locator('.o_nurse_end_session input[type="number"]').first();
+      if (await weightInput.isVisible().catch(() => false)) {
+        await weightInput.fill('70.2');
+        await page.waitForTimeout(500);
+      }
+      // Sélectionner tolérance globale (ex: Bonne)
+      const tolBtn = page.locator('.o_nurse_end_session button:has-text("Bonne")').first();
+      if (await tolBtn.isVisible().catch(() => false)) {
+        await tolBtn.click();
+        await page.waitForTimeout(500);
+      }
       await snap(page, 'c3_inf_09_end_vitals');
 
-      // c3_inf_10_session_done — vue résumé done
-      await page.evaluate(() => window.scrollTo(0, 0));
+      // ── c3_inf_10_session_done — Formulaire rempli prêt à valider ──
+      // Scroll pour voir le bouton VALIDER LA SÉANCE
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       await page.waitForTimeout(500);
       await snap(page, 'c3_inf_10_session_done');
+
+      // Retour à la liste sans valider (pour ne pas changer l'état)
+      const backEndBtn = page.locator('button:has-text("Retour")').first();
+      if (await backEndBtn.isVisible().catch(() => false)) {
+        await backEndBtn.click();
+        await page.waitForTimeout(2000);
+      }
+    } else {
+      // Fallback: pas de bouton "Terminer" visible (session non démarrée correctement)
+      await snap(page, 'c3_inf_08_session_end');
+      await snap(page, 'c3_inf_09_end_vitals');
+      await snap(page, 'c3_inf_10_session_done');
     }
+
+    // ── c3_inf_07_dashboard_alert — Retour au dashboard avec statuts mis à jour ──
+    await page.goto('/odoo/action-588', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(4000);
+    await page.waitForSelector('.o_nurse_patient_list, .o_nurse_dashboard', { timeout: 10000 }).catch(() => {});
+    await page.waitForTimeout(1000);
+    await snap(page, 'c3_inf_07_dashboard_alert');
   });
 
   // ═══════════════════════════════════════════════════════════════════
