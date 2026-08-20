@@ -13,7 +13,7 @@
 
 const { test, expect } = require('@playwright/test');
 const { loginUI } = require('../helpers/auth');
-const { loginApi, apiSearchRead, apiRead } = require('../helpers/api');
+const { loginApi, rpcCall, apiSearchRead, apiRead } = require('../helpers/api');
 const path = require('path');
 const fs = require('fs');
 
@@ -425,19 +425,50 @@ test.describe('99b — Screenshots pour docs/index.html', () => {
   // C3 — Planning Dialyse (action-590, acs_dialysis_calendar)
   // ═══════════════════════════════════════════════════════════════════
   test('C3 — Planning Dialyse', async ({ page, request }) => {
-    await loginUI(page, 'medecin@nephro.test', TEST_PASSWORD);
     await loginApi(request, 'admin', 'admin');
+
+    // Donner à l'infirmière le groupe néphrologie pour voir l'onglet clinique
+    try {
+      const xmlRef = await apiSearchRead(request, 'ir.model.data',
+        [['module', '=', 'acs_hms_nephrology'], ['name', '=', 'group_hms_nephrology_user']],
+        ['res_id'], 1);
+      const infUser = await apiSearchRead(request, 'res.users',
+        [['login', '=', 'infirmiere@nephro.test']], ['id'], 1);
+      if (xmlRef.length && infUser.length) {
+        const grpId = xmlRef[0].res_id;
+        const userId = infUser[0].id;
+        await rpcCall(request, 'res.groups', 'write', [[grpId], { user_ids: [[4, userId]] }]);
+        console.log(`  Groupe nephro (id=${grpId}) ajouté à infirmière (id=${userId})`);
+      }
+    } catch (e) {
+      console.log('  Note: groupe nephro infirmière:', e.message);
+    }
+
+    await loginUI(page, 'infirmiere@nephro.test', TEST_PASSWORD);
 
     // ── c3_plan_01_calendar_day — Planning Dialyse vue jour (postes + séances) ──
     await page.goto('/odoo/action-590', { waitUntil: 'domcontentloaded' });
     await page.waitForTimeout(4000);
     await page.waitForSelector('.dc-wrap, .dc-content', { timeout: 10000 }).catch(() => {});
     await page.waitForTimeout(1000);
-    // S'assurer qu'on est en vue jour (cliquer le bouton "Jour" si disponible)
+    // S'assurer qu'on est en vue jour
     const dayBtn = page.locator('button:has-text("Jour"), .dc-toolbar button:has-text("J")').first();
     if (await dayBtn.isVisible().catch(() => false)) {
       await dayBtn.click();
       await page.waitForTimeout(2000);
+    }
+    // Si 0% occupation (pas de séances aujourd'hui), naviguer aux jours précédents
+    let hasSessionCards = await page.locator('.dc-session-card').first().isVisible().catch(() => false);
+    if (!hasSessionCards) {
+      // Cliquer le bouton "précédent" (‹ = &#8249;, .dc-nav-btn premier du groupe)
+      for (let i = 0; i < 7 && !hasSessionCards; i++) {
+        const prevArrow = page.locator('.dc-nav-btn').first();
+        if (await prevArrow.isVisible().catch(() => false)) {
+          await prevArrow.click();
+          await page.waitForTimeout(2000);
+        }
+        hasSessionCards = await page.locator('.dc-session-card').first().isVisible().catch(() => false);
+      }
     }
     await snap(page, 'c3_plan_01_calendar_day');
 
@@ -452,16 +483,26 @@ test.describe('99b — Screenshots pour docs/index.html', () => {
     }
 
     // ── c3_plan_03_session_panel — Clic sur une séance → panneau patient ──
-    // Revenir en vue jour pour cliquer sur une carte de séance
-    if (await dayBtn.isVisible().catch(() => false)) {
-      await dayBtn.click();
+    // Revenir en vue jour au jour qui contient des séances
+    const dayBtn2 = page.locator('.dc-mode-btn:has-text("Jour"), button:has-text("Jour")').first();
+    if (await dayBtn2.isVisible().catch(() => false)) {
+      await dayBtn2.click();
       await page.waitForTimeout(2000);
-    } else {
-      await page.goto('/odoo/action-590', { waitUntil: 'domcontentloaded' });
-      await page.waitForTimeout(4000);
+    }
+    // Naviguer au jour avec des séances si aujourd'hui est vide
+    let hasCards2 = await page.locator('.dc-session-card').first().isVisible().catch(() => false);
+    if (!hasCards2) {
+      for (let i = 0; i < 7 && !hasCards2; i++) {
+        const prevArrow2 = page.locator('.dc-nav-btn').first();
+        if (await prevArrow2.isVisible().catch(() => false)) {
+          await prevArrow2.click();
+          await page.waitForTimeout(2000);
+        }
+        hasCards2 = await page.locator('.dc-session-card').first().isVisible().catch(() => false);
+      }
     }
     // Cliquer sur la première carte de séance dans la grille
-    const sessionCard = page.locator('.dc-session-card, .session-card, [class*="session"]').first();
+    const sessionCard = page.locator('.dc-session-card').first();
     if (await sessionCard.isVisible().catch(() => false)) {
       await sessionCard.click();
       await page.waitForTimeout(2000);
@@ -469,9 +510,48 @@ test.describe('99b — Screenshots pour docs/index.html', () => {
       await page.waitForSelector('.doctor-patient-panel', { timeout: 5000 }).catch(() => {});
       await page.waitForTimeout(1000);
       await snap(page, 'c3_plan_03_session_panel');
+
+      // ── c3_plan_04_dossier_complet — Clic "Dossier complet" → formulaire séance ──
+      const dossierBtn = page.locator('.dpp-btn-primary, .doctor-patient-panel button:has-text("Dossier complet")').first();
+      if (await dossierBtn.isVisible().catch(() => false)) {
+        await dossierBtn.click();
+        await page.waitForTimeout(3000);
+        await page.waitForSelector('.o_form_view, .o_action', { timeout: 10000 }).catch(() => {});
+        await page.waitForTimeout(1000);
+
+        // S'assurer que l'onglet Néphrologie est sélectionné
+        const nephroTab = page.locator('.o_notebook .nav-link').filter({ hasText: /n[eé]phrologie/i }).first();
+        if (await nephroTab.isVisible().catch(() => false)) {
+          await nephroTab.click();
+          await page.waitForTimeout(500);
+        }
+        await snap(page, 'c3_plan_04_dossier_complet');
+
+        // ── c3_plan_05_dossier_scroll — Scroll vers Poids / Fin de séance ──
+        await page.evaluate(() => {
+          const el = document.querySelector('.o_form_sheet_bg');
+          if (el) el.scrollTop = 700;
+        });
+        await page.waitForTimeout(500);
+        await snap(page, 'c3_plan_05_dossier_scroll');
+
+        // ── c3_plan_06_dossier_debits — Scroll vers Débits / Paramètres du bain ──
+        await page.evaluate(() => {
+          const el = document.querySelector('.o_form_sheet_bg');
+          if (el) el.scrollTop = 1400;
+        });
+        await page.waitForTimeout(500);
+        await snap(page, 'c3_plan_06_dossier_debits');
+      } else {
+        await snap(page, 'c3_plan_04_dossier_complet');
+        await snap(page, 'c3_plan_05_dossier_scroll');
+        await snap(page, 'c3_plan_06_dossier_debits');
+      }
     } else {
       // Pas de séance visible, prendre quand même un screenshot
       await snap(page, 'c3_plan_03_session_panel');
+      await snap(page, 'c3_plan_04_dossier_complet');
+      await snap(page, 'c3_plan_05_dossier_scroll');
     }
   });
 
